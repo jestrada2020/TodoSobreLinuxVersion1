@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Maestría Linux: Deep Dive</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Palette: Slate & Key Accents */
+            --bg-body: #020617;
+            /* Very Dark Slate */
+            --bg-sidebar: #0f172a;
+            /* Dark Slate */
+            --bg-card: #1e293b;
+            /* Slate 800 */
+            --bg-code: #0b1120;
+            /* Almost Black */
+
+            --text-main: #f1f5f9;
+            /* Slate 100 */
+            --text-muted: #94a3b8;
+            /* Slate 400 */
+
+            --border: rgba(255, 255, 255, 0.08);
+
+            /* Semantic Colors (neon-ish) */
+            --color-primary: #38bdf8;
+            /* Sky Blue (Core) */
+            --color-file: #c084fc;
+            /* Purple (Files) */
+            --color-cmd: #4ade80;
+            /* Green (Terminal) */
+            --color-sys: #f472b6;
+            /* Pink (System) */
+            --color-net: #facc15;
+            /* Yellow (Network) */
+            --color-warn: #fb923c;
+            /* Orange (Warnings) */
+
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ----- SIDEBAR ----- */
+        #sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-sidebar);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .brand {
+            padding: 1.5rem;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.05em;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand span {
+            color: var(--color-primary);
+        }
+
+        .search-box {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            font-family: inherit;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+        }
+
+        .nav-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        .nav-group-title {
+            padding: 0.75rem 1.5rem 0.25rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-item.active {
+            color: var(--text-main);
+            background: rgba(56, 189, 248, 0.1);
+            /* Primary tint */
+            border-left-color: var(--color-primary);
+        }
+
+        /* Sidebar Icons (SVG) */
+        .icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+
+        /* ----- MAIN CONTENT ----- */
+        #main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 3rem 4rem;
+            max-width: 1200px;
+        }
+
+        .section {
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin: 3rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        p {
+            line-height: 1.7;
+            color: #bdc5d1;
+            /* Lighter than muted */
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* ----- CARDS & BLOCKS ----- */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* File Tree Visualization */
+        .tree-diagram {
+            font-family: 'Fira Code', monospace;
+            background: var(--bg-code);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .tree-node {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-name {
+            color: var(--color-file);
+            font-weight: 700;
+            margin-right: 1rem;
+        }
+
+        .node-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Command Box */
+        .cmd-box {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cmd-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+        }
+
+        .cmd-content {
+            padding: 1rem 1rem 1.5rem;
+            /* Extra bottom padding for scrollbar */
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        /* Syntax Highlighting */
+        .hl-prompt {
+            color: #64748b;
+            margin-right: 0.5rem;
+            user-select: none;
+        }
+
+        .hl-cmd {
+            color: var(--color-cmd);
+            font-weight: 700;
+        }
+
+        .hl-arg {
+            color: var(--color-file);
+        }
+
+        .hl-opt {
+            color: var(--color-sys);
+        }
+
+        .hl-net {
+            color: var(--color-net);
+        }
+
+        .hl-comment {
+            color: #475569;
+            font-style: italic;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+        }
+
+        .badge-core {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--color-primary);
+        }
+
+        .badge-imp {
+            background: rgba(244, 114, 182, 0.15);
+            color: var(--color-sys);
+        }
+
+        .badge-net {
+            background: rgba(250, 204, 21, 0.15);
+            color: var(--color-net);
+        }
+
+        /* Accordion Style for deep content */
+        .accordion {
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .accordion-header {
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-main);
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .accordion.open .accordion-content {
+            display: block;
+        }
+
+        .accordion.open .accordion-header {
+            color: var(--color-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: 0.3s;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #main {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .mobile-menu {
+                display: block;
+                position: fixed;
+                bottom: 1rem;
+                right: 1rem;
+                z-index: 200;
+                background: var(--color-primary);
+                border: none;
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                color: #000;
+                font-weight: bold;
+                cursor: pointer;
+            }
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+        <div class="brand">
+            <span>//</span> LINUX MASTERY
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Buscar comando..." onkeyup="filterNav()">
+        </div>
+
+        <div class="nav-scroll" id="nav-list">
+            <!-- 1. Conceptos -->
+            <div class="nav-group-title">Introducción</div>
+            <a class="nav-link nav-item active" onclick="showSection('intro-linux')"
+                data-tags="linux kernel gnu open source">
+                ¿Qué es Linux?
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('intro-distros')" data-tags="ubuntu debian redhat arch">
+                Distribuciones
+            </a>
+
+            <!-- 2. Sistema de Archivos files -->
+            <div class="nav-group-title">Sistema de Archivos</div>
+            <a class="nav-link nav-item" onclick="showSection('fs-hierarchy')" data-tags="root etc var home tree">
+                Jerarquía (The Tree)
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('fs-nav')" data-tags="cd ls pwd navigation">
+                Navegación
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('fs-manip')" data-tags="cp mv rm touch mkdir">
+                Gestión Básica
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('fs-advanced')"
+                data-tags="tar zip gzip ln find locate head tail">
+                Archivos Avanzado
+            </a>
+
+            <!-- 3. Terminal & Comandos -->
+            <div class="nav-group-title">Power User</div>
+            <a class="nav-link nav-item" onclick="showSection('term-shell')" data-tags="bash zsh terminal echo">
+                Shell Basics
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('term-pipes')"
+                data-tags="grep pipes redirection history alias jobs">
+                Pipes, Redirección y Jobs
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('term-scripting')" data-tags="bash script variables env">
+                Scripting Intro
+            </a>
+
+            <!-- 4. Admin Pro -->
+            <div class="nav-group-title">Admin Avanzada</div>
+            <a class="nav-link nav-item" onclick="showSection('admin-perms')" data-tags="chmod chown suid sgid sticky">
+                Permisos y Seguridad
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('admin-sys')"
+                data-tags="systemctl journalctl htop ps kill df du">
+                Servicios y Sistema
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('admin-net')"
+                data-tags="ssh ip ping curl wget netstat ss">
+                Redes y Conectividad
+            </a>
+
+            <!-- 5. Emergencia -->
+            <div class="nav-group-title" style="color: var(--color-warn);">Emergencia</div>
+            <a class="nav-link nav-item" onclick="showSection('rescue-grub')"
+                data-tags="grub boot rescue chroot repair boot-repair initramfs">
+                Recuperar Arranque (GRUB)
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('rescue-disk')"
+                data-tags="disk usb hdd ssd smartctl fsck badblocks ddrescue recovery">
+                Discos y USB Dañados
+            </a>
+
+            <!-- 6. Personalización -->
+            <div class="nav-group-title">Personalización</div>
+            <a class="nav-link nav-item" onclick="showSection('custom-icons')"
+                data-tags="iconos icons desktop applications themes customization">
+                Iconos de Aplicaciones
+            </a>
+
+            <!-- 7. Mantenimiento -->
+            <div class="nav-group-title">Mantenimiento</div>
+            <a class="nav-link nav-item" onclick="showSection('sys-debug')"
+                data-tags="debug kill process lsof dpkg apt fix broken update">
+                Depurar y Reparar
+            </a>
+
+            <!-- 8. Software -->
+            <div class="nav-group-title">Software y Tools</div>
+            <a class="nav-link nav-item" onclick="showSection('devtools')"
+                data-tags="install snap vscode chrome latex texstudio cursor appimage">
+                Instalar Dev Tools
+            </a>
+
+            <!-- 9. Data Science -->
+            <div class="nav-group-title">Ciencia de Datos</div>
+            <a class="nav-link nav-item" onclick="showSection('datascience')"
+                data-tags="r language rstudio commander rcmdr libreoffice excel statistic">
+                R & Office Suite
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('anaconda')"
+                data-tags="anaconda python jupyter panda numpy data science">
+                Anaconda Python
+            </a>
+
+            <!-- 10. Command Expansion -->
+            <div class="nav-group-title">Expansión de Comandos</div>
+            <a class="nav-link nav-item" onclick="showSection('essentials')"
+                data-tags="system info hardware uname neofetch disk space ram">
+                Info del Sistema
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('text-files')"
+                data-tags="text processing head tail less grep sort wc zip ln">
+                Texto y Archivos
+            </a>
+            <a class="nav-link nav-item" onclick="showSection('sys-mgmt')"
+                data-tags="management shutdown editors nano vim which echo">
+                Gestión y Editores
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="main">
+
+        <!-- DISK RECOVERY MODULE -->
+        <section id="rescue-disk" class="section">
+            <span class="badge" style="background: rgba(220, 38, 38, 0.15); color: #ef4444;">Hardware Recovery</span>
+            <h1>Reparación de Discos y USB</h1>
+            <p>Herramientas profesionales para diagnosticar fallos físicos (Bad Sectors) y recuperar datos de unidades
+                moribundas.</p>
+
+            <!-- DIAGNOSE -->
+            <div class="card">
+                <h2>1. Diagnóstico de Salud (S.M.A.R.T.)</h2>
+                <p>Antes de intentar reparar, pregunta al disco cómo se siente. Si falla S.M.A.R.T., haz backup y
+                    reemplázalo.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">SMARTCTL (smartmontools)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo smartctl</span> <span
+                            class="hl-opt">-a</span> <span class="hl-arg">/dev/sda</span><br>
+                        <span class="hl-comment"># Busca "PASSED" o "FAILED" y mira
+                            "Reallocated_Sector_Ct"</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo smartctl</span> <span
+                            class="hl-opt">-t short</span> <span class="hl-arg">/dev/sda</span>
+                        <span class="hl-comment"># Ejecuta un test rápido (unos minutos)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FILESYSTEM REPAIR -->
+            <div class="card">
+                <h2>2. Reparar Sistema de Archivos (FSCK)</h2>
+                <p>Para errores lógicos (carpetas vacías, archivos corruptos). <strong>NUNCA usar en discos
+                        montados.</strong></p>
+
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">umount</span> <span
+                            class="hl-arg">/dev/sdb1</span> <span class="hl-comment"># Desmontar primero</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo fsck</span> <span
+                            class="hl-opt">-y</span> <span class="hl-arg">/dev/sdb1</span>
+                        <span class="hl-comment"># -y: Reparar todo automáticamente (Yes a todo)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAD SECTORS -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    💀 Recuperar de Sectores Defectuosos (Bad Clusters)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Si el disco tiene daño físico (ruidos, lentitud extrema), <strong>NO uses dd</strong>. Usa
+                        <strong>ddrescue</strong>.
+                    </p>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">DDRESCUE (El salvavidas)</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># 1. Instalar: sudo apt install gddrescue</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo ddrescue</span> <span
+                                class="hl-opt">-n</span> <span class="hl-arg">/dev/dañado</span> <span
+                                class="hl-arg">imagen.img</span> <span class="hl-arg">mapa.log</span>
+                            <span class="hl-comment"># -n: No intentar scrapear (modo rápido para sacar lo fácil
+                                primero)</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo ddrescue</span> <span
+                                class="hl-opt">-r3</span> <span class="hl-arg">/dev/dañado</span> <span
+                                class="hl-arg">imagen.img</span> <span class="hl-arg">mapa.log</span>
+                            <span class="hl-comment"># -r3: Reintentar sectores malos 3 veces (Solo después del paso
+                                1)</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--color-warn);">Advertencia: ddrescue clona el disco bit a
+                        bit. Necesitas otro disco con IGUAL o MAYOR espacio.</p>
+                </div>
+            </div>
+
+            <!-- USB RECOVERY -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    💾 Revivir USB (Formateo Profundo)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Si un USB no se monta o da errores raros, límpialo de raíz.</p>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">Opción A: Wipe (Peligroso)</div>
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo dd</span> <span
+                                class="hl-opt">if=/dev/zero</span> <span class="hl-opt">of=/dev/sdx</span> <span
+                                class="hl-opt">bs=4M status=progress</span>
+                            <span class="hl-comment"># Llena el USB de ceros. Adios virus, adios datos, adios
+                                particiones.</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">Opción B: Crear Nuevo Sistema</div>
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo mkfs.vfat</span> <span
+                                class="hl-arg">/dev/sdx1</span> <span class="hl-comment"># Formato compatible
+                                (FAT32)</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo mkfs.ext4</span> <span
+                                class="hl-arg">/dev/sdx1</span> <span class="hl-comment"># Formato Linux</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CUSTOM ICONS MODULE -->
+        <section id="custom-icons" class="section">
+            <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">Estética</span>
+            <h1>Personalizar Iconos de Apps</h1>
+            <p>¿No te gusta el icono de VS Code o Chrome? Cámbialo. En Linux (Ubuntu/GNOME), esto se hace editando los
+                archivos <code>.desktop</code>.</p>
+
+            <div class="card">
+                <h2>La Teoría: Archivos .desktop</h2>
+                <p>En Linux, los accesos directos no son .exe ni .lnk. Son archivos de texto con extensión
+                    <code>.desktop</code>. Contienen el nombre, el comando a ejecutar y <strong>la ruta del
+                        icono</strong>.
+                </p>
+
+                <h3 style="color: var(--text-muted); font-size: 1rem; margin-top: 1rem;">Ubicaciones Clave</h3>
+                <ul style="margin-left: 1.5rem; color: #bdc5d1; margin-bottom: 1rem;">
+                    <li><code>/usr/share/applications/</code>: Apps del sistema (Para todos los usuarios). Requiere
+                        Root.</li>
+                    <li><code>~/.local/share/applications/</code>: Apps de tu usuario. <strong>(Recomendado editar
+                            aquí)</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    🎨 Guía Paso a Paso (Método Manual)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Vamos a cambiar el icono de una app (ej: Firefox) sin romper el sistema.</p>
+
+                    <h3 style="margin-top: 1rem;">1. Consigue tu icono</h3>
+                    <p>Busca una imagen PNG o SVG. Guárdala en una carpeta segura, por ejemplo:</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span
+                                class="hl-opt">-p</span> <span class="hl-arg">~/.local/share/icons</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span
+                                class="hl-arg">mi_icono_cool.png</span> <span
+                                class="hl-arg">~/.local/share/icons/</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1rem;">2. Copia el .desktop a tu carpeta local</h3>
+                    <p>Nunca edites los archivos en <code>/usr/share</code> directamente. Cópialo a tu carpeta personal;
+                        el sistema le dará prioridad.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span
+                                class="hl-arg">/usr/share/applications/firefox.desktop</span> <span
+                                class="hl-arg">~/.local/share/applications/</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1rem;">3. Edita la línea "Icon"</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">nano</span> <span
+                                class="hl-arg">~/.local/share/applications/firefox.desktop</span><br><br>
+                            <span class="hl-comment"># Busca la línea que empieza por 'Icon=' y cámbiala:</span><br>
+                            <span class="hl-cmd">Icon</span>=<span
+                                class="hl-arg">/home/john/.local/share/icons/mi_icono_cool.png</span><br><br>
+                            <span class="hl-comment"># Guarda con Ctrl+O y sal con Ctrl+X</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1rem;">4. Refrescar</h3>
+                    <p>A veces los cambios son inmediatos. Si no:</p>
+                    <ul>
+                        <li>Presiona <code>Alt + F2</code>, escribe <code>r</code> y pulsa Enter (Solo en X11/GNOME).
+                        </li>
+                        <li>O cierra sesión y vuelve a entrar.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Alternativa Gráfica: MenuLibre</h2>
+                <p>Si prefieres no usar la terminal, existe una app genial para esto.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">menulibre</span><br>
+                        <span class="hl-comment"># Luego abre "Editor de Menús" en tus aplicaciones.</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SYSTEM DEBUG MODULE -->
+        <section id="sys-debug" class="section">
+            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Salud del Sistema</span>
+            <h1>Depuración y Mantenimiento</h1>
+            <p>Comandos sagrados para cuando "algo se rompe" o "el disco está lleno pero no veo archivos".</p>
+
+            <!-- GHOST FILES -->
+            <div class="card">
+                <h2>1. Archivos Fantasma (Espacio Disco)</h2>
+                <p>¿Borraste un archivo gigante pero <code>df -h</code> dice que el disco sigue lleno? Un proceso lo
+                    tiene "agarrado".</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lsof</span> <span class="hl-opt">+L1</span>
+                        <span class="hl-comment"># Lista archivos con 0 enlaces (borrados) pero abiertos.</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kill</span> <span class="hl-arg">-9</span>
+                        <span class="hl-opt">PID</span>
+                        <span class="hl-comment"># Mata el proceso (PID) para liberar el espacio realmente.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROCESS KILLING -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    🔪 Matar Procesos (Kill / Zombies)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Si una app se cuelga, no reinicies. Mátala.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-header">Identificar</div>
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">top</span> <span class="hl-comment"># O
+                                htop. Busca procesos en estado 'Z' (Zombie).</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">ps</span> <span
+                                class="hl-opt">aux</span> <span class="hl-opt">|</span> <span class="hl-cmd">grep</span>
+                            <span class="hl-arg">firefox</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">Ejecutar</div>
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">kill</span> <span
+                                class="hl-arg">1234</span> <span class="hl-comment"># Pide amablemente terminar
+                                (SIGTERM)</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">kill</span> <span
+                                class="hl-opt">-9</span> <span class="hl-arg">1234</span> <span class="hl-comment">#
+                                Fuerza bruta (SIGKILL). Úsalo si no responde.</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">pkill</span> <span
+                                class="hl-opt">-f</span> <span class="hl-arg">chrome</span> <span class="hl-comment">#
+                                Mata todo lo que se llame "chrome".</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PACKAGE REPAIR -->
+            <div class="card" style="border-left: 4px solid var(--color-sys);">
+                <h2>2. Reparar Actualizaciones (APT/DPKG)</h2>
+                <p>Si se fue la luz actualizando o ves "Errors were encountered while processing...", usa esto.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Reconfigurar paquetes a medio instalar</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg</span> <span
+                            class="hl-opt">--configure</span> <span class="hl-arg">-a</span><br><br>
+
+                        <span class="hl-comment"># 2. Arreglar dependencias rotas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt</span> <span
+                            class="hl-opt">--fix-broken</span> <span class="hl-arg">install</span><br><br>
+
+                        <span class="hl-comment"># 3. Limpiar caché corrupta</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt</span> <span
+                            class="hl-arg">clean</span> <span class="hl-opt">&&</span> <span class="hl-cmd">sudo
+                            apt</span> <span class="hl-arg">update</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FILE RECOVERY -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    ♻️ Recuperar Archivos Borrados
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Si borraste algo con <code>rm</code>, no va a la papelera. Es difícil volver, pero herramientas
+                        como <strong>TestDisk</strong> pueden ayudar.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                                class="hl-arg">testdisk</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo testdisk</span>
+                            <span class="hl-comment"># Sigue el asistente: [Create] -> Select Disk -> [Intel] ->
+                                [Advanced] -> [Undelete]</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.9rem;">Nota: Para recuperación forense de fotos, usa <code>photorec</code>
+                        (viene con testdisk).</p>
+                </div>
+            </div>
+
+            <!-- TERMINAL RECORDING (HISTORY & SCRIPT) -->
+            <div class="card">
+                <h2>3. Auditoría: Grabar Historial</h2>
+                <p>Para ver qué hiciste ayer o grabar una sesión completa para mostrársela a un experto.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Exportar Historial Completo</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Guardar lo que tienes en pantalla (memoria):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">history</span> <span
+                            class="hl-opt">></span> <span class="hl-arg">mis_comandos.txt</span><br><br>
+
+                        <span class="hl-comment"># 2. Leer TODO el historial histórico (archivo oculto):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span
+                            class="hl-arg">~/.bash_history</span> <span class="hl-opt">></span> <span
+                            class="hl-arg">historial_completo.txt</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Grabar Sesión en Vivo (Script)</div>
+                    <div class="cmd-content">
+                        <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.5rem;">Graba todo lo que sale por
+                            pantalla (inputs y outputs) hasta que escribas exit.</p>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">script</span> <span
+                            class="hl-arg">auditoria.log</span><br>
+                        <span class="hl-comment"># ... escribe tus comandos peligrosos ...</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">exit</span><br>
+                        <span class="hl-comment"># El archivo 'auditoria.log' tendrás todo grabado.</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SOFTWARE INSTALLATION MODULE -->
+        <section id="devtools" class="section">
+            <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Instalación</span>
+            <h1>Software de Desarrollo</h1>
+            <p>Guía rápida para instalar las herramientas esenciales. Usamos Snap cuando es fácil, y APT cuando es
+                robusto.</p>
+
+            <div class="info-grid">
+                <!-- VS CODE -->
+                <div class="card">
+                    <h3 style="color: #23a9f2;">Visual Studio Code</h3>
+                    <p style="font-size: 0.9rem;">El editor estándar. Versión oficial Snap.</p>
+                    <div class="cmd-box" style="margin:0">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
+                                class="hl-arg">code</span> <span class="hl-opt">--classic</span>
+                            <span class="hl-comment"># --classic: Permite acceso total a tus archivos (necesario para
+                                programar).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHROME -->
+                <div class="card">
+                    <h3 style="color: #ea4335;">Google Chrome</h3>
+                    <p style="font-size: 0.9rem;">Dos opciones.</p>
+                    <div class="cmd-box" style="margin:0">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># A. Chromium (Snap - Open Source):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
+                                class="hl-arg">chromium</span><br><br>
+                            <span class="hl-comment"># B. Chrome Oficial (.deb):</span><br>
+                            <span class="hl-comment"># Descarga el .deb de la web de Google y luego:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                                class="hl-arg">./google-chrome*.deb</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CURSOR AI -->
+            <div class="card">
+                <h2>Cursor AI Editor</h2>
+                <p><strong>No existe Snap oficial.</strong> Se usa un formato llamado <code>.AppImage</code>.</p>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Instrucciones AppImage
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <ol style="margin-left: 1.5rem; color: #bdc5d1; margin-bottom: 1rem;">
+                            <li>Descarga el archivo desde <a href="https://cursor.com" target="_blank"
+                                    style="color:var(--color-primary)">cursor.com</a>.</li>
+                            <li>Dale permisos de ejecución (Click derecho -> Propiedades -> Permisos -> "Permitir
+                                ejecutar").</li>
+                            <li>O por terminal:</li>
+                        </ol>
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                                    class="hl-arg">Descargas</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span
+                                    class="hl-opt">+x</span> <span class="hl-arg">cursor-*.AppImage</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">./cursor-*.AppImage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LATEX SUITE -->
+            <div class="card">
+                <h2>Suite LaTeX Completa</h2>
+                <p>Para tesis y papers. Instalaremos <strong>TexLive Full</strong> (Base) y <strong>TeXstudio</strong>
+                    (Editor).</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">1. El Motor (TexLive Full)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># El snap es incompleto. Usa APT (Pesa ~5GB, paciencia):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">texlive-full</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">2. El Editor (TeXstudio)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Instala la última versión vía Snap:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
+                            class="hl-arg">texstudio</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SOFTWARE INSTALLATION MODULE -->
+        <section id="devtools" class="section">
+            <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Instalación</span>
+            <h1>Software de Desarrollo</h1>
+            <p>Guía rápida para instalar las herramientas esenciales. Usamos Snap cuando es fácil, y APT cuando es
+                robusto.</p>
+
+            <div class="info-grid">
+                <!-- VS CODE -->
+                <div class="card">
+                    <h3 style="color: #23a9f2;">Visual Studio Code</h3>
+                    <p style="font-size: 0.9rem;">El editor estándar. Versión oficial Snap.</p>
+                    <div class="cmd-box" style="margin:0">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
+                                class="hl-arg">code</span> <span class="hl-opt">--classic</span>
+                            <span class="hl-comment"># --classic: Permite acceso total a tus archivos (necesario para
+                                programar).</span>
+                        </div>
+                    </div>
+
+                    <!-- UNINSTALL VSCODE -->
+                    <div class="accordion" style="margin-top: 1rem;">
+                        <div class="accordion-header" onclick="toggleAccordion(this)"
+                            style="font-size: 0.85rem; padding: 0.5rem;">
+                            🗑️ Desinstalar VS Code
+                            <span>+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="cmd-box">
+                                <div class="cmd-content">
+                                    <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap remove</span> <span
+                                        class="hl-arg">code</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHROME -->
+                <div class="card">
+                    <h3 style="color: #ea4335;">Google Chrome</h3>
+                    <p style="font-size: 0.9rem;">Dos opciones.</p>
+                    <div class="cmd-box" style="margin:0">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># A. Chromium (Snap - Open Source):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
+                                class="hl-arg">chromium</span><br><br>
+                            <span class="hl-comment"># B. Chrome Oficial (.deb):</span><br>
+                            <span class="hl-comment"># Descarga el .deb de la web de Google y luego:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                                class="hl-arg">./google-chrome*.deb</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNINSTALL CHROME -->
+                <div class="accordion" style="margin-top: 1rem;">
+                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                        style="font-size: 0.85rem; padding: 0.5rem;">
+                        🗑️ Desinstalar Chrome
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-comment"># Si usaste Snap:</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap remove</span> <span
+                                    class="hl-arg">chromium</span><br><br>
+                                <span class="hl-comment"># Si usaste .deb (Apt):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                                    class="hl-arg">google-chrome-stable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- CURSOR AI -->
+            <div class="card">
+                <h2>Cursor AI Editor</h2>
+                <p><strong>No existe Snap oficial.</strong> Se usa un formato llamado <code>.AppImage</code>.</p>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Instrucciones AppImage
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <ol style="margin-left: 1.5rem; color: #bdc5d1; margin-bottom: 1rem;">
+                            <li>Descarga el archivo desde <a href="https://cursor.com" target="_blank"
+                                    style="color:var(--color-primary)">cursor.com</a>.</li>
+                            <li>Dale permisos de ejecución (Click derecho -> Propiedades -> Permisos -> "Permitir
+                                ejecutar").</li>
+                            <li>O por terminal:</li>
+                        </ol>
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                                    class="hl-arg">Descargas</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span
+                                    class="hl-opt">+x</span> <span class="hl-arg">cursor-*.AppImage</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">./cursor-*.AppImage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!-- UNINSTALL CURSOR -->
+            <div class="accordion" style="margin-top: 1rem;">
+                <div class="accordion-header" onclick="toggleAccordion(this)"
+                    style="font-size: 0.85rem; padding: 0.5rem;">
+                    🗑️ Desinstalar Cursor
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p style="font-size: 0.8rem;">Al ser portable, solo borra el archivo AppImage.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span
+                                class="hl-arg">~/Descargas/cursor-*.AppImage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- LATEX SUITE -->
+            <div class="card">
+                <h2>Suite LaTeX Completa</h2>
+                <p>Para tesis y papers. Instalaremos <strong>TexLive Full</strong> (Base) y <strong>TeXstudio</strong>
+                    (Editor).</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">1. El Motor (TexLive Full)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># El snap es incompleto. Usa APT (Pesa ~5GB, paciencia):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">texlive-full</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">2. El Editor (TeXstudio)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Instala la última versión vía Snap:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
+                            class="hl-arg">texstudio</span>
+                    </div>
+                </div>
+
+                <!-- UNINSTALL LATEX -->
+                <div class="accordion" style="margin-top: 1rem;">
+                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                        style="font-size: 0.85rem; padding: 0.5rem;">
+                        🗑️ Desinstalar LaTeX & TeXstudio
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-comment"># Borrar TeXstudio (Snap):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap remove</span> <span
+                                    class="hl-arg">texstudio</span><br><br>
+                                <span class="hl-comment"># Borrar TexLive (Apt - Libera mucho espacio):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                                    class="hl-opt">--purge</span> <span class="hl-arg">texlive-full</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- DATA SCIENCE & OFFICE MODULE -->
+        <section id="datascience" class="section">
+            <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">Estadística y
+                Oficina</span>
+            <h1>Data Science & Office</h1>
+            <p>Herramientas para análisis estadístico (R) y ofimática avanzada (LibreOffice).</p>
+
+            <!-- R LANGUAGE & COMMANDER -->
+            <div class="card">
+                <h2>1. Lenguaje R & RCommander</h2>
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 1: Añadir Repo Universitario (CRAN)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Clave de Seguridad (GPG Key):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wget -qO-
+                            https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a
+                            /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc</span><br><br>
+
+                        <span class="hl-comment"># 2. Añadir Repo (Univ. Michigan):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository</span> <span
+                            class="hl-arg">"deb https://mirror.its.umich.edu/cran/bin/linux/ubuntu $(lsb_release
+                            -sc)-cran40/"</span><br><br>
+
+                        <span class="hl-comment"># 3. Instalar R (Última versión 4.x):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">r-base r-base-dev</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 2: Instalar R Commander</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Entra a la consola de R como root para instalar
+                            globalmente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo R</span><br><br>
+
+                        <span class="hl-comment"># Dentro de R (verás el prompt >):</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span
+                            class="hl-arg">"Rcmdr"</span>, dependencies=<span class="hl-opt">TRUE</span>)<br>
+                        <span class="hl-comment"># Elige un mirror (ej: 0-Cloud) si te pregunta.</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">q()</span> <span class="hl-comment"># Para
+                            salir (No guardes workspace).</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 3: Ejecutar R Commander</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">R</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">library</span>(<span
+                            class="hl-arg">Rcmdr</span>)
+                    </div>
+                </div>
+
+                <!-- UNINSTALL R -->
+                <div class="accordion" style="margin-top: 1rem;">
+                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                        style="font-size: 0.85rem; padding: 0.5rem;">
+                        🗑️ Desinstalar R & Packages
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-comment"># 1. Borrar paquete Rcmdr (Dentro de R console):</span><br>
+                                <span class="hl-prompt">></span> <span class="hl-cmd">remove.packages</span>(<span
+                                    class="hl-arg">"Rcmdr"</span>)<br><br>
+                                <span class="hl-comment"># 2. Borrar R del sistema (Terminal):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                                    class="hl-opt">--purge</span> <span class="hl-arg">r-base r-base-dev</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RSTUDIO -->
+            <div class="card">
+                <h2>2. RStudio Desktop</h2>
+                <p>El IDE profesional. Se instala manualmente vía <code>.deb</code>.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Ve a la web oficial y descarga el .deb para Ubuntu
+                            22/24:</span><br>
+                        <span class="hl-prompt">#</span> <a href="https://posit.co/download/rstudio-desktop/"
+                            target="_blank"
+                            style="color:var(--color-primary); text-decoration: underline;">https://posit.co/download/rstudio-desktop/</a><br><br>
+
+                        <span class="hl-comment"># 2. Instala el archivo descargado:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                            class="hl-arg">~/Descargas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">./rstudio-*.deb</span>
+                    </div>
+                </div>
+
+                <!-- UNINSTALL RSTUDIO -->
+                <div class="accordion" style="margin-top: 1rem;">
+                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                        style="font-size: 0.85rem; padding: 0.5rem;">
+                        🗑️ Desinstalar RStudio
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                                    class="hl-opt">--purge</span> <span class="hl-arg">rstudio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIBREOFFICE -->
+            <div class="card">
+                <h2>3. LibreOffice (Última Versión)</h2>
+                <p>Para tener el "Excel" de Linux siempre al día (más nuevo que el que trae Ubuntu).</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Añadir PPA Oficial (Fresh):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository</span> <span
+                            class="hl-arg">ppa:libreoffice/ppa</span><br><br>
+
+                        <span class="hl-comment"># Actualizar e Instalar:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">libreoffice</span>
+                    </div>
+                </div>
+
+                <!-- UNINSTALL LIBREOFFICE -->
+                <div class="accordion" style="margin-top: 1rem;">
+                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                        style="font-size: 0.85rem; padding: 0.5rem;">
+                        🗑️ Desinstalar LibreOffice
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-comment"># Borrar LibreOffice y limpiar config:</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                                    class="hl-opt">--purge</span> <span class="hl-arg">libreoffice*</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove</span><br><br>
+                                <span class="hl-comment"># (Opcional) Quitar el PPA:</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository</span>
+                                <span class="hl-opt">--remove</span> <span class="hl-arg">ppa:libreoffice/ppa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ANACONDA MODULE -->
+        <section id="anaconda" class="section">
+            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Data Science</span>
+            <h1>Anaconda Python Distribution</h1>
+            <p>La plataforma más popular para Ciencia de Datos y Machine Learning en Python.</p>
+
+            <div class="card">
+                <h2>1. Instalación de Anaconda</h2>
+                <div class="cmd-box">
+                    <div class="cmd-header">Descarga e Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Descargar el instalador (Revisa la versión en su web):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span
+                            class="hl-arg">https://repo.anaconda.com/archive/Anaconda3-2023.09-0-Linux-x86_64.sh</span><br><br>
+
+                        <span class="hl-comment"># 2. Verificar integridad (Opcional pero recomendado):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sha256sum</span> <span
+                            class="hl-arg">Anaconda3-*.sh</span><br><br>
+
+                        <span class="hl-comment"># 3. Ejecutar el instalador:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span
+                            class="hl-arg">Anaconda3-*.sh</span><br>
+                        <span class="hl-comment"># Sigue las instrucciones: 'yes' a la licencia, Enter para ubicación,
+                            'yes' para init.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. Gestión de Entornos (Conda)</h2>
+                <p>Crea espacios aislados para tus proyectos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear un entorno nuevo (llamado 'mi_proyecto'):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda create</span> <span
+                            class="hl-opt">--name</span> <span class="hl-arg">mi_proyecto</span> <span
+                            class="hl-arg">python=3.9</span><br><br>
+
+                        <span class="hl-comment"># Activar el entorno:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda activate</span> <span
+                            class="hl-arg">mi_proyecto</span><br><br>
+
+                        <span class="hl-comment"># Instalar librerías:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda install</span> <span
+                            class="hl-arg">pandas numpy matplotlib</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. Jupyter Notebooks</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter notebook</span><br>
+                        <span class="hl-comment"># Se abrirá en tu navegador automáticamente.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE: SYSTEM INFO & HARDWARE -->
+        <section id="essentials" class="section">
+            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">System Info</span>
+            <h1>Información del Sistema</h1>
+            <p>Comandos esenciales para conocer tu hardware y estado del sistema (Hostinger/Kinsta).</p>
+
+            <div class="info-grid">
+                <!-- SYSTEM SPECS -->
+                <div class="card">
+                    <h3>Núcleo y Distribución</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Versión del Kernel:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">uname -a</span><br><br>
+                            <span class="hl-comment"># Información de la Distro:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">hostnamectl</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DISK & RAM -->
+                <div class="card">
+                    <h3>Espacio y Memoria</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># RAM (Free/Used - Human Readable):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">free -h</span><br><br>
+                            <span class="hl-comment"># Espacio en Disco (Filesystems):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">df -h</span><br><br>
+                            <span class="hl-comment"># Tamaño de una carpeta específica:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">du -sh</span> <span
+                                class="hl-arg">/home/usuario/Fotos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEOFETCH -->
+                <div class="card">
+                    <h3>Neofetch (Visual)</h3>
+                    <p>Muestra el logo de tu distro e info resumen. Muy popular.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Instalar si no lo tienes:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                                class="hl-arg">neofetch</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">neofetch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE: TEXT & FILES ADVANCED -->
+        <section id="text-files" class="section">
+            <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Text Ops</span>
+            <h1>Procesamiento de Texto y Archivos</h1>
+            <p>Herramientas poderosas para manipular datos y gestionar archivos (Contabo/Hostinger).</p>
+
+            <!-- READING -->
+            <div class="card">
+                <h2>Lectura de Archivos</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Primeras 10 líneas (Cabeceras):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">head</span> <span
+                            class="hl-arg">archivo.txt</span><br><br>
+                        <span class="hl-comment"># Últimas 10 líneas (Logs):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span
+                            class="hl-arg">error.log</span><br><br>
+                        <span class="hl-comment"># Seguir un log en tiempo real (Muy útil):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tail -f</span> <span
+                            class="hl-arg">/var/log/syslog</span><br><br>
+                        <span class="hl-comment"># Leer con scroll (Salir con 'q'):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">less</span> <span
+                            class="hl-arg">documento_largo.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROCESSING -->
+            <div class="card">
+                <h2>Procesamiento de Datos</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Contar líneas, palabras y caracteres:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wc</span> <span
+                            class="hl-arg">archivo.txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wc -l</span> <span
+                            class="hl-arg">archivo.txt</span> <span class="hl-comment"># Solo líneas</span><br><br>
+                        <span class="hl-comment"># Ordenar contenido alfabéticamente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span
+                            class="hl-arg">lista.txt</span><br><br>
+                        <span class="hl-comment"># Ver diferencias entre dos archivos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">diff</span> <span
+                            class="hl-arg">version1.txt version2.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADVANCED FILES -->
+            <div class="card">
+                <h2>Utilidades de Archivo</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear Enlace Simbólico (Acceso directo):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ln -s</span> <span
+                            class="hl-arg">/ruta/original /ruta/enlace</span><br><br>
+                        <span class="hl-comment"># Comprimir (Zip):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">zip</span> <span class="hl-opt">-r</span>
+                        <span class="hl-arg">archivo.zip carpeta/</span><br><br>
+                        <span class="hl-comment"># Borrado seguro (Sobreescribe datos):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">shred</span> <span class="hl-opt">-u</span>
+                        <span class="hl-arg">secreto.txt</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE: MANAGEMENT & EDITORS -->
+        <section id="sys-mgmt" class="section">
+            <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">Admin</span>
+            <h1>Gestión y Editores</h1>
+            <p>Control del sistema y edición de configuración.</p>
+
+            <div class="info-grid">
+                <!-- POWER -->
+                <div class="card">
+                    <h3>Control de Energía</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Apagar inmediatamente:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo shutdown -h now</span><br><br>
+                            <span class="hl-comment"># Reiniciar:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo reboot</span><br><br>
+                            <span class="hl-comment"># Cancelar un apagado programado:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo shutdown -c</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EDITORS -->
+                <div class="card">
+                    <h3>Editores de Terminal</h3>
+                    <div class="accordion">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            Nano (Fácil) vs Vim (Avanzado)
+                            <span>+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p><strong>Nano:</strong> Ideal para empezar.</p>
+                            <ul>
+                                <li><code>nano archivo.txt</code>: para abrir.</li>
+                                <li><code>Ctrl + O</code>: Guardar.</li>
+                                <li><code>Ctrl + X</code>: Salir.</li>
+                            </ul>
+                            <p style="margin-top:1rem;"><strong>Vim:</strong> Potente pero distinto.</p>
+                            <ul>
+                                <li><code>vim archivo.txt</code>: para abrir.</li>
+                                <li>Presiona <code>i</code> para modo <strong>Insertar</strong> (Escribir).</li>
+                                <li>Presiona <code>Esc</code> para salir de modo escritura.</li>
+                                <li>Escribe <code>:wq</code> y Enter para <strong>Guardar y Salir</strong>.</li>
+                                <li>Escribe <code>:q!</code> y Enter para <strong>Salir sin guardar</strong>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEARCH COMMANDS -->
+                <div class="card">
+                    <h3>Ubicar Comandos</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># ¿Dónde está instalado python?</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">which</span> <span
+                                class="hl-arg">python3</span><br><br>
+                            <span class="hl-comment"># Buscar binario, fuente y manual:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">whereis</span> <span
+                                class="hl-arg">nano</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EMERGENCY MODULE -->
+        <section id="rescue-grub" class="section">
+            <span class="badge" style="background: rgba(251, 146, 60, 0.15); color: var(--color-warn);">Crítico</span>
+            <h1>Recuperación del Sistema (Boot Repair)</h1>
+            <p>Si tu Linux no arranca y ves una pantalla negra con <code>grub rescue></code> o un mensaje de error, no
+                entres en pánico. Aquí tienes cómo solucionarlo.</p>
+
+            <!-- SCENARIO A: GRUB RESCUE PROMPT -->
+            <div class="card" style="border-left: 4px solid var(--color-warn);">
+                <h2 style="margin-top:0; border:none; font-size:1.5rem; color: var(--color-warn);">Caso A: El prompt
+                    "grub rescue>"</h2>
+                <p>Esto ocurre cuando GRUB se ha corrompido o movido. Estás en una mini-shell de emergencia.</p>
+
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Paso 1: Localizar tu partición Linux</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">grub rescue></span><span class="hl-cmd">ls</span>
+                        <span class="hl-comment"># Salida: (hd0) (hd0,msdos1) (hd0,msdos1)...</span><br><br>
+
+                        <span class="hl-comment"># Prueba hacer 'ls' en cada una hasta ver carpetas de linux (etc, boot,
+                            home)</span><br>
+                        <span class="hl-prompt">grub rescue></span><span class="hl-cmd">ls</span> <span
+                            class="hl-arg">(hd0,msdos1)/</span>
+                        <span class="hl-comment"># Si ves "error: unknown filesystem", esa NO es.</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Paso 2: Configurar y Arrancar</h3>
+                <p>Supongamos que tu Linux está en <code>(hd0,msdos1)</code>:</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">grub rescue></span><span class="hl-cmd">set</span> <span
+                            class="hl-arg">root=(hd0,msdos1)</span><br>
+                        <span class="hl-prompt">grub rescue></span><span class="hl-cmd">set</span> <span
+                            class="hl-arg">prefix=(hd0,msdos1)/boot/grub</span><br>
+                        <span class="hl-prompt">grub rescue></span><span class="hl-cmd">insmod</span> <span
+                            class="hl-arg">normal</span><br>
+                        <span class="hl-prompt">grub rescue></span><span class="hl-cmd">normal</span>
+                    </div>
+                </div>
+                <p>Si esto funciona, tu PC arrancará. <strong>IMPORTANTE:</strong> Al entrar a Linux, abre una terminal
+                    y ejecuta <code>sudo update-grub</code> y <code>sudo grub-install /dev/sdX</code> para hacerlo
+                    permanente.</p>
+            </div>
+
+            <!-- SCENARIO B: LIVE USB CHROOT -->
+            <div class="card">
+                <h2 style="margin-top:0; border:none; font-size:1.5rem;">Caso B: Método "Live USB" (Chroot)</h2>
+                <p>Si el método anterior falla, necesitas un USB de instalación (Ubuntu, Fedora, etc.).</p>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        🛠️ Guía Paso a Paso (Reinstalar GRUB)
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>1. Arranca desde el USB ("Try Ubuntu").</p>
+                        <p>2. Abre una terminal (Ctrl+Alt+T) y averigua tu partición:</p>
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">lsblk</span>
+                                <span class="hl-comment"># Busca la partición grande (ej: /dev/sda2)</span>
+                            </div>
+                        </div>
+
+                        <p>3. Monta tu sistema en /mnt:</p>
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo mount</span> <span
+                                    class="hl-arg">/dev/sda2</span> <span class="hl-arg">/mnt</span>
+                                <span class="hl-comment"># Si tienes partición EFI separada (boot), móntala
+                                    también:</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo mount</span> <span
+                                    class="hl-arg">/dev/sda1</span> <span class="hl-arg">/mnt/boot/efi</span>
+                            </div>
+                        </div>
+
+                        <p>4. Reinstala GRUB:</p>
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-comment"># Opción rápida (Boot Repair automática):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt-add-repository</span>
+                                <span class="hl-arg">ppa:yannubuntu/boot-repair</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update && sudo apt install
+                                    boot-repair</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">boot-repair</span><br><br>
+
+                                <span class="hl-comment"># Opción Manual (Pro):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo grub-install</span> <span
+                                    class="hl-opt">--boot-directory=/mnt/boot</span> <span
+                                    class="hl-arg">/dev/sda</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- INTRODUCION -->
+        <section id="intro-linux" class="section active">
+            <span class="badge badge-core">Fundamentos</span>
+            <h1>¿Qué es Linux Realmente?</h1>
+            <p>Linux no es solo un sistema operativo; es el motor que impulsa internet, supercomputadoras, dispositivos
+                Android y, cada vez más, el desarrollo de software moderno.</p>
+
+            <div class="info-grid">
+                <div class="card">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">El Kernel</h3>
+                    <p style="font-size: 0.9rem;">Es el "corazón". Gestiona la CPU, la memoria y los dispositivos. Fue
+                        creado por Linus Torvalds en 1991. Cuando dices "Linux", técnicamente hablas del Kernel.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--color-file); margin-bottom: 0.5rem;">GNU/Linux</h3>
+                    <p style="font-size: 0.9rem;">El Kernel solo no sirve de mucho. Necesita herramientas (compiladores,
+                        shell, utilidades). Estas vinieron del proyecto GNU. Juntos, forman el sistema operativo
+                        completo.</p>
+                </div>
+            </div>
+
+            <h2>Filosofía Open Source</h2>
+            <p>A diferencia de Windows o macOS, Linux es <strong>código abierto</strong>. Cualquiera puede ver cómo está
+                hecho, modificarlo y redistribuirlo. Esto ha creado una comunidad global masiva que lo mejora
+                constantemente.</p>
+        </section>
+
+        <section id="intro-distros" class="section">
+            <h1>Distribuciones (Distros)</h1>
+            <p>Como el Kernel de Linux es libre, muchas empresas y comunidades crean sus propias versiones empaquetadas.
+                Estas se llaman "Distros".</p>
+            <div class="card">
+                <ul>
+                    <li style="margin-bottom: 1rem;"><strong>Debian / Ubuntu:</strong> Las más populares para
+                        principiantes y servidores. Muy estables.</li>
+                    <li style="margin-bottom: 1rem;"><strong>Red Hat / CentOS / Fedora:</strong> Enfocadas en el mundo
+                        empresarial corporativo.</li>
+                    <li><strong>Arch Linux:</strong> Para usuarios avanzados que quieren construir su sistema desde cero
+                        ("Do It Yourself").</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SISTEMA DE ARCHIVOS -->
+        <section id="fs-hierarchy" class="section">
+            <span class="badge badge-imp">Vital</span>
+            <h1>La Jerarquía de Archivos</h1>
+            <p>En Windows tienes C:\, D:\, etc. En Linux, todo empieza en un solo lugar: <strong>La Raíz (The
+                    Root)</strong>, representada por una barra <code>/</code>.</p>
+
+            <div class="card">
+                <h3>El Árbol de Directorios</h3>
+                <div class="tree-diagram">
+                    <div class="tree-node"><span class="node-name">/</span> <span class="node-desc">RAÍZ del sistema
+                            (The Root).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/bin</span> <span
+                            class="node-desc">Binarios (programas esenciales como ls, cp).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/etc</span> <span
+                            class="node-desc">Configuración del sistema (red, usuarios, wifi).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/home</span> <span
+                            class="node-desc">Carpeta personal de usuarios (Tus documentos).</span></div>
+                    <div class="tree-node" style="padding-left: 40px;"><span class="node-name">/john</span> <span
+                            class="node-desc">Tu carpeta personal (~).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/var</span> <span
+                            class="node-desc">Archivos variables (Logs del sistema, webs).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/tmp</span> <span
+                            class="node-desc">Archivos temporales (se borran al reiniciar).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/dev</span> <span
+                            class="node-desc">Dispositivos (discos duros, terminales).</span></div>
+                    <div class="tree-node" style="padding-left: 20px;"><span class="node-name">/proc</span> <span
+                            class="node-desc">Información del Kernel (CPU, Memoria).</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fs-nav" class="section">
+            <h1>Navegación</h1>
+            <p>Aprende a moverte sin el ratón. Estos son los comandos que usarás el 90% del tiempo.</p>
+
+            <!-- PWD -->
+            <div class="cmd-box">
+                <div class="cmd-header">
+                    <span>Saber dónde estoy</span>
+                    <button class="copy-btn" onclick="copyText('pwd')">Copiar</button>
+                </div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">pwd</span>
+                    <span class="hl-comment"># Print Working Directory (Imprimir directorio actual)</span>
+                    <span class="hl-comment"># Salida ejemplo: /home/john</span>
+                </div>
+            </div>
+
+            <!-- CD -->
+            <div class="cmd-box">
+                <div class="cmd-header">
+                    <span>CD (Change Directory)</span>
+                    <button class="copy-btn" onclick="copyText('cd-cmds')">Copiar</button>
+                </div>
+                <div class="cmd-content" id="cd-cmds">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">Descargas</span>
+                    <span class="hl-comment"># Entrar en la carpeta Descargas</span><br><br>
+
+                    <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">..</span>
+                    <span class="hl-comment"># Subir un nivel (salir de la carpeta actual)</span><br><br>
+
+                    <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">~</span>
+                    <span class="hl-comment"># Ir directamente a tu carpeta Home (/home/tu_usuario)</span>
+                </div>
+            </div>
+
+            <!-- LS -->
+            <div class="cmd-box">
+                <div class="cmd-header">
+                    <span>LS (Listar archivos)</span>
+                    <button class="copy-btn" onclick="copyText('ls-cmds')">Copiar</button>
+                </div>
+                <div class="cmd-content" id="ls-cmds">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-la</span>
+                    <span class="hl-comment"># -l: Lista detallada (permisos, tamaño)</span>
+                    <span class="hl-comment"># -a: Muestra ocultos (archivos que inician con .)</span><br><br>
+
+                    <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-lh</span>
+                    <span class="hl-comment"># -h: Human readable (tamaños en KB, MB, GB)</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="fs-manip" class="section">
+            <h1>Gestión Básica</h1>
+            <p>Crear, copiar y manipular archivos y directorios básicos.</p>
+
+            <div class="info-grid">
+                <!-- MKDIR -->
+                <div class="cmd-box" style="margin:0">
+                    <div class="cmd-header">Crear Carpeta (MKDIR)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span
+                            class="hl-arg">Proyectos</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span>
+                        <span class="hl-arg">app/src/imgs</span>
+                        <span class="hl-comment"># -p crea toda la ruta</span>
+                    </div>
+                </div>
+                <!-- TOUCH -->
+                <div class="cmd-box" style="margin:0">
+                    <div class="cmd-header">Crear Archivo (TOUCH)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span
+                            class="hl-arg">notas.txt</span><br>
+                        <span class="hl-comment"># Actualiza fecha si ya existe</span>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <div class="cmd-box">
+                <div class="cmd-header">CP / MV / RM</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-r</span> <span
+                        class="hl-arg">carpeta1/</span> <span class="hl-arg">carpeta_copia/</span>
+                    <span class="hl-comment"># Copiar recursivamente (para carpetas)</span><br><br>
+
+                    <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">viejo.txt</span>
+                    <span class="hl-arg">nuevo.txt</span>
+                    <span class="hl-comment"># Renombrar (mover al mismo sitio con otro nombre)</span><br><br>
+
+                    <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-opt">-rf</span> <span
+                        class="hl-arg">carpeta_peligrosa/</span>
+                    <span class="hl-comment"># Eliminar carpeta y contenido a la fuerza (-f)</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="fs-advanced" class="section">
+            <span class="badge badge-imp">Deep Dive</span>
+            <h1>Archivos Avanzado</h1>
+            <p>Compresión, enlaces simbólicos y búsqueda profunda.</p>
+
+            <!-- ACORDEON COMPRESION -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    📦 Archivos y Compresión (tar, zip)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>En Linux raramente usas .zip. El estándar es <strong>.tar.gz</strong> (Tarjeta de cinta + Gzip).
+                    </p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span
+                                class="hl-opt">-czvf</span> <span class="hl-arg">backup.tar.gz</span> <span
+                                class="hl-arg">/carpeta</span>
+                            <span class="hl-comment"># c=Create, z=Gzip, v=Verbose, f=File</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span
+                                class="hl-opt">-xzvf</span> <span class="hl-arg">backup.tar.gz</span>
+                            <span class="hl-comment"># x=Extract</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">unzip</span> <span
+                                class="hl-arg">archivo.zip</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACORDEON ENLACES -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    🔗 Enlaces Simbólicos (ln)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Son como los "Accesos directos" de Windows pero más potentes.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span
+                                class="hl-opt">-s</span> <span class="hl-arg">/ruta/archivo_original</span> <span
+                                class="hl-arg">enlace_simbolico</span>
+                            <span class="hl-comment"># -s = Soft Link (Simbólico). Sin -s crea un Hard Link.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACORDEON BUSQUEDA -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    🔍 Búsqueda Profunda (find, locate)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/var</span> <span class="hl-opt">-name</span> <span
+                                class="hl-arg">"*.log"</span> <span class="hl-opt">-size</span> <span
+                                class="hl-arg">+50M</span>
+                            <span class="hl-comment"># Busca logs de más de 50MB en /var</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span
+                                class="hl-arg">nginx.conf</span>
+                            <span class="hl-comment"># Búsqueda instantánea (usa una base de datos indexada).</span>
+                            <span class="hl-comment"># Requiere 'sudo updatedb' antes.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO -->
+            <div class="cmd-box">
+                <div class="cmd-header">Lectura de Archivos (Head/Tail)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">head</span> <span class="hl-opt">-n 5</span>
+                    <span class="hl-arg">archivo.txt</span> <span class="hl-comment"># Primeras 5 líneas</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-n 5</span>
+                    <span class="hl-arg">archivo.txt</span> <span class="hl-comment"># Últimas 5 líneas</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-f</span>
+                    <span class="hl-arg">server.log</span> <span class="hl-comment"># (Follow) Ver logs en tiempo
+                        real</span>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- TERMINAL -->
+        <section id="term-shell" class="section">
+            <h1>Shell Basics</h1>
+            <p>Diferencias entre shells y trucos básicos.</p>
+            <ul>
+                <li><strong>Bash:</strong> Estándar. Scripts portables.</li>
+                <li><strong>Zsh:</strong> Interactivo. Plugins como "Oh My Zsh".</li>
+            </ul>
+        </section>
+
+        <section id="term-pipes" class="section">
+            <span class="badge badge-core">Essential</span>
+            <h1>Pipes, Redirección y Jobs</h1>
+
+            <!-- REDIRECCION -->
+            <div class="card">
+                <h3>Redirección de Flujo (Streams)</h3>
+                <p>Linux tiene 3 canales: <strong>STDIN (0)</strong>, <strong>STDOUT (1)</strong>, <strong>STDERR
+                        (2)</strong>.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">></span>
+                        <span class="hl-arg">lista_archivos.txt</span>
+                        <span class="hl-comment"># > Guarda la salida en un archivo (Sobreescribe)</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"Nueva
+                            linea"</span> <span class="hl-opt">>></span> <span class="hl-arg">notas.txt</span>
+                        <span class="hl-comment"># >> Añade al final del archivo (Append)</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">comando_error</span> <span
+                            class="hl-opt">2></span> <span class="hl-arg">errores.log</span>
+                        <span class="hl-comment"># 2> Guarda solo los errores</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JOBS -->
+            <div class="card">
+                <h3>Control de Trabajos (Jobs)</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sleep 100</span> <span
+                            class="hl-opt">&</span>
+                        <span class="hl-comment"># & Ejecuta en segundo plano (Background)</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jobs</span>
+                        <span class="hl-comment"># Lista trabajos en segundo plano</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">fg</span> <span class="hl-arg">%1</span>
+                        <span class="hl-comment"># Trae el trabajo 1 al primer plano (Foreground)</span>
+
+                        <span class="hl-comment"># Ctrl+Z: Pausar proceso actual</span>
+                        <span class="hl-comment"># Ctrl+C: Matar proceso actual</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORIAL -->
+            <div class="cmd-box">
+                <div class="cmd-header">Historial y Trucos</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">history</span> <span class="hl-comment"># Ver
+                        comandos anteriores</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">!!</span> <span class="hl-comment"># Repetir
+                        último comando</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">sudo !!</span> <span class="hl-comment">#
+                        "¡Mierda, olvidé sudo!" -> Repite último con sudo</span><br>
+                    <span class="hl-comment"># Ctrl+R: Buscar en el historial interactivamente</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="term-scripting" class="section">
+            <h1>Scripting Básico</h1>
+            <div class="cmd-box">
+                <div class="cmd-header">alias (Atajos)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">alias</span> <span
+                        class="hl-arg">ll</span>=<span class="hl-arg">'ls -la'</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">alias</span> <span
+                        class="hl-arg">update</span>=<span class="hl-arg">'sudo apt update && sudo apt upgrade'</span>
+                </div>
+            </div>
+            <div class="cmd-box">
+                <div class="cmd-header">Variables</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-arg">NOMBRE</span>=<span
+                        class="hl-arg">"Juan"</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"Hola
+                        $NOMBRE"</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ADMIN PRO -->
+        <section id="admin-perms" class="section">
+            <h1>Permisos Avanzados</h1>
+
+            <div class="cmd-box">
+                <div class="cmd-header">CHMOD Octal</div>
+                <div class="cmd-content">
+                    <span class="hl-comment"># R=4, W=2, X=1</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span class="hl-arg">777</span>
+                    <span class="hl-arg">file</span> <span class="hl-comment"># rwx rwx rwx (Peligro)</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span class="hl-arg">644</span>
+                    <span class="hl-arg">file</span> <span class="hl-comment"># rw- r-- r-- (Estándar
+                        archivos)</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span class="hl-arg">755</span>
+                    <span class="hl-arg">file</span> <span class="hl-comment"># rwx r-x r-x (Estándar
+                        scripts/directorios)</span>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    🛡️ SUID, SGID y Sticky Bit
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Permisos especiales para casos avanzados.</p>
+                    <ul>
+                        <li><strong>SUID (4000):</strong> Ejecuta el archivo con los permisos del DUEÑO, no del usuario.
+                            (Ej: comando <code>passwd</code>).</li>
+                        <li><strong>Sticky Bit (1000):</strong> En carpetas compartidas (`/tmp`), impide que borres
+                            archivos de otros usuarios.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-sys" class="section">
+            <h1>Servicios y Sistema</h1>
+            <p>Control de daemons y análisis de hardware.</p>
+
+            <div class="cmd-box">
+                <div class="cmd-header">SYSTEMTCL (SystemD)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">systemctl</span> <span
+                        class="hl-arg">status</span> <span class="hl-arg">nginx</span> <span class="hl-comment"># Ver
+                        estado</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">systemctl</span> <span
+                        class="hl-arg">start</span> <span class="hl-arg">nginx</span> <span class="hl-comment">#
+                        Iniciar</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">systemctl</span> <span
+                        class="hl-arg">enable</span> <span class="hl-arg">nginx</span> <span class="hl-comment">#
+                        Iniciar automáticamente al arrancar</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">systemctl</span> <span
+                        class="hl-arg">restart</span> <span class="hl-arg">nginx</span> <span class="hl-comment">#
+                        Reiniciar</span>
+                </div>
+            </div>
+
+            <div class="cmd-box">
+                <div class="cmd-header">LOGS (JournalCTL)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">journalctl</span> <span
+                        class="hl-opt">-xe</span> <span class="hl-comment"># Ver el final de los logs con
+                        explicación</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">journalctl</span> <span
+                        class="hl-opt">-u</span> <span class="hl-arg">nginx</span> <span class="hl-comment"># Logs solo
+                        de Nginx</span>
+                </div>
+            </div>
+
+            <div class="cmd-box">
+                <div class="cmd-header">Hardware</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">lsblk</span> <span class="hl-comment"># Listar
+                        discos y particiones</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">lscpu</span> <span class="hl-comment"># Info
+                        del procesador</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">free</span> <span class="hl-opt">-h</span>
+                    <span class="hl-comment"># Memoria RAM disponible</span><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">uname</span> <span class="hl-opt">-a</span>
+                    <span class="hl-comment"># Info del Kernel</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- REDES (NEW MODULE) -->
+        <section id="admin-net" class="section">
+            <span class="badge badge-net">Nuevo Módulo</span>
+            <h1>Redes y Conectividad</h1>
+            <p>Diagnóstico de red, transferencias y control remoto. Esencial para servidores.</p>
+
+            <div class="cmd-box">
+                <div class="cmd-header">Diagnóstico (IP, Ping)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">ip</span> <span class="hl-arg">a</span>
+                    <span class="hl-comment"># Ver interfaces y direcciones IP (Reemplaza a ifconfig)</span><br><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">ping</span> <span
+                        class="hl-arg">google.com</span>
+                    <span class="hl-comment"># Comprobar conectividad</span><br><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">traceroute</span> <span
+                        class="hl-arg">google.com</span>
+                    <span class="hl-comment"># Ver por dónde pasan tus paquetes hasta el destino</span>
+                </div>
+            </div>
+
+            <div class="cmd-box">
+                <div class="cmd-header">Transferencia (Curl, Wget)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span
+                        class="hl-arg">http://ejemplo.com</span>
+                    <span class="hl-comment"># Hacer petición HTTP y ver respuesta en terminal</span><br><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span
+                        class="hl-arg">file.zip</span>
+                    <span class="hl-comment"># Descargar archivos</span>
+                </div>
+            </div>
+
+            <div class="cmd-box">
+                <div class="cmd-header">SSH (Secure Shell)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">ssh</span> <span
+                        class="hl-arg">usuario@192.168.1.50</span>
+                    <span class="hl-comment"># Conectarse a servidor remoto</span><br><br>
+                    <span class="hl-prompt">$</span><span class="hl-cmd">scp</span> <span
+                        class="hl-arg">archivo.txt</span> <span class="hl-arg">usuario@server:/ruta</span>
+                    <span class="hl-comment"># Copiar archivo DE tu PC AL servidor (Secure Copy)</span>
+                </div>
+            </div>
+
+            <div class="cmd-box">
+                <div class="cmd-header">Puertos (Netstat / SS)</div>
+                <div class="cmd-content">
+                    <span class="hl-prompt">$</span><span class="hl-cmd">ss</span> <span class="hl-opt">-tulpn</span>
+                    <span class="hl-comment"># Ver puertos escuchando (listening) y qué proceso los usa.</span>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        // Navigation Logic
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+
+            const target = document.getElementById(id);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                if (link.getAttribute('onclick').includes(id)) {
+                    link.classList.add('active');
+                }
+            });
+
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        // Accordion Logic
+        function toggleAccordion(header) {
+            header.parentElement.classList.toggle('open');
+        }
+
+        // Search Filter
+        function filterNav() {
+            const query = document.querySelector('.search-input').value.toLowerCase();
+            const items = document.querySelectorAll('.nav-item');
+            const groups = document.querySelectorAll('.nav-group-title');
+
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                const tags = item.getAttribute('data-tags') || "";
+
+                if (text.includes(query) || tags.includes(query)) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+
+            if (query.length > 0) {
+                groups.forEach(g => g.style.display = 'none');
+            } else {
+                groups.forEach(g => g.style.display = 'block');
+            }
+        }
+
+        // Copy Function
+        function copyText(idOrText) {
+            let text = "";
+            const el = document.getElementById(idOrText);
+            if (el) {
+                text = el.innerText;
+            } else {
+                text = idOrText;
+                if (text === 'pwd') text = "pwd";
+            }
+            const cleanText = text.replace(/^\$\s*/gm, '');
+            navigator.clipboard.writeText(cleanText).then(() => {
+                // Could add tooltip here
+            });
+        }
+    </script>
+</body>
+
+</html>
