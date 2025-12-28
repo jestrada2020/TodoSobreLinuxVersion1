@@ -11,434 +11,12 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <style>
-        :root {
-            /* Palette: Slate & Key Accents */
-            --bg-body: #020617;
-            /* Very Dark Slate */
-            --bg-sidebar: #0f172a;
-            /* Dark Slate */
-            --bg-card: #1e293b;
-            /* Slate 800 */
-            --bg-code: #0b1120;
-            /* Almost Black */
-
-            --text-main: #f1f5f9;
-            /* Slate 100 */
-            --text-muted: #94a3b8;
-            /* Slate 400 */
-
-            --border: rgba(255, 255, 255, 0.08);
-
-            /* Semantic Colors (neon-ish) */
-            --color-primary: #38bdf8;
-            /* Sky Blue (Core) */
-            --color-file: #c084fc;
-            /* Purple (Files) */
-            --color-cmd: #4ade80;
-            /* Green (Terminal) */
-            --color-sys: #f472b6;
-            /* Pink (System) */
-            --color-net: #facc15;
-            /* Yellow (Network) */
-            --color-warn: #fb923c;
-            /* Orange (Warnings) */
-
-            --sidebar-width: 280px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ----- SIDEBAR ----- */
-        #sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--bg-sidebar);
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border);
-            z-index: 100;
-        }
-
-        .brand {
-            padding: 1.5rem;
-            font-weight: 800;
-            font-size: 1.25rem;
-            letter-spacing: -0.05em;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .brand span {
-            color: var(--color-primary);
-        }
-
-        .search-box {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .search-input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-            color: var(--text-main);
-            font-family: inherit;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: var(--color-primary);
-        }
-
-        .nav-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem 0;
-        }
-
-        .nav-group-title {
-            padding: 0.75rem 1.5rem 0.25rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            font-weight: 700;
-            margin-top: 0.5rem;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 0.6rem 1.5rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border-left: 3px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-item:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .nav-item.active {
-            color: var(--text-main);
-            background: rgba(56, 189, 248, 0.1);
-            /* Primary tint */
-            border-left-color: var(--color-primary);
-        }
-
-        /* Sidebar Icons (SVG) */
-        .icon {
-            width: 18px;
-            height: 18px;
-            margin-right: 10px;
-            opacity: 0.8;
-        }
-
-        /* ----- MAIN CONTENT ----- */
-        #main {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 3rem 4rem;
-            max-width: 1200px;
-        }
-
-        .section {
-            display: none;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.1;
-        }
-
-        h2 {
-            font-size: 1.75rem;
-            margin: 3rem 0 1.5rem;
-            display: flex;
-            align-items: center;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.5rem;
-        }
-
-        p {
-            line-height: 1.7;
-            color: #bdc5d1;
-            /* Lighter than muted */
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
-        }
-
-        /* ----- CARDS & BLOCKS ----- */
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* File Tree Visualization */
-        .tree-diagram {
-            font-family: 'Fira Code', monospace;
-            background: var(--bg-code);
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border);
-        }
-
-        .tree-node {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .node-name {
-            color: var(--color-file);
-            font-weight: 700;
-            margin-right: 1rem;
-        }
-
-        .node-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-style: italic;
-        }
-
-        /* Command Box */
-        .cmd-box {
-            background: var(--bg-code);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            margin: 1.5rem 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .cmd-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid var(--border);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-family: 'Fira Code', monospace;
-            font-weight: bold;
-        }
-
-        .cmd-content {
-            padding: 1rem 1rem 1.5rem;
-            /* Extra bottom padding for scrollbar */
-            font-family: 'Fira Code', monospace;
-            font-size: 0.95rem;
-            color: #e2e8f0;
-            overflow-x: auto;
-        }
-
-        /* Syntax Highlighting */
-        .hl-prompt {
-            color: #64748b;
-            margin-right: 0.5rem;
-            user-select: none;
-        }
-
-        .hl-cmd {
-            color: var(--color-cmd);
-            font-weight: 700;
-        }
-
-        .hl-arg {
-            color: var(--color-file);
-        }
-
-        .hl-opt {
-            color: var(--color-sys);
-        }
-
-        .hl-net {
-            color: var(--color-net);
-        }
-
-        .hl-comment {
-            color: #475569;
-            font-style: italic;
-            display: block;
-            margin-top: 0.25rem;
-        }
-
-        .copy-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 0.2rem 0.5rem;
-            font-size: 0.7rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover {
-            border-color: var(--color-primary);
-            color: var(--color-primary);
-        }
-
-        /* Badges */
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-right: 0.5rem;
-        }
-
-        .badge-core {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--color-primary);
-        }
-
-        .badge-imp {
-            background: rgba(244, 114, 182, 0.15);
-            color: var(--color-sys);
-        }
-
-        .badge-net {
-            background: rgba(250, 204, 21, 0.15);
-            color: var(--color-net);
-        }
-
-        /* Accordion Style for deep content */
-        .accordion {
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .accordion-header {
-            padding: 1rem;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-main);
-        }
-
-        .accordion-header:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .accordion-content {
-            display: none;
-            padding: 1rem;
-            border-top: 1px solid var(--border);
-            background: var(--bg-card);
-        }
-
-        .accordion.open .accordion-content {
-            display: block;
-        }
-
-        .accordion.open .accordion-header {
-            color: var(--color-primary);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            #sidebar {
-                transform: translateX(-100%);
-                transition: 0.3s;
-            }
-
-            #sidebar.open {
-                transform: translateX(0);
-            }
-
-            #main {
-                margin-left: 0;
-                padding: 1.5rem;
-            }
-
-            .mobile-menu {
-                display: block;
-                position: fixed;
-                bottom: 1rem;
-                right: 1rem;
-                z-index: 200;
-                background: var(--color-primary);
-                border: none;
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                color: #000;
-                font-weight: bold;
-                cursor: pointer;
-            }
-        }
-
-        .mobile-menu {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-    <button class="mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <button class="mobile-menu" data-mobile-menu="toggle">☰</button>
 
     <!-- SIDEBAR -->
     <nav id="sidebar">
@@ -447,117 +25,129 @@
         </div>
 
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="Buscar comando..." onkeyup="filterNav()">
+            <input type="text" class="search-input" placeholder="Buscar comando...">
         </div>
 
         <div class="nav-scroll" id="nav-list">
             <!-- 1. Conceptos -->
             <div class="nav-group-title">Introducción</div>
-            <a class="nav-link nav-item active" onclick="showSection('intro-linux')"
+            <a class="nav-link nav-item active" data-section="intro-linux"
                 data-tags="linux kernel gnu open source">
                 ¿Qué es Linux?
             </a>
-            <a class="nav-link nav-item" onclick="showSection('intro-distros')" data-tags="ubuntu debian redhat arch">
+            <a class="nav-link nav-item" data-section="intro-distros" data-tags="ubuntu debian redhat arch">
                 Distribuciones
             </a>
 
             <!-- 2. Sistema de Archivos files -->
             <div class="nav-group-title">Sistema de Archivos</div>
-            <a class="nav-link nav-item" onclick="showSection('fs-hierarchy')" data-tags="root etc var home tree">
+            <a class="nav-link nav-item" data-section="fs-hierarchy" data-tags="root etc var home tree">
                 Jerarquía (The Tree)
             </a>
-            <a class="nav-link nav-item" onclick="showSection('fs-nav')" data-tags="cd ls pwd navigation">
+            <a class="nav-link nav-item" data-section="fs-nav" data-tags="cd ls pwd navigation">
                 Navegación
             </a>
-            <a class="nav-link nav-item" onclick="showSection('fs-manip')" data-tags="cp mv rm touch mkdir">
+            <a class="nav-link nav-item" data-section="fs-manip" data-tags="cp mv rm touch mkdir">
                 Gestión Básica
             </a>
-            <a class="nav-link nav-item" onclick="showSection('fs-advanced')"
+            <a class="nav-link nav-item" data-section="fs-advanced"
                 data-tags="tar zip gzip ln find locate head tail">
                 Archivos Avanzado
             </a>
 
             <!-- 3. Terminal & Comandos -->
             <div class="nav-group-title">Power User</div>
-            <a class="nav-link nav-item" onclick="showSection('term-shell')" data-tags="bash zsh terminal echo">
+            <a class="nav-link nav-item" data-section="term-shell" data-tags="bash zsh terminal echo">
                 Shell Basics
             </a>
-            <a class="nav-link nav-item" onclick="showSection('term-pipes')"
+            <a class="nav-link nav-item" data-section="term-pipes"
                 data-tags="grep pipes redirection history alias jobs">
                 Pipes, Redirección y Jobs
             </a>
-            <a class="nav-link nav-item" onclick="showSection('term-scripting')" data-tags="bash script variables env">
+            <a class="nav-link nav-item" data-section="term-scripting" data-tags="bash script variables env">
                 Scripting Intro
             </a>
 
             <!-- 4. Admin Pro -->
             <div class="nav-group-title">Admin Avanzada</div>
-            <a class="nav-link nav-item" onclick="showSection('admin-perms')" data-tags="chmod chown suid sgid sticky">
+            <a class="nav-link nav-item" data-section="admin-perms" data-tags="chmod chown suid sgid sticky">
                 Permisos y Seguridad
             </a>
-            <a class="nav-link nav-item" onclick="showSection('admin-sys')"
+            <a class="nav-link nav-item" data-section="admin-sys"
                 data-tags="systemctl journalctl htop ps kill df du">
                 Servicios y Sistema
             </a>
-            <a class="nav-link nav-item" onclick="showSection('admin-net')"
+            <a class="nav-link nav-item" data-section="admin-net"
                 data-tags="ssh ip ping curl wget netstat ss">
                 Redes y Conectividad
             </a>
 
             <!-- 5. Emergencia -->
             <div class="nav-group-title" style="color: var(--color-warn);">Emergencia</div>
-            <a class="nav-link nav-item" onclick="showSection('rescue-grub')"
+            <a class="nav-link nav-item" data-section="rescue-grub"
                 data-tags="grub boot rescue chroot repair boot-repair initramfs">
                 Recuperar Arranque (GRUB)
             </a>
-            <a class="nav-link nav-item" onclick="showSection('rescue-disk')"
+            <a class="nav-link nav-item" data-section="rescue-disk"
                 data-tags="disk usb hdd ssd smartctl fsck badblocks ddrescue recovery">
                 Discos y USB Dañados
             </a>
 
             <!-- 6. Personalización -->
             <div class="nav-group-title">Personalización</div>
-            <a class="nav-link nav-item" onclick="showSection('custom-icons')"
+            <a class="nav-link nav-item" data-section="custom-icons"
                 data-tags="iconos icons desktop applications themes customization">
                 Iconos de Aplicaciones
             </a>
 
             <!-- 7. Mantenimiento -->
             <div class="nav-group-title">Mantenimiento</div>
-            <a class="nav-link nav-item" onclick="showSection('sys-debug')"
+            <a class="nav-link nav-item" data-section="sys-debug"
                 data-tags="debug kill process lsof dpkg apt fix broken update">
                 Depurar y Reparar
             </a>
 
             <!-- 8. Software -->
             <div class="nav-group-title">Software y Tools</div>
-            <a class="nav-link nav-item" onclick="showSection('devtools')"
+            <a class="nav-link nav-item" data-section="devtools"
                 data-tags="install snap vscode chrome latex texstudio cursor appimage">
                 Instalar Dev Tools
+            </a>
+            <a class="nav-link nav-item" data-section="manim"
+                data-tags="manim python video math animation cli pip conda">
+                Manim (Animaciones)
+            </a>
+            <a class="nav-link nav-item" data-section="complementos-instalacion"
+                data-tags="complementos dependencias python rstudio latex manim r commander">
+                Complementos de Instalación
+            </a>
+            <a class="nav-link nav-item" data-section="configuracion-ia-cli"
+                data-tags="ia cli codex claude gemini codin antigravity ai tools">
+                Configuración IA_CLI
             </a>
 
             <!-- 9. Data Science -->
             <div class="nav-group-title">Ciencia de Datos</div>
-            <a class="nav-link nav-item" onclick="showSection('datascience')"
+            <a class="nav-link nav-item" data-section="datascience"
                 data-tags="r language rstudio commander rcmdr libreoffice excel statistic">
                 R & Office Suite
             </a>
-            <a class="nav-link nav-item" onclick="showSection('anaconda')"
+            <a class="nav-link nav-item" data-section="anaconda"
                 data-tags="anaconda python jupyter panda numpy data science">
                 Anaconda Python
             </a>
 
             <!-- 10. Command Expansion -->
             <div class="nav-group-title">Expansión de Comandos</div>
-            <a class="nav-link nav-item" onclick="showSection('essentials')"
+            <a class="nav-link nav-item" data-section="essentials"
                 data-tags="system info hardware uname neofetch disk space ram">
                 Info del Sistema
             </a>
-            <a class="nav-link nav-item" onclick="showSection('text-files')"
+            <a class="nav-link nav-item" data-section="text-files"
                 data-tags="text processing head tail less grep sort wc zip ln">
                 Texto y Archivos
             </a>
-            <a class="nav-link nav-item" onclick="showSection('sys-mgmt')"
+            <a class="nav-link nav-item" data-section="sys-mgmt"
                 data-tags="management shutdown editors nano vim which echo">
                 Gestión y Editores
             </a>
@@ -614,7 +204,7 @@
 
             <!-- BAD SECTORS -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     💀 Recuperar de Sectores Defectuosos (Bad Clusters)
                     <span>+</span>
                 </div>
@@ -648,7 +238,7 @@
 
             <!-- USB RECOVERY -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     💾 Revivir USB (Formateo Profundo)
                     <span>+</span>
                 </div>
@@ -705,7 +295,7 @@
             </div>
 
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     🎨 Guía Paso a Paso (Método Manual)
                     <span>+</span>
                 </div>
@@ -796,7 +386,7 @@
 
             <!-- PROCESS KILLING -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     🔪 Matar Procesos (Kill / Zombies)
                     <span>+</span>
                 </div>
@@ -854,7 +444,7 @@
 
             <!-- FILE RECOVERY -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     ♻️ Recuperar Archivos Borrados
                     <span>+</span>
                 </div>
@@ -955,7 +545,7 @@
                 <h2>Cursor AI Editor</h2>
                 <p><strong>No existe Snap oficial.</strong> Se usa un formato llamado <code>.AppImage</code>.</p>
                 <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-header">
                         Instrucciones AppImage
                         <span>+</span>
                     </div>
@@ -1007,6 +597,388 @@
 
         </section>
 
+        <!-- MANIM MODULE -->
+        <section id="manim" class="section">
+            <span class="badge badge-core">Python</span>
+            <h1>Instalar Manim (Math Animation Engine)</h1>
+            <p>Manim es una librería de Python para generar animaciones matemáticas en video. Aquí tienes el flujo
+                completo: dependencias del sistema, entorno virtual, instalación del paquete y renderizado de prueba.</p>
+
+            <div class="card">
+                <h2>1. Dependencias del Sistema</h2>
+                <p>Necesitas FFmpeg, LaTeX y otros paquetes para que los renders salgan con audio/texto.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
+                        <span class="hl-arg">ffmpeg</span> <span class="hl-arg">texlive-full</span>
+                        <span class="hl-arg">python3-pip</span> <span class="hl-arg">python3-venv</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. Crear Entorno Virtual</h2>
+                <p>Aíslalo para que las dependencias de Manim no choquen con otros proyectos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Carpeta del Proyecto</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span>
+                        <span class="hl-arg">~/manim-projects</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span>
+                        <span class="hl-arg">~/manim-projects</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Virtualenv</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
+                        <span class="hl-arg">venv</span> <span class="hl-arg">.venv</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span>
+                        <span class="hl-arg">.venv/bin/activate</span> <span class="hl-comment"># Verás (venv) en la
+                            terminal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. Instalar Manim</h2>
+                <p>Usamos pip para instalar la versión estable.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">pip</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Asegúrate de estar dentro de la venv</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">-U</span> <span class="hl-arg">pip</span> <span class="hl-arg">wheel</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">manim</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>4. Render de Prueba</h2>
+                <p>Crea un archivo Python con una escena mínima y genera un video MP4.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Archivo Example.py</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nano</span>
+                        <span class="hl-arg">example.py</span><br>
+                        <span class="hl-comment"># Contenido:</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">from</span> <span
+                            class="hl-arg">manim</span> <span class="hl-cmd">import</span> <span
+                            class="hl-arg">*</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">class</span> <span
+                            class="hl-arg">Hello(Scene)</span>:<br>
+                        <span class="hl-prompt">></span> <span class="hl-arg">    </span><span class="hl-cmd">def</span>
+                        <span class="hl-arg">construct(self)</span>:<br>
+                        <span class="hl-prompt">></span> <span class="hl-arg">        </span><span class="hl-cmd">self.play</span>(<span class="hl-arg">Write</span>(<span class="hl-arg">Tex</span>(<span class="hl-arg">\"Hola Manim\"</span>)))<br>
+                        <span class="hl-prompt">></span> <span class="hl-arg">        </span><span class="hl-cmd">self.wait</span>(<span class="hl-arg">2</span>)
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Renderizar</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">manim</span> <span class="hl-arg">-pqh</span>
+                        <span class="hl-arg">example.py</span> <span class="hl-arg">Hello</span><br>
+                        <span class="hl-comment"># -p abre el video, -qH usa alta calidad (puedes cambiar a -ql para
+                            vista previa rápida).</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. Actualizaciones y Limpieza</h2>
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizar Manim</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">-U</span> <span class="hl-arg">manim</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Salir del entorno virtual</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">deactivate</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPLEMENTOS -->
+        <section id="complementos-instalacion" class="section">
+            <span class="badge badge-imp">Complementos</span>
+            <h1>Complementos de Instalación</h1>
+            <p>Instala estos paquetes extra después de los entornos base para tener la mejor experiencia en Python,
+                RStudio, Manim, LaTeX y R Commander.</p>
+
+            <div class="card">
+                <h2>1. Python Científico</h2>
+                <p>Actualiza pip y agrega los paquetes esenciales para ciencia de datos y cuadernos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizar Gestores</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
+                        <span class="hl-arg">pip</span> <span class="hl-arg">install</span> <span class="hl-arg">--upgrade</span>
+                        <span class="hl-arg">pip</span> <span class="hl-arg">setuptools</span> <span class="hl-arg">wheel</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Librerías Core</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">numpy</span> <span class="hl-arg">pandas</span> <span class="hl-arg">matplotlib</span>
+                        <span class="hl-arg">scipy</span> <span class="hl-arg">scikit-learn</span>
+                        <span class="hl-arg">seaborn</span> <span class="hl-arg">plotly</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Jupyter y Extensiones</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">jupyterlab</span> <span class="hl-arg">ipykernel</span>
+                        <span class="hl-arg">notebook</span> <span class="hl-arg">nbconvert</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
+                        <span class="hl-arg">ipykernel</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">--user</span> <span class="hl-arg">--name</span> <span class="hl-arg">datos</span>
+                        <span class="hl-arg">--display-name</span> <span class="hl-arg">"Python (Datos)"</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. RStudio</h2>
+                <p>Paquetes recomendados para análisis, visualización y conexión con Python.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalar desde R</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">R</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span
+                            class="hl-arg">c</span>(<span class="hl-arg">"tidyverse"</span>, <span
+                                class="hl-arg">"data.table"</span>, <span class="hl-arg">"shiny"</span>, <span
+                                class="hl-arg">"plotly"</span>, <span class="hl-arg">"reticulate"</span>, <span
+                                class="hl-arg">"devtools"</span>), <span class="hl-arg">dependencies</span>=<span
+                                class="hl-arg">TRUE</span>)<br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span
+                            class="hl-arg">"tidymodels"</span>)<br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">q</span>() <span class="hl-comment">#
+                            salir</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalar paquetes de sistema</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Necesario para compilar paquetes desde código fuente.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
+                        <span class="hl-arg">libcurl4-openssl-dev</span> <span class="hl-arg">libssl-dev</span>
+                        <span class="hl-arg">libxml2-dev</span> <span class="hl-arg">build-essential</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. Manim Extras</h2>
+                <p>Añade bibliotecas para audio, fuentes y exportación más compleja.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Dependencias del Sistema</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
+                        <span class="hl-arg">libcairo2</span> <span class="hl-arg">libpango1.0-dev</span>
+                        <span class="hl-arg">pkg-config</span> <span class="hl-arg">python3-dev</span>
+                        <span class="hl-arg">libsdl2-dev</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Plugins Python</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">manim</span>[<span class="hl-arg">opencv</span>,<span class="hl-arg">fast</span>]<br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">scikit-image</span> <span class="hl-arg">pydub</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>4. LaTeX Completo</h2>
+                <p>Complementos para informes profesionales con soporte en español.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">APT</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
+                        <span class="hl-arg">texlive-latex-extra</span> <span class="hl-arg">texlive-lang-spanish</span>
+                        <span class="hl-arg">texlive-science</span> <span class="hl-arg">biber</span>
+                        <span class="hl-arg">latexmk</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Plantillas y Fonts</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Instala plantillas beamer + fuentes tipográficas.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo tlmgr</span> <span
+                            class="hl-arg">install</span> <span class="hl-arg">beamer</span> <span class="hl-arg">pgf</span>
+                        <span class="hl-arg">fontspec</span> <span class="hl-arg">babel-spanish</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="border-left: 4px solid var(--color-sys);">
+                <h2>5. R Commander</h2>
+                <p>Paquetes adicionales y configuración del entorno gráfico.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Dependencias del Sistema</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
+                        <span class="hl-arg">r-cran-tcltk2</span> <span class="hl-arg">r-cran-rgl</span>
+                        <span class="hl-arg">libtiff5-dev</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Dentro de R</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">R</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span
+                            class="hl-arg">"Rcmdr"</span>, <span class="hl-arg">dependencies</span>=<span
+                            class="hl-arg">TRUE</span>)<br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">library</span>(<span
+                            class="hl-arg">Rcmdr</span>)<br>
+                        <span class="hl-prompt">></span> <span class="hl-comment"># Instala extras utilizados por el plugin
+                            de gráficos</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span
+                            class="hl-arg">c</span>(<span class="hl-arg">"car"</span>, <span class="hl-arg">"effects"</span>,
+                            <span class="hl-arg">"rgl"</span>, <span class="hl-arg">"sem"</span>))
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI CLI CONFIG -->
+        <section id="configuracion-ia-cli" class="section">
+            <span class="badge" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">IA</span>
+            <h1>Configuración de CLI para IA</h1>
+            <p>Guía paso a paso para instalar y autenticar múltiples herramientas CLI de IA. Ejecuta los comandos en
+                terminal exactamente en este orden y guarda tus claves API en variables de entorno seguras.</p>
+
+            <div class="card">
+                <h2>1. Codex CLI</h2>
+                <p>Cliente oficial para interactuar con Codex desde la consola.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación Global</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-opt">-fsSL</span>
+                        <span class="hl-arg">https://cli.codex.sh/install.sh</span> <span class="hl-opt">|</span>
+                        <span class="hl-cmd">bash</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo mv</span>
+                        <span class="hl-arg">codex</span> <span class="hl-arg">/usr/local/bin/</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Autenticación</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Añade tu API Key como variable y ejecuta login:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span>
+                        <span class="hl-arg">CODEX_API_KEY</span>=<span class="hl-arg">\"sk_codex_xxxx\"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">codex</span> <span
+                            class="hl-arg">auth</span> <span class="hl-arg">login</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. Claude CLI</h2>
+                <p>Interface oficial de Anthropic para consultar Claude.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Requiere Node 18 o superior.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-arg">install</span>
+                        <span class="hl-opt">-g</span> <span class="hl-arg">@anthropic-ai/claude-cli</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Configurar API Key</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span>
+                        <span class="hl-arg">ANTHROPIC_API_KEY</span>=<span class="hl-arg">\"sk-ant-xxxx\"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">claude</span> <span
+                            class="hl-arg">whoami</span> <span class="hl-comment"># Verifica la conexión</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. Gemini CLI</h2>
+                <p>Cliente experimental para los modelos de Google Gemini.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación via Pipx</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pipx</span> <span
+                            class="hl-arg">install</span> <span class="hl-arg">gemini-cli</span><br>
+                        <span class="hl-comment"># Si no tienes pipx:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
+                        <span class="hl-arg">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-arg">--user</span> <span class="hl-arg">pipx</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Inicialización</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span>
+                        <span class="hl-arg">GEMINI_API_KEY</span>=<span class="hl-arg">\"ya29.a0AfH6SMA\"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">gemini</span> <span class="hl-arg">init</span>
+                        <span class="hl-arg">--project</span> <span class="hl-arg">mi-proyecto</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>4. Codin CLI</h2>
+                <p>CLI ligera para gestionar proyectos asistidos por IA.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Descarga y Setup</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">git</span> <span class="hl-arg">clone</span>
+                        <span class="hl-arg">https://github.com/codinlabs/codin-cli.git</span>
+                        <span class="hl-arg">~/apps/codin-cli</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                            class="hl-arg">~/apps/codin-cli</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-arg">install</span>
+                        <br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span
+                            class="hl-arg">run</span> <span class="hl-arg">build</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo ln</span> <span
+                            class="hl-arg">-s</span> <span class="hl-arg">~/apps/codin-cli/bin/codin</span>
+                        <span class="hl-arg">/usr/local/bin/codin</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Primer Uso</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">codin</span> <span class="hl-arg">setup</span>
+                        <span class="hl-arg">--provider</span> <span class="hl-arg">openai</span>
+                        <span class="hl-arg">--model</span> <span class="hl-arg">gpt-4o</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">codin</span> <span class="hl-arg">project</span>
+                        <span class="hl-arg">init</span> <span class="hl-arg">mi-app</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="border-left: 4px solid var(--color-warn);">
+                <h2>5. Antigravity</h2>
+                <p>Huevo de pascua histórico de Python para comprobar el entorno. No requiere API Key.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Ejecutar</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Abre un navegador con el cómic XKCD “Antigravity” (sí, en serio).</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
+                        <span class="hl-arg">antigravity</span>
+                    </div>
+                </div>
+                <p style="font-size: 0.9rem;">Úsalo como prueba rápida para confirmar que Python está correctamente
+                    instalado y puede ejecutar módulos estándar.</p>
+            </div>
+        </section>
+
         <!-- SOFTWARE INSTALLATION MODULE -->
         <section id="devtools" class="section">
             <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Instalación</span>
@@ -1030,7 +1002,7 @@
 
                     <!-- UNINSTALL VSCODE -->
                     <div class="accordion" style="margin-top: 1rem;">
-                        <div class="accordion-header" onclick="toggleAccordion(this)"
+                        <div class="accordion-header"
                             style="font-size: 0.85rem; padding: 0.5rem;">
                             🗑️ Desinstalar VS Code
                             <span>+</span>
@@ -1065,7 +1037,7 @@
 
                 <!-- UNINSTALL CHROME -->
                 <div class="accordion" style="margin-top: 1rem;">
-                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                    <div class="accordion-header"
                         style="font-size: 0.85rem; padding: 0.5rem;">
                         🗑️ Desinstalar Chrome
                         <span>+</span>
@@ -1091,7 +1063,7 @@
                 <h2>Cursor AI Editor</h2>
                 <p><strong>No existe Snap oficial.</strong> Se usa un formato llamado <code>.AppImage</code>.</p>
                 <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-header">
                         Instrucciones AppImage
                         <span>+</span>
                     </div>
@@ -1118,7 +1090,7 @@
             </div>
             <!-- UNINSTALL CURSOR -->
             <div class="accordion" style="margin-top: 1rem;">
-                <div class="accordion-header" onclick="toggleAccordion(this)"
+                <div class="accordion-header"
                     style="font-size: 0.85rem; padding: 0.5rem;">
                     🗑️ Desinstalar Cursor
                     <span>+</span>
@@ -1161,7 +1133,7 @@
 
                 <!-- UNINSTALL LATEX -->
                 <div class="accordion" style="margin-top: 1rem;">
-                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                    <div class="accordion-header"
                         style="font-size: 0.85rem; padding: 0.5rem;">
                         🗑️ Desinstalar LaTeX & TeXstudio
                         <span>+</span>
@@ -1239,7 +1211,7 @@
 
                 <!-- UNINSTALL R -->
                 <div class="accordion" style="margin-top: 1rem;">
-                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                    <div class="accordion-header"
                         style="font-size: 0.85rem; padding: 0.5rem;">
                         🗑️ Desinstalar R & Packages
                         <span>+</span>
@@ -1281,7 +1253,7 @@
 
                 <!-- UNINSTALL RSTUDIO -->
                 <div class="accordion" style="margin-top: 1rem;">
-                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                    <div class="accordion-header"
                         style="font-size: 0.85rem; padding: 0.5rem;">
                         🗑️ Desinstalar RStudio
                         <span>+</span>
@@ -1316,7 +1288,7 @@
 
                 <!-- UNINSTALL LIBREOFFICE -->
                 <div class="accordion" style="margin-top: 1rem;">
-                    <div class="accordion-header" onclick="toggleAccordion(this)"
+                    <div class="accordion-header"
                         style="font-size: 0.85rem; padding: 0.5rem;">
                         🗑️ Desinstalar LibreOffice
                         <span>+</span>
@@ -1543,7 +1515,7 @@
                 <div class="card">
                     <h3>Editores de Terminal</h3>
                     <div class="accordion">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header">
                             Nano (Fácil) vs Vim (Avanzado)
                             <span>+</span>
                         </div>
@@ -1634,7 +1606,7 @@
                 <p>Si el método anterior falla, necesitas un USB de instalación (Ubuntu, Fedora, etc.).</p>
 
                 <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-header">
                         🛠️ Guía Paso a Paso (Reinstalar GRUB)
                         <span>+</span>
                     </div>
@@ -1765,7 +1737,7 @@
             <div class="cmd-box">
                 <div class="cmd-header">
                     <span>Saber dónde estoy</span>
-                    <button class="copy-btn" onclick="copyText('pwd')">Copiar</button>
+                    <button class="copy-btn" data-copy-target="pwd">Copiar</button>
                 </div>
                 <div class="cmd-content">
                     <span class="hl-prompt">$</span><span class="hl-cmd">pwd</span>
@@ -1778,7 +1750,7 @@
             <div class="cmd-box">
                 <div class="cmd-header">
                     <span>CD (Change Directory)</span>
-                    <button class="copy-btn" onclick="copyText('cd-cmds')">Copiar</button>
+                    <button class="copy-btn" data-copy-target="cd-cmds">Copiar</button>
                 </div>
                 <div class="cmd-content" id="cd-cmds">
                     <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">Descargas</span>
@@ -1796,7 +1768,7 @@
             <div class="cmd-box">
                 <div class="cmd-header">
                     <span>LS (Listar archivos)</span>
-                    <button class="copy-btn" onclick="copyText('ls-cmds')">Copiar</button>
+                    <button class="copy-btn" data-copy-target="ls-cmds">Copiar</button>
                 </div>
                 <div class="cmd-content" id="ls-cmds">
                     <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-la</span>
@@ -1862,7 +1834,7 @@
 
             <!-- ACORDEON COMPRESION -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     📦 Archivos y Compresión (tar, zip)
                     <span>+</span>
                 </div>
@@ -1889,7 +1861,7 @@
 
             <!-- ACORDEON ENLACES -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     🔗 Enlaces Simbólicos (ln)
                     <span>+</span>
                 </div>
@@ -1908,7 +1880,7 @@
 
             <!-- ACORDEON BUSQUEDA -->
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     🔍 Búsqueda Profunda (find, locate)
                     <span>+</span>
                 </div>
@@ -2062,7 +2034,7 @@
             </div>
 
             <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="accordion-header">
                     🛡️ SUID, SGID y Sticky Bit
                     <span>+</span>
                 </div>
@@ -2183,75 +2155,8 @@
 
     </main>
 
-    <script>
-        // Navigation Logic
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
-
-            const target = document.getElementById(id);
-            if (target) {
-                target.classList.add('active');
-                window.scrollTo(0, 0);
-            }
-
-            const links = document.querySelectorAll('.nav-link');
-            links.forEach(link => {
-                if (link.getAttribute('onclick').includes(id)) {
-                    link.classList.add('active');
-                }
-            });
-
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('open');
-            }
-        }
-
-        // Accordion Logic
-        function toggleAccordion(header) {
-            header.parentElement.classList.toggle('open');
-        }
-
-        // Search Filter
-        function filterNav() {
-            const query = document.querySelector('.search-input').value.toLowerCase();
-            const items = document.querySelectorAll('.nav-item');
-            const groups = document.querySelectorAll('.nav-group-title');
-
-            items.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                const tags = item.getAttribute('data-tags') || "";
-
-                if (text.includes(query) || tags.includes(query)) {
-                    item.style.display = "flex";
-                } else {
-                    item.style.display = "none";
-                }
-            });
-
-            if (query.length > 0) {
-                groups.forEach(g => g.style.display = 'none');
-            } else {
-                groups.forEach(g => g.style.display = 'block');
-            }
-        }
-
-        // Copy Function
-        function copyText(idOrText) {
-            let text = "";
-            const el = document.getElementById(idOrText);
-            if (el) {
-                text = el.innerText;
-            } else {
-                text = idOrText;
-                if (text === 'pwd') text = "pwd";
-            }
-            const cleanText = text.replace(/^\$\s*/gm, '');
-            navigator.clipboard.writeText(cleanText).then(() => {
-                // Could add tooltip here
-            });
-        }
-    </script>
+    <script src="js/core/navigation.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
