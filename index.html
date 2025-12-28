@@ -117,6 +117,10 @@
                 data-tags="manim python video math animation cli pip conda">
                 Manim (Animaciones)
             </a>
+            <a class="nav-link nav-item" data-section="uv-python"
+                data-tags="uv python gestor paquetes virtualenv install astral sh">
+                Manejo UV en Python
+            </a>
             <a class="nav-link nav-item" data-section="complementos-instalacion"
                 data-tags="complementos dependencias python rstudio latex manim r commander">
                 Complementos de Instalación
@@ -705,6 +709,271 @@
             </div>
         </section>
 
+        <!-- UV PYTHON -->
+        <section id="uv-python" class="section">
+            <span class="badge badge-core">Python</span>
+            <h1>Manejo de UV en Python</h1>
+            <p><strong>uv</strong> es el gestor de entornos y dependencias ultrarrápido de Astral. Los comandos a
+                continuación se basan en la guía oficial (<a href="https://docs.astral.sh/uv/getting-started/installation/"
+                    target="_blank" style="color:var(--color-primary);">docs.astral.sh</a>) para instalarlo y aprovecharlo
+                en proyectos reales.</p>
+
+            <div class="card">
+                <h2>1. Instalación vía Script Oficial</h2>
+                <p>Método recomendado para Linux/macOS (detecta la arquitectura y ubica el binario en
+                    <code>~/.local/bin</code>).</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Script (curl + sh)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-opt">-LsSf</span>
+                        <span class="hl-arg">https://astral.sh/uv/install.sh</span> <span class="hl-opt">|</span>
+                        <span class="hl-cmd">sh</span><br>
+                        <span class="hl-comment"># Agrega ~/.local/bin a $PATH si no está:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"export
+                            PATH=$HOME/.local/bin:$PATH"</span> <span class="hl-opt">>> </span>
+                        <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Verificar versión</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">version</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. Instalación vía Gestores</h2>
+                <p>Alternativas sugeridas cuando prefieres paquetes manejados por el sistema.</p>
+                <div class="info-grid">
+                    <div class="cmd-box">
+                        <div class="cmd-header">Homebrew (macOS/Linux)</div>
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">brew</span> <span
+                                class="hl-arg">install</span> <span class="hl-arg">astral-sh/uv/uv</span>
+                        </div>
+                    </div>
+                    <div class="cmd-box">
+                        <div class="cmd-header">pipx (aislado)</div>
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">pipx</span> <span
+                                class="hl-arg">install</span> <span class="hl-arg">uv</span>
+                        </div>
+                    </div>
+                    <div class="cmd-box">
+                        <div class="cmd-header">Actualización</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Script:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">self</span>
+                            <span class="hl-arg">update</span><br><br>
+                            <span class="hl-comment"># Homebrew:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">brew</span> <span class="hl-arg">upgrade</span>
+                            <span class="hl-arg">uv</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. Crear y Gestionar Proyectos</h2>
+                <p>uv combina la creación de entornos con un lockfile reproducible.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Inicializar proyecto</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span
+                            class="hl-arg">mi-app</span> <span class="hl-opt">&&</span> <span class="hl-cmd">cd</span>
+                        <span class="hl-arg">mi-app</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">init</span>
+                        <span class="hl-comment"># Crea pyproject.toml + uv.lock</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Añadir dependencias</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">add</span>
+                        <span class="hl-arg">requests</span> <span class="hl-arg">rich</span><br>
+                        <span class="hl-comment"># Dependencias de desarrollo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">add</span>
+                        <span class="hl-arg">--dev</span> <span class="hl-arg">pytest</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Sincronizar en otra máquina</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">sync</span>
+                        <span class="hl-comment"># Instala exactamente lo que está en uv.lock</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>4. Entornos y Ejecución</h2>
+                <p>uv abstrae la creación de virtualenvs y ejecutar scripts/comandos a través de ellos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Ejecutar comandos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">run</span>
+                        <span class="hl-arg">python</span> <span class="hl-arg">main.py</span><br>
+                        <span class="hl-comment"># Para comandos arbitrarios (ej: pytest):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">run</span>
+                        <span class="hl-arg">pytest</span> <span class="hl-arg">-q</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Bloquear versión de Python</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">python</span>
+                        <span class="hl-arg">install</span> <span class="hl-arg">3.12</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">python</span>
+                        <span class="hl-arg">list</span><br>
+                        <span class="hl-comment"># uv usará la versión fijada al sincronizar.</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Exportar requirements.txt</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">pip</span>
+                        <span class="hl-arg">compile</span> <span class="hl-arg">--all-extras</span> <span
+                            class="hl-arg">--output-file</span> <span class="hl-arg">requirements.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. Extras Útiles</h2>
+                <div class="cmd-box">
+                    <div class="cmd-header">Autocompletado</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Bash:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">completion</span>
+                        <span class="hl-arg">bash</span> <span class="hl-opt">|</span> <span class="hl-cmd">sudo tee</span>
+                        <span class="hl-arg">/etc/bash_completion.d/uv</span><br><br>
+                        <span class="hl-comment"># Zsh:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">completion</span>
+                        <span class="hl-arg">zsh</span> <span class="hl-opt">>></span> <span
+                            class="hl-arg">~/.zshrc</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Limpieza de caché</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">cache</span>
+                        <span class="hl-arg">list</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">cache</span>
+                        <span class="hl-arg">prune</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>6. Herramientas y Scripts (uv tool / uvx)</h2>
+                <p>uv incluye un gestor de herramientas globales y un runner ligero (<code>uvx</code>) para ejecutar
+                    utilidades sin instalarlas permanentemente.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalar y listar herramientas</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">tool</span>
+                        <span class="hl-arg">install</span> <span class="hl-arg">ruff</span> <span class="hl-arg">black</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">tool</span>
+                        <span class="hl-arg">list</span><br>
+                        <span class="hl-comment"># Actualizar todas las herramientas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">tool</span>
+                        <span class="hl-arg">upgrade</span> <span class="hl-arg">--all</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Eliminar / reinstalar herramientas</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">tool</span>
+                        <span class="hl-arg">uninstall</span> <span class="hl-arg">ruff</span><br>
+                        <span class="hl-comment"># Reinstalar versión específica:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">tool</span>
+                        <span class="hl-arg">install</span> <span class="hl-arg">ruff==0.5.3</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Ejecutar con uvx</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ejecuta Ruff sin instalación previa:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uvx</span> <span class="hl-arg">ruff</span>
+                        <span class="hl-arg">check</span> <span class="hl-arg">src/</span><br><br>
+                        <span class="hl-comment"># Correr scripts sueltos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uvx</span> <span class="hl-arg">python</span>
+                        <span class="hl-arg">-c</span> <span class="hl-arg">"import httpx; print(httpx.get('https://httpbin.org/ip').json())"</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>7. Empaquetado y Publicación</h2>
+                <p>uv también cubre el build y publicación en PyPI desde la línea de comandos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Construir artefactos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">build</span>
+                        <span class="hl-arg">--format</span> <span class="hl-arg">wheel</span> <span class="hl-arg">--format</span>
+                        <span class="hl-arg">sdist</span><br>
+                        <span class="hl-comment"># Verifica el contenido:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">dist/</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Publicar en PyPI / TestPyPI</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Usa variables de entorno para tokens:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">UV_PUBLISH_USERNAME</span>=<span class="hl-arg">"__token__"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">UV_PUBLISH_PASSWORD</span>=<span class="hl-arg">"$PYPI_TOKEN"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">publish</span><br><br>
+                        <span class="hl-comment"># Para TestPyPI:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">publish</span>
+                        <span class="hl-arg">--repository</span> <span class="hl-arg">testpypi</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Firmar builds</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">build</span>
+                        <span class="hl-arg">--sign</span> <span class="hl-arg">--identity</span>
+                        <span class="hl-arg">"ACME Packaging"</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>8. Diagnóstico y Soporte</h2>
+                <p>Cuando algo falla, estos comandos ayudan a inspeccionar el estado del proyecto y del propio UV.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Estado del entorno</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">pip</span>
+                        <span class="hl-arg">check</span><br>
+                        <span class="hl-comment"># Mostrar información del proyecto:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">tree</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Diagnóstico de la herramienta</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">doctor</span><br>
+                        <span class="hl-comment"># Mostrar estadísticas de cache:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">cache</span>
+                        <span class="hl-arg">stats</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizaciones y canales</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">self</span>
+                        <span class="hl-arg">update</span> <span class="hl-arg">--preview</span><br>
+                        <span class="hl-comment"># Volver a la release estable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv</span> <span class="hl-arg">self</span>
+                        <span class="hl-arg">update</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- COMPLEMENTOS -->
         <section id="complementos-instalacion" class="section">
             <span class="badge badge-imp">Complementos</span>
@@ -964,18 +1233,70 @@
             </div>
 
             <div class="card" style="border-left: 4px solid var(--color-warn);">
-                <h2>5. Antigravity</h2>
-                <p>Huevo de pascua histórico de Python para comprobar el entorno. No requiere API Key.</p>
+                <h2>5. Antigravity (Google)</h2>
+                <p>Basado en la guía oficial (<a href="https://antigravity.google" target="_blank"
+                        style="color:var(--color-primary);">antigravity.google</a>) y el tutorial del video
+                    <a href="https://www.youtube.com/watch?v=RKJ9_94O4rQ" target="_blank"
+                        style="color:var(--color-primary);">RKJ9_94O4rQ</a>. Sigue estos comandos para una instalación
+                    óptima.</p>
+
                 <div class="cmd-box">
-                    <div class="cmd-header">Ejecutar</div>
+                    <div class="cmd-header">A. Debian/Ubuntu (APT)</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Abre un navegador con el cómic XKCD “Antigravity” (sí, en serio).</span><br>
+                        <span class="hl-comment"># 1. Añade el repositorio y la llave:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo mkdir</span> <span
+                            class="hl-arg">-p</span> <span class="hl-arg">/etc/apt/keyrings</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-opt">-fsSL</span>
+                        <span class="hl-arg">https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg</span> <span
+                            class="hl-opt">|</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo gpg</span> <span class="hl-arg">--dearmor</span>
+                        <span class="hl-arg">--yes</span> <span class="hl-arg">-o</span>
+                        <span class="hl-arg">/etc/apt/keyrings/antigravity-repo-key.gpg</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span>
+                        <span class="hl-arg">"deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main"</span>
+                        <span class="hl-opt">|</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo tee</span>
+                        <span class="hl-arg">/etc/apt/sources.list.d/antigravity.list</span>
+                        <span class="hl-opt">></span> <span class="hl-arg">/dev/null</span><br><br>
+
+                        <span class="hl-comment"># 2. Actualiza índices e instala:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
+                        <span class="hl-arg">antigravity</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">B. Fedora / RHEL / openSUSE (DNF/YUM)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Crea el repo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo tee</span>
+                        <span class="hl-arg">/etc/yum.repos.d/antigravity.repo</span> <span class="hl-opt">&lt;&lt;</span>
+                        <span class="hl-arg">EOL</span><br>
+                        <span class="hl-arg">[antigravity-rpm]</span><br>
+                        <span class="hl-arg">name=Antigravity RPM Repository</span><br>
+                        <span class="hl-arg">baseurl=https://us-central1-yum.pkg.dev/projects/antigravity-auto-updater-dev/antigravity-rpm</span><br>
+                        <span class="hl-arg">enabled=1</span><br>
+                        <span class="hl-arg">gpgcheck=0</span><br>
+                        <span class="hl-arg">EOL</span><br><br>
+
+                        <span class="hl-comment"># 2. Refresca cache e instala:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo dnf makecache</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo dnf install</span>
+                        <span class="hl-arg">antigravity</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Verificación rápida</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ejecuta el módulo (abre el easter egg en tu navegador):</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
                         <span class="hl-arg">antigravity</span>
                     </div>
                 </div>
-                <p style="font-size: 0.9rem;">Úsalo como prueba rápida para confirmar que Python está correctamente
-                    instalado y puede ejecutar módulos estándar.</p>
+                <p style="font-size: 0.9rem;">Si prefieres trabajar en un entorno virtual, activa tu venv antes de
+                    instalar o vuelve a correr <code>python3 -m antigravity</code> dentro de ella tras la instalación.</p>
             </div>
         </section>
 

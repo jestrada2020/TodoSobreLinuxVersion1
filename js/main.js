@@ -18,6 +18,7 @@
     'js/tabs/sys-debug.js',
     'js/tabs/devtools.js',
     'js/tabs/manim.js',
+    'js/tabs/uv-python.js',
     'js/tabs/complementos-instalacion.js',
     'js/tabs/configuracion-ia-cli.js',
     'js/tabs/datascience.js',
