@@ -26,6 +26,7 @@
     'js/tabs/essentials.js',
     'js/tabs/text-files.js',
     'js/tabs/sys-mgmt.js',
+    'js/tabs/config-hardware.js',
   ];
 
   function loadScript(src) {

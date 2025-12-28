@@ -155,6 +155,13 @@
                 data-tags="management shutdown editors nano vim which echo">
                 Gestión y Editores
             </a>
+
+            <!-- 11. Hardware -->
+            <div class="nav-group-title">Hardware</div>
+            <a class="nav-link nav-item" data-section="config-hardware"
+                data-tags="wifi network multimedia audio video bluetooth cd dvd burner com usb printers pdf">
+                Configuración de Hardware
+            </a>
         </div>
     </nav>
 
@@ -1873,6 +1880,270 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- HARDWARE CONFIG MODULE -->
+        <section id="config-hardware" class="section">
+            <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Hardware</span>
+            <h1>Configuración de Hardware</h1>
+            <p>Checklist práctico para dejar operativo Wi-Fi, multimedia, unidades ópticas, puertos seriales e
+                impresoras (incluida la impresora PDF virtual) en un equipo recién instalado.</p>
+
+            <div class="card">
+                <h2>1. Diagnóstico Rápido del Equipo</h2>
+                <ol>
+                    <li>Actualiza kernel/firmware antes de empezar.</li>
+                    <li>Detecta cada dispositivo con <code>lspci</code>, <code>lsusb</code> y <code>sudo lshw</code>.
+                    </li>
+                    <li>Verifica módulos cargados (<code>lsmod</code>) y bloqueos de radio (<code>rfkill</code>).</li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update && sudo apt</span> <span
+                            class="hl-cmd">upgrade</span><br>
+                        <span class="hl-comment"># Listar hardware relevante:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lspci</span> <span class="hl-opt">|</span>
+                        <span class="hl-cmd">grep</span> <span class="hl-arg">-i network</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lsusb</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo lshw</span> <span
+                            class="hl-opt">-short</span> <span class="hl-opt">-C</span> <span
+                            class="hl-arg">multimedia</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. Configuración de Red (fácil → experto)</h2>
+                <ol>
+                    <li>Método gráfico: Configuración (GNOME) o <code>nm-connection-editor</code> para redes cableadas y
+                        Wi-Fi.</li>
+                    <li>Modo semi-gráfico: usa <code>nmtui</code> en servidores con solo terminal.</li>
+                    <li>Modo script/infra: define perfiles con <code>nmcli</code>, <code>netplan</code> o incluso
+                        <code>systemd-networkd</code> para entornos minimalistas.</li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-header">Método 1 · Interfaz Gráfica</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># GNOME: Configuración → Red (Ethernet) o Wi-Fi.</span><br>
+                        <span class="hl-comment"># Añade una red, define DHCP o IP fija, DNS y VLAN si aplica.</span><br>
+                        <span class="hl-comment"># Para opciones avanzadas abre:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nm-connection-editor</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Método 2 · nmtui (semi-GUI)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">network-manager</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nmtui</span><br>
+                        <span class="hl-comment"># Selecciona "Activate a connection" y configura Ethernet o Wi-Fi.</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Método 3 · nmcli (scriptable)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear perfil Ethernet con IP estática:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nmcli con add type ethernet</span> <span
+                            class="hl-opt">con-name</span> <span class="hl-arg">LAN-Estatica</span> <span
+                            class="hl-opt">ifname</span> <span class="hl-arg">enp3s0</span> <span
+                            class="hl-opt">ipv4.addresses</span> <span class="hl-arg">192.168.10.20/24</span> <span
+                            class="hl-opt">ipv4.gateway</span> <span class="hl-arg">192.168.10.1</span> <span
+                            class="hl-opt">ipv4.dns</span> <span class="hl-arg">1.1.1.1</span> <span
+                            class="hl-opt">ipv4.method</span> <span class="hl-arg">manual</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nmcli con up</span> <span
+                            class="hl-arg">LAN-Estatica</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Método 4 · Netplan / systemd-networkd</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Edita /etc/netplan/*.yaml (ejemplo DHCP + estático):</span><br>
+                        <code style="display:block; background:#111827; padding:0.75rem; border-radius:8px;">network:
+    version: 2
+    renderer: NetworkManager
+    ethernets:
+      enp3s0:
+        dhcp4: true
+      eno1:
+        addresses: [10.0.0.5/24]
+        routes:
+          - to: default
+            via: 10.0.0.1
+        nameservers:
+          addresses: [1.1.1.1,8.8.8.8]</code>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo netplan apply</span><br><br>
+                        <span class="hl-comment"># Para systemd-networkd:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo nano /etc/systemd/network/10-wired.network</span><br>
+                        <span class="hl-comment">[Match]</span><br>
+                        <span class="hl-comment">Name=enp3s0</span><br>
+                        <span class="hl-comment">[Network]</span><br>
+                        <span class="hl-comment">Address=192.168.50.10/24</span><br>
+                        <span class="hl-comment">Gateway=192.168.50.1</span><br>
+                        <span class="hl-comment">DNS=9.9.9.9</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl enable --now systemd-networkd systemd-resolved</span>
+                    </div>
+                </div>
+                <p style="font-size:0.95rem; color:var(--text-muted); margin-top:1rem;">Cuando automatices despliegues,
+                    guarda plantillas Netplan o scripts <code>nmcli</code> en Git para replicar la misma topología en
+                    varios equipos.</p>
+            </div>
+
+            <div class="card">
+                <h2>3. Wi-Fi paso a paso</h2>
+                <ol>
+                    <li>Confirma que el adaptador existe (<code>lspci</code>/<code>lsusb</code>) y que no está bloqueado:
+                        <code>rfkill list</code>.
+                    </li>
+                    <li>Instala el driver/firmware sugerido por el sistema o por el fabricante (Intel = <code>firmware-iwlwifi</code>,
+                        Broadcom = <code>bcmwl-kernel-source</code>, Realtek = <code>rtl88xxau-dkms</code>, etc.).</li>
+                    <li>Reinicia NetworkManager y conéctate con <code>nmcli</code>.</li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rfkill</span> <span
+                            class="hl-cmd">list</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo rfkill</span> <span
+                            class="hl-cmd">unblock all</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo ubuntu-drivers</span> <span
+                            class="hl-cmd">autoinstall</span><br>
+                        <span class="hl-comment"># O instala firmware específico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">bcmwl-kernel-source</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nmcli device wifi list</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nmcli device wifi connect</span> <span
+                            class="hl-arg">MiRed</span> <span class="hl-opt">password</span> <span
+                            class="hl-arg">SuperSecreta</span>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top:1rem;">Si todo falla, usa
+                    <code>sudo journalctl -u NetworkManager -f</code> mientras intentas conectar; los errores suelen
+                    decirte el módulo faltante.</p>
+            </div>
+
+            <div class="card">
+                <h2>4. Multimedia (Audio/Video/Bluetooth)</h2>
+                <ol>
+                    <li>Revisa que PipeWire o PulseAudio estén corriendo (<code>systemctl --user status pipewire</code>).
+                    </li>
+                    <li>Instala códecs y utilerías: <code>pavucontrol</code>, <code>ffmpeg</code>,
+                        <code>ubuntu-restricted-extras</code>.</li>
+                    <li>Para Bluetooth, activa el servicio y empareja con <code>bluetoothctl</code> o la app gráfica.
+                    </li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-header">Audio</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">systemctl --user</span> <span
+                            class="hl-cmd">status pipewire</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">pavucontrol alsa-utils</span><br>
+                        <span class="hl-comment"># Ajusta entradas/salidas con pavucontrol.</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Video y códecs</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">ubuntu-restricted-extras ffmpeg vlc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo ubuntu-drivers</span> <span
+                            class="hl-cmd">devices</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Bluetooth</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl enable --now</span> <span
+                            class="hl-arg">bluetooth</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bluetoothctl</span><br>
+                        <span class="hl-comment"># En bluetoothctl:</span><br>
+                        <span class="hl-cmd">power on</span><br>
+                        <span class="hl-cmd">scan on</span><br>
+                        <span class="hl-cmd">pair XX:XX:XX:XX:XX:XX</span><br>
+                        <span class="hl-cmd">connect XX:XX:XX:XX:XX:XX</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. Lectores y Quemadoras de CD/DVD</h2>
+                <ol>
+                    <li>Identifica la unidad: <code>sudo wodim --devices</code> o revisa <code>/dev/sr0</code>.</li>
+                    <li>Para leer discos, basta montarlos: <code>udisksctl mount -b /dev/sr0</code>.</li>
+                    <li>Para quemar, instala herramientas tipo Brasero (GUI) o <code>wodim</code>/<code>growisofs</code>.
+                    </li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">brasero wodim cdrdao growisofs</span><br><br>
+                        <span class="hl-comment"># Quemar una ISO en DVD:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">growisofs</span> <span
+                            class="hl-opt">-dvd-compat</span> <span class="hl-opt">-Z</span> <span
+                            class="hl-arg">/dev/sr0=image.iso</span><br><br>
+                        <span class="hl-comment"># Ver logs de lectura:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">dmesg</span> <span class="hl-opt">|</span>
+                        <span class="hl-cmd">grep</span> <span class="hl-arg">sr0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>6. Puertos COM / Serial</h2>
+                <ol>
+                    <li>Conecta el dispositivo y mira <code>dmesg | grep tty</code> para ver qué puerto asignó el kernel.
+                    </li>
+                    <li>Añade tu usuario al grupo <code>dialout</code> para tener permisos.</li>
+                    <li>Configura velocidad y paridad con <code>stty</code> o usa herramientas como <code>screen</code>,
+                        <code>minicom</code> o <code>picocom</code>.</li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">dmesg</span> <span class="hl-opt">|</span>
+                        <span class="hl-cmd">grep</span> <span class="hl-arg">tty</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span
+                            class="hl-arg">/dev/ttyUSB*</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo usermod</span> <span
+                            class="hl-opt">-aG</span> <span class="hl-arg">dialout</span> <span
+                            class="hl-arg">$USER</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">minicom setserial</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo stty</span> <span
+                            class="hl-opt">-F</span> <span class="hl-arg">/dev/ttyUSB0</span> <span
+                            class="hl-arg">115200</span> <span class="hl-opt">cs8</span> <span
+                            class="hl-opt">-cstopb</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-muted);">Para equipos industriales legacy puedes instalar
+                    <code>setserial</code> y definir IRQ/IO si el BIOS no lo hace automáticamente.</p>
+            </div>
+
+            <div class="card">
+                <h2>7. Impresoras (Físicas y PDF)</h2>
+                <ol>
+                    <li>Instala CUPS, controladores y utilerías gráficas.</li>
+                    <li>Habilita el servicio y abre la consola web <code>http://localhost:631</code> o
+                        <code>system-config-printer</code>.</li>
+                    <li>Para impresora PDF, instala <code>cups-pdf</code>; aparecerá como impresora virtual.</li>
+                </ol>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">cups system-config-printer printer-driver-gutenprint cups-pdf</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl enable --now</span> <span
+                            class="hl-arg">cups</span><br>
+                        <span class="hl-comment"># Añadir impresora Wi-Fi (IPP):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lpadmin</span> <span
+                            class="hl-opt">-p</span> <span class="hl-arg">HP_WIFI</span> <span class="hl-opt">-E</span>
+                        <span class="hl-opt">-v</span> <span class="hl-arg">ipp://192.168.1.50/ipp/print</span> <span
+                            class="hl-opt">-m</span> <span class="hl-arg">everywhere</span><br><br>
+                        <span class="hl-comment"># Comprobar colas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lpstat -p</span>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); font-size:0.95rem;">Tras instalar <code>cups-pdf</code>, los
+                    documentos exportados quedan en <code>~/PDF</code>. Ideal para generar facturas o comprobantes sin
+                    impresora física.</p>
             </div>
         </section>
 
