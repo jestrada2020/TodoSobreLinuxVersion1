@@ -109,6 +109,39 @@
       sidebar.classList.toggle('open');
     });
   }
+  
+  function initSidebarToggle() {
+    const toggleBtn = document.querySelector('[data-sidebar-toggle]');
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main');
+
+    if (!toggleBtn || !sidebar || !main) return;
+
+    toggleBtn.addEventListener('click', () => {
+      const isCollapsed = sidebar.classList.toggle('collapsed');
+      main.classList.toggle('expanded', isCollapsed);
+      toggleBtn.classList.toggle('collapsed', isCollapsed);
+      
+      // Store preference in localStorage
+      try {
+        localStorage.setItem('sidebar-collapsed', isCollapsed ? '1' : '0');
+      } catch (e) {
+        // Ignore localStorage errors
+      }
+    });
+    
+    // Restore sidebar state from localStorage
+    try {
+      const savedState = localStorage.getItem('sidebar-collapsed');
+      if (savedState === '1') {
+        sidebar.classList.add('collapsed');
+        main.classList.add('expanded');
+        toggleBtn.classList.add('collapsed');
+      }
+    } catch (e) {
+      // Ignore localStorage errors
+    }
+  }
 
   function showSection(sectionId) {
     const sections = document.querySelectorAll('.section');
@@ -148,6 +181,7 @@
       initAccordions();
       initCopyButtons();
       initMobileMenu();
+      initSidebarToggle();
       showSection(DEFAULT_SECTION);
     });
   }
