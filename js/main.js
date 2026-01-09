@@ -16,6 +16,7 @@
     'js/tabs/rescue-disk.js',
     'js/tabs/custom-icons.js',
     'js/tabs/sys-debug.js',
+    'js/tabs/pkg-uninstall.js',
     'js/tabs/devtools.js',
     'js/tabs/manim.js',
     'js/tabs/uv-python.js',

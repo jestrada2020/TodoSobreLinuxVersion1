@@ -21,7 +21,7 @@
     <!-- SIDEBAR -->
     <nav id="sidebar">
         <div class="brand">
-            <span>//</span> LINUX MASTERY
+            <span>//</span> LINUX todo lo básico de su manejo
         </div>
 
         <div class="search-box">
@@ -105,6 +105,10 @@
             <a class="nav-link nav-item" data-section="sys-debug"
                 data-tags="debug kill process lsof dpkg apt fix broken update">
                 Depurar y Reparar
+            </a>
+            <a class="nav-link nav-item" data-section="pkg-uninstall"
+                data-tags="remove purge uninstall apt dpkg autoremove clean autoclean paquetes desinstalar eliminar">
+                Desinstalación de Paquetes
             </a>
 
             <!-- 8. Software -->
@@ -505,6 +509,340 @@
                         <span class="hl-comment"># ... escribe tus comandos peligrosos ...</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">exit</span><br>
                         <span class="hl-comment"># El archivo 'auditoria.log' tendrás todo grabado.</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- PACKAGE UNINSTALL MODULE -->
+        <section id="pkg-uninstall" class="section">
+            <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">Limpieza Sistema</span>
+            <h1>Desinstalación de Paquetes y Depuración</h1>
+            <p>Guía completa para desinstalar programas de forma eficiente, limpiar dependencias huérfanas y liberar espacio en Ubuntu/Debian.</p>
+
+            <!-- INTRO CARD -->
+            <div class="card" style="border-left: 4px solid var(--color-warn);">
+                <h2>⚠️ Remove vs Purge: Diferencias Clave</h2>
+                <div class="info-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div>
+                        <h3 style="color: var(--color-primary);">apt remove</h3>
+                        <ul style="font-size: 0.9rem;">
+                            <li>Desinstala el programa</li>
+                            <li>❌ Deja archivos de configuración</li>
+                            <li>✅ Si reinstalas, conserva tu configuración</li>
+                            <li>Usa cuando: Vas a reinstalar después</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--color-sys);">apt purge</h3>
+                        <ul style="font-size: 0.9rem;">
+                            <li>Desinstala el programa</li>
+                            <li>✅ Borra archivos de configuración (/etc)</li>
+                            <li>✅ Limpieza completa del sistema</li>
+                            <li>Usa cuando: No volverás a usar ese programa</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BASIC REMOVAL -->
+            <div class="card">
+                <h2>1. Desinstalación Básica (APT)</h2>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">REMOVE - Desinstalar conservando configuración</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Desinstalar un paquete (mantiene configuración):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                            class="hl-arg">firefox</span><br><br>
+
+                        <span class="hl-comment"># Desinstalar múltiples paquetes:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                            class="hl-arg">firefox vlc gimp</span><br><br>
+
+                        <span class="hl-comment"># Simulación (ver qué se va a borrar sin hacerlo):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
+                            class="hl-opt">--dry-run</span> <span class="hl-arg">firefox</span><br>
+                        <span class="hl-comment"># Útil para verificar antes de borrar</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">PURGE - Desinstalación completa (incluye configuración)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Desinstalar + borrar configuración:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge</span> <span
+                            class="hl-arg">firefox</span><br><br>
+
+                        <span class="hl-comment"># Purgar múltiples paquetes a la vez:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge</span> <span
+                            class="hl-arg">firefox vlc gimp</span><br><br>
+
+                        <span class="hl-comment"># Purgar un paquete ya removido (solo borra configs):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge</span> <span
+                            class="hl-arg">firefox</span>
+                        <span class="hl-comment"># Funciona aunque ya esté desinstalado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADVANCED CLEANING -->
+            <div class="card">
+                <h2>2. Limpieza Profunda: Dependencias Huérfanas</h2>
+                <p>Cuando instalas un programa, trae dependencias (librerías). Al desinstalarlo, esas dependencias quedan "huérfanas" ocupando espacio.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">AUTOREMOVE - Eliminar dependencias no usadas</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Después de desinstalar, limpia dependencias huérfanas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove</span><br><br>
+
+                        <span class="hl-comment"># Autoremove + purge (borra configs de las dependencias):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove</span> <span
+                            class="hl-opt">--purge</span><br><br>
+
+                        <span class="hl-comment"># Comando recomendado para máxima limpieza:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge</span> <span
+                            class="hl-arg">firefox</span> <span class="hl-opt">&&</span> <span
+                            class="hl-cmd">sudo apt autoremove</span> <span class="hl-opt">--purge</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CACHE CLEANING -->
+            <div class="card">
+                <h2>3. Limpieza de Caché de Paquetes (.deb)</h2>
+                <p>APT guarda todos los .deb descargados en <code>/var/cache/apt/archives/</code>. Con el tiempo puede ocupar varios GB.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">CLEAN vs AUTOCLEAN</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ver cuánto espacio ocupa la caché:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">du -sh</span> <span
+                            class="hl-arg">/var/cache/apt/archives/</span><br><br>
+
+                        <span class="hl-comment"># CLEAN - Borrar TODA la caché (agresivo):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt clean</span>
+                        <span class="hl-comment"># Libera espacio, pero tendrás que re-descargar si reinstalas</span><br><br>
+
+                        <span class="hl-comment"># AUTOCLEAN - Borrar solo paquetes obsoletos (recomendado):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoclean</span>
+                        <span class="hl-comment"># Borra versiones viejas, mantiene las actuales</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DPKG ADVANCED -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    🔧 DPKG - Gestión de bajo nivel
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>DPKG es el gestor de paquetes base de Debian/Ubuntu. APT es una interfaz sobre dpkg.</p>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">Listar paquetes instalados</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Ver todos los paquetes instalados:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">dpkg</span> <span
+                                class="hl-opt">-l</span><br><br>
+
+                            <span class="hl-comment"># Buscar un paquete específico:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">dpkg</span> <span
+                                class="hl-opt">-l</span> <span class="hl-opt">|</span> <span
+                                class="hl-cmd">grep</span> <span class="hl-arg">firefox</span><br><br>
+
+                            <span class="hl-comment"># Ver archivos instalados por un paquete:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">dpkg</span> <span
+                                class="hl-opt">-L</span> <span class="hl-arg">firefox</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">Desinstalar con DPKG</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Remover paquete (similar a apt remove):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg</span> <span
+                                class="hl-opt">-r</span> <span class="hl-arg">firefox</span><br><br>
+
+                            <span class="hl-comment"># Purgar paquete (similar a apt purge):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg</span> <span
+                                class="hl-opt">-P</span> <span class="hl-arg">firefox</span><br><br>
+
+                            <span class="hl-comment"># ⚠️ DPKG no resuelve dependencias automáticamente</span><br>
+                            <span class="hl-comment"># Si falla, luego ejecuta: sudo apt --fix-broken install</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">Encontrar paquetes con configuración residual</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Listar paquetes marcados como 'rc' (removed, config remains):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">dpkg</span> <span
+                                class="hl-opt">-l</span> <span class="hl-opt">|</span> <span
+                                class="hl-cmd">grep</span> <span class="hl-arg">'^rc'</span><br><br>
+
+                            <span class="hl-comment"># Purgar TODOS los paquetes con config residual:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg</span> <span
+                                class="hl-opt">-l</span> <span class="hl-opt">|</span> <span
+                                class="hl-cmd">grep</span> <span class="hl-arg">'^rc'</span> <span
+                                class="hl-opt">|</span> <span class="hl-cmd">awk</span> <span
+                                class="hl-arg">'{print $2}'</span> <span class="hl-opt">|</span> <span
+                                class="hl-cmd">xargs sudo dpkg --purge</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SNAP/FLATPAK REMOVAL -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    📦 Desinstalar Snap y Flatpak
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Ubuntu usa Snap para algunos programas. Flatpak es otra alternativa moderna.</p>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">SNAP - Paquetes universales de Canonical</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Listar snaps instalados:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">snap list</span><br><br>
+
+                            <span class="hl-comment"># Desinstalar un snap:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap remove</span> <span
+                                class="hl-arg">firefox</span><br><br>
+
+                            <span class="hl-comment"># Remover + borrar datos del usuario:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap remove</span> <span
+                                class="hl-opt">--purge</span> <span class="hl-arg">firefox</span><br><br>
+
+                            <span class="hl-comment"># Deshabilitar snap completamente (avanzado):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl disable snapd</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge snapd</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">FLATPAK - Paquetes de Flathub</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Listar flatpaks instalados:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">flatpak list</span><br><br>
+
+                            <span class="hl-comment"># Desinstalar flatpak:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">flatpak uninstall</span> <span
+                                class="hl-arg">org.mozilla.firefox</span><br><br>
+
+                            <span class="hl-comment"># Borrar datos del usuario también:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">flatpak uninstall</span> <span
+                                class="hl-opt">--delete-data</span> <span class="hl-arg">org.mozilla.firefox</span><br><br>
+
+                            <span class="hl-comment"># Limpiar runtimes no usados (equivalente a autoremove):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">flatpak uninstall</span> <span
+                                class="hl-opt">--unused</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLETE CLEANUP WORKFLOW -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1)); border-left: 4px solid var(--color-primary);">
+                <h2>🚀 Rutina de Limpieza Completa (Recomendada)</h2>
+                <p>Ejecuta esto mensualmente para mantener tu sistema optimizado:</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Actualizar lista de paquetes</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br><br>
+
+                        <span class="hl-comment"># 2. Actualizar paquetes instalados</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt upgrade</span> <span
+                            class="hl-opt">-y</span><br><br>
+
+                        <span class="hl-comment"># 3. Eliminar paquetes huérfanos + configs</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove</span> <span
+                            class="hl-opt">--purge</span> <span class="hl-opt">-y</span><br><br>
+
+                        <span class="hl-comment"># 4. Limpiar caché de paquetes obsoletos</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoclean</span><br><br>
+
+                        <span class="hl-comment"># 5. Purgar configuraciones residuales</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg -l | grep '^rc' | awk '{print $2}' | xargs -r sudo dpkg --purge</span><br><br>
+
+                        <span class="hl-comment"># 6. Limpiar journald logs (opcional, si /var está lleno)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo journalctl --vacuum-time=7d</span>
+                        <span class="hl-comment"># Mantiene solo últimos 7 días</span><br><br>
+
+                        <span class="hl-comment"># 7. Ver espacio liberado</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">df -h</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PPA REMOVAL -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    🔌 Desinstalar PPAs (Repositorios Externos)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Los PPAs (Personal Package Archives) añaden software de terceros. A veces conviene eliminarlos.</p>
+
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Listar PPAs instalados:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span
+                                class="hl-arg">/etc/apt/sources.list.d/</span><br><br>
+
+                            <span class="hl-comment"># Remover un PPA:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository</span> <span
+                                class="hl-opt">--remove</span> <span class="hl-arg">ppa:nombre/repo</span><br><br>
+
+                            <span class="hl-comment"># Desinstalar programa del PPA + remover el repositorio:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge</span> <span
+                                class="hl-arg">nombre-paquete</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository --remove</span> <span
+                                class="hl-arg">ppa:nombre/repo</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DANGER ZONE -->
+            <div class="card" style="border-left: 4px solid var(--color-warn); background: rgba(239, 68, 68, 0.05);">
+                <h2>⚠️ Zona Peligrosa: Comandos Avanzados</h2>
+                <p style="color: var(--color-warn); font-weight: 600;">Usar con EXTREMA precaución. Pueden romper tu sistema.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Forzar desinstalación (si dpkg/apt fallan)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Si un paquete está roto y no se puede desinstalar normalmente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg --force-all -P</span> <span
+                            class="hl-arg">nombre-paquete</span><br><br>
+
+                        <span class="hl-comment"># Luego arregla dependencias:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt --fix-broken install</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Remover kernels viejos (liberar espacio /boot)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ver kernels instalados:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">dpkg -l | grep linux-image</span><br><br>
+
+                        <span class="hl-comment"># Ver kernel actual (NO LO BORRES):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uname -r</span><br><br>
+
+                        <span class="hl-comment"># Remover kernel viejo específico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt purge</span> <span
+                            class="hl-arg">linux-image-5.15.0-56-generic</span><br><br>
+
+                        <span class="hl-comment"># Autoremover kernels viejos (más seguro):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove --purge</span>
                     </div>
                 </div>
             </div>
@@ -1762,18 +2100,64 @@
                 <h2>Lectura de Archivos</h2>
                 <div class="cmd-box">
                     <div class="cmd-content">
+                        <span class="hl-comment"># Ver todo el contenido de un archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span
+                            class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Mostrar archivo completo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-opt">-n</span> <span
+                            class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Con números de línea</span><br><br>
+
                         <span class="hl-comment"># Primeras 10 líneas (Cabeceras):</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">head</span> <span
-                            class="hl-arg">archivo.txt</span><br><br>
+                            class="hl-arg">archivo.txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">head</span> <span class="hl-opt">-n 20</span> <span
+                            class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Primeras 20 líneas</span><br><br>
+
                         <span class="hl-comment"># Últimas 10 líneas (Logs):</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span
-                            class="hl-arg">error.log</span><br><br>
-                        <span class="hl-comment"># Seguir un log en tiempo real (Muy útil):</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">tail -f</span> <span
-                            class="hl-arg">/var/log/syslog</span><br><br>
+                            class="hl-arg">error.log</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-f</span> <span
+                            class="hl-arg">/var/log/syslog</span>
+                        <span class="hl-comment"># Seguir en tiempo real (muy útil)</span><br><br>
+
                         <span class="hl-comment"># Leer con scroll (Salir con 'q'):</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">less</span> <span
                             class="hl-arg">documento_largo.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GREP - BUSCAR PATRONES -->
+            <div class="card">
+                <h2>Buscar en Archivos (GREP)</h2>
+                <p>Grep es una de las herramientas más poderosas para buscar texto.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Buscar palabra en un archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span
+                            class="hl-arg">"palabra"</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                        <span class="hl-comment"># Buscar sin distinguir mayúsculas/minúsculas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-i</span> <span
+                            class="hl-arg">"error"</span> <span class="hl-arg">log.txt</span><br><br>
+
+                        <span class="hl-comment"># Buscar en todos los archivos de una carpeta:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-r</span> <span
+                            class="hl-arg">"TODO"</span> <span class="hl-arg">/proyecto/</span><br><br>
+
+                        <span class="hl-comment"># Mostrar número de línea donde aparece:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-n</span> <span
+                            class="hl-arg">"function"</span> <span class="hl-arg">script.js</span><br><br>
+
+                        <span class="hl-comment"># Contar cuántas veces aparece:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-c</span> <span
+                            class="hl-arg">"error"</span> <span class="hl-arg">log.txt</span><br><br>
+
+                        <span class="hl-comment"># Invertir búsqueda (líneas que NO contienen el patrón):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-v</span> <span
+                            class="hl-arg">"comentario"</span> <span class="hl-arg">codigo.py</span>
                     </div>
                 </div>
             </div>
@@ -1790,10 +2174,82 @@
                             class="hl-arg">archivo.txt</span> <span class="hl-comment"># Solo líneas</span><br><br>
                         <span class="hl-comment"># Ordenar contenido alfabéticamente:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span
-                            class="hl-arg">lista.txt</span><br><br>
+                            class="hl-arg">lista.txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">-r</span> <span
+                            class="hl-arg">lista.txt</span> <span class="hl-comment"># Orden inverso</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">-u</span> <span
+                            class="hl-arg">lista.txt</span> <span class="hl-comment"># Eliminar duplicados</span><br><br>
                         <span class="hl-comment"># Ver diferencias entre dos archivos:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">diff</span> <span
                             class="hl-arg">version1.txt version2.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AWK - PROCESAMIENTO AVANZADO -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    🔧 AWK - Procesamiento de Columnas
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>AWK es ideal para procesar archivos con columnas (CSV, logs, etc.).</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Imprimir la primera columna de un archivo:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span
+                                class="hl-arg">'{print $1}'</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                            <span class="hl-comment"># Imprimir columnas 1 y 3:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span
+                                class="hl-arg">'{print $1, $3}'</span> <span class="hl-arg">datos.csv</span><br><br>
+
+                            <span class="hl-comment"># Filtrar líneas donde columna 3 > 100:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span
+                                class="hl-arg">'$3 > 100'</span> <span class="hl-arg">ventas.txt</span><br><br>
+
+                            <span class="hl-comment"># Sumar valores de la segunda columna:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span
+                                class="hl-arg">'{sum += $2} END {print sum}'</span> <span class="hl-arg">numeros.txt</span><br><br>
+
+                            <span class="hl-comment"># Usar delimitador personalizado (ej: CSV con comas):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-opt">-F','</span> <span
+                                class="hl-arg">'{print $1, $2}'</span> <span class="hl-arg">datos.csv</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SED - EDICION DE TEXTO -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    ✏️ SED - Editor de Flujo (Stream Editor)
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>SED permite editar archivos de texto sin abrirlos en un editor.</p>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Reemplazar primera ocurrencia en cada línea:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span
+                                class="hl-arg">'s/viejo/nuevo/'</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                            <span class="hl-comment"># Reemplazar TODAS las ocurrencias (flag 'g' = global):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span
+                                class="hl-arg">'s/viejo/nuevo/g'</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                            <span class="hl-comment"># Editar archivo directamente (in-place) con -i:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span class="hl-opt">-i</span> <span
+                                class="hl-arg">'s/http/https/g'</span> <span class="hl-arg">config.txt</span><br><br>
+
+                            <span class="hl-comment"># Borrar líneas que contienen un patrón:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span
+                                class="hl-arg">'/DEBUG/d'</span> <span class="hl-arg">log.txt</span><br><br>
+
+                            <span class="hl-comment"># Mostrar solo las líneas 10 a 20:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span
+                                class="hl-arg">-n '10,20p'</span> <span class="hl-arg">archivo.txt</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1862,6 +2318,111 @@
                                 <li>Escribe <code>:wq</code> y Enter para <strong>Guardar y Salir</strong>.</li>
                                 <li>Escribe <code>:q!</code> y Enter para <strong>Salir sin guardar</strong>.</li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UTILITIES -->
+                <div class="card">
+                    <h3>Comandos Útiles Esenciales</h3>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">ECHO - Imprimir Texto</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Mostrar texto en terminal:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span
+                                class="hl-arg">"Hola Mundo"</span><br><br>
+
+                            <span class="hl-comment"># Usar variables:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span
+                                class="hl-arg">"Usuario: $USER"</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span
+                                class="hl-arg">"Ruta HOME: $HOME"</span><br><br>
+
+                            <span class="hl-comment"># Crear archivo con contenido:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span
+                                class="hl-arg">"Primera línea"</span> <span class="hl-opt">></span> <span
+                                class="hl-arg">archivo.txt</span><br><br>
+
+                            <span class="hl-comment"># Agregar línea al final de archivo:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span
+                                class="hl-arg">"Nueva línea"</span> <span class="hl-opt">>></span> <span
+                                class="hl-arg">archivo.txt</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">MAN - Manual de Comandos</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Ver manual de cualquier comando:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">man</span> <span
+                                class="hl-arg">ls</span>
+                            <span class="hl-comment"># Muestra la documentación completa de ls</span><br><br>
+
+                            <span class="hl-comment"># Buscar comando por palabra clave:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">man</span> <span class="hl-opt">-k</span> <span
+                                class="hl-arg">network</span>
+                            <span class="hl-comment"># Lista comandos relacionados con network</span><br><br>
+
+                            <span class="hl-comment"># Navegación en el manual:</span><br>
+                            <span class="hl-comment"># Espacio: Página siguiente | b: Página anterior</span><br>
+                            <span class="hl-comment"># /texto: Buscar | q: Salir</span><br><br>
+
+                            <span class="hl-comment"># Ayuda rápida (alternativa más corta):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span
+                                class="hl-arg">--help</span>
+                            <span class="hl-comment"># Muestra resumen de opciones</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">WATCH - Ejecutar Comando Repetidamente</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Ejecutar comando cada 2 segundos (por defecto):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">watch</span> <span
+                                class="hl-arg">df -h</span>
+                            <span class="hl-comment"># Monitorear espacio en disco en tiempo real</span><br><br>
+
+                            <span class="hl-comment"># Cambiar intervalo (cada 5 segundos):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">watch</span> <span class="hl-opt">-n 5</span> <span
+                                class="hl-arg">free -h</span><br><br>
+
+                            <span class="hl-comment"># Resaltar diferencias entre actualizaciones:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">watch</span> <span class="hl-opt">-d</span> <span
+                                class="hl-arg">ls -l</span><br><br>
+
+                            <span class="hl-comment"># Ejemplos útiles:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">watch</span> <span
+                                class="hl-arg">'ps aux | grep nginx'</span>
+                            <span class="hl-comment"># Monitorear procesos nginx</span><br>
+                            <span class="hl-comment"># Presiona Ctrl+C para salir</span>
+                        </div>
+                    </div>
+
+                    <div class="cmd-box">
+                        <div class="cmd-header">FILE - Determinar Tipo de Archivo</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Identificar tipo de archivo (sin importar extensión):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">file</span> <span
+                                class="hl-arg">imagen.jpg</span>
+                            <span class="hl-comment"># Output: JPEG image data, JFIF standard...</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">file</span> <span
+                                class="hl-arg">script.sh</span>
+                            <span class="hl-comment"># Output: Bourne-Again shell script...</span><br><br>
+
+                            <span class="hl-prompt">$</span><span class="hl-cmd">file</span> <span
+                                class="hl-arg">documento.pdf</span>
+                            <span class="hl-comment"># Output: PDF document, version 1.4</span><br><br>
+
+                            <span class="hl-comment"># Muy útil para archivos sin extensión:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">file</span> <span
+                                class="hl-arg">archivo_desconocido</span><br><br>
+
+                            <span class="hl-comment"># Analizar múltiples archivos:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">file</span> <span
+                                class="hl-arg">*</span>
+                            <span class="hl-comment"># Muestra el tipo de todos los archivos en la carpeta</span>
                         </div>
                     </div>
                 </div>
@@ -2477,18 +3038,65 @@
                     <span>+</span>
                 </div>
                 <div class="accordion-content">
+                    <p><strong>find</strong> busca en tiempo real. <strong>locate</strong> usa un índice (más rápido pero requiere actualización).</p>
+
+                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">FIND - Búsqueda en Tiempo Real</h3>
                     <div class="cmd-box">
                         <div class="cmd-content">
+                            <span class="hl-comment"># Buscar archivo por nombre (case sensitive):</span><br>
                             <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/var</span> <span class="hl-opt">-name</span> <span
-                                class="hl-arg">"*.log"</span> <span class="hl-opt">-size</span> <span
-                                class="hl-arg">+50M</span>
-                            <span class="hl-comment"># Busca logs de más de 50MB en /var</span><br><br>
+                                class="hl-arg">/home</span> <span class="hl-opt">-name</span> <span
+                                class="hl-arg">"documento.txt"</span><br><br>
 
+                            <span class="hl-comment"># Buscar ignorando mayúsculas/minúsculas:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/home</span> <span class="hl-opt">-iname</span> <span
+                                class="hl-arg">"*.jpg"</span><br><br>
+
+                            <span class="hl-comment"># Buscar archivos por tamaño (más de 50MB):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/var</span> <span class="hl-opt">-size</span> <span
+                                class="hl-arg">+50M</span><br><br>
+
+                            <span class="hl-comment"># Buscar archivos modificados en los últimos 7 días:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/home</span> <span class="hl-opt">-mtime</span> <span
+                                class="hl-arg">-7</span><br><br>
+
+                            <span class="hl-comment"># Buscar solo directorios:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/var</span> <span class="hl-opt">-type d</span> <span
+                                class="hl-opt">-name</span> <span class="hl-arg">"log*"</span><br><br>
+
+                            <span class="hl-comment"># Buscar y ejecutar acción (ej: borrar archivos .tmp):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span
+                                class="hl-arg">"*.tmp"</span> <span class="hl-opt">-exec</span> <span
+                                class="hl-cmd">rm</span> <span class="hl-arg">{} \;</span><br><br>
+
+                            <span class="hl-comment"># Buscar archivos vacíos:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
+                                class="hl-arg">/home</span> <span class="hl-opt">-empty</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">LOCATE - Búsqueda Rápida Indexada</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Búsqueda instantánea por nombre:</span><br>
                             <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span
-                                class="hl-arg">nginx.conf</span>
-                            <span class="hl-comment"># Búsqueda instantánea (usa una base de datos indexada).</span>
-                            <span class="hl-comment"># Requiere 'sudo updatedb' antes.</span>
+                                class="hl-arg">nginx.conf</span><br><br>
+
+                            <span class="hl-comment"># Buscar ignorando mayúsculas:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-i</span> <span
+                                class="hl-arg">readme.md</span><br><br>
+
+                            <span class="hl-comment"># Actualizar base de datos (necesario para archivos nuevos):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo updatedb</span><br><br>
+
+                            <span class="hl-comment"># Limitar número de resultados:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-n 10</span> <span
+                                class="hl-arg">"*.pdf"</span>
                         </div>
                     </div>
                 </div>
@@ -2687,6 +3295,70 @@
                     <span class="hl-comment"># Memoria RAM disponible</span><br>
                     <span class="hl-prompt">$</span><span class="hl-cmd">uname</span> <span class="hl-opt">-a</span>
                     <span class="hl-comment"># Info del Kernel</span>
+                </div>
+            </div>
+
+            <!-- GESTION DE PROCESOS -->
+            <div class="card">
+                <h2>Gestión de Procesos</h2>
+                <p>Monitorear y controlar procesos en ejecución.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Ver Procesos (PS, TOP, HTOP)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Listar todos los procesos en ejecución:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ps</span> <span class="hl-opt">aux</span>
+                        <span class="hl-comment"># a=all users, u=user format, x=incluir sin terminal</span><br><br>
+
+                        <span class="hl-comment"># Ver procesos de un usuario específico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ps</span> <span class="hl-opt">-u</span> <span
+                            class="hl-arg">john</span><br><br>
+
+                        <span class="hl-comment"># Buscar un proceso específico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ps</span> <span class="hl-opt">aux</span> <span
+                            class="hl-opt">|</span> <span class="hl-cmd">grep</span> <span
+                            class="hl-arg">nginx</span><br><br>
+
+                        <span class="hl-comment"># Monitor interactivo en tiempo real (presiona 'q' para salir):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">top</span><br>
+                        <span class="hl-comment"># Ordenar por CPU: Shift+P | Ordenar por RAM: Shift+M</span><br><br>
+
+                        <span class="hl-comment"># HTOP - Versión mejorada de top (más visual):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">htop</span>
+                        <span class="hl-comment"># Instalar: sudo apt install htop</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Terminar Procesos (KILL)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Terminar proceso por PID (Process ID):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kill</span> <span
+                            class="hl-arg">1234</span>
+                        <span class="hl-comment"># Envía señal TERM (15) - Cierre ordenado</span><br><br>
+
+                        <span class="hl-comment"># Forzar terminación inmediata (si no responde):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kill</span> <span class="hl-opt">-9</span> <span
+                            class="hl-arg">1234</span>
+                        <span class="hl-comment"># Señal KILL (9) - No se puede ignorar</span><br><br>
+
+                        <span class="hl-comment"># Terminar proceso por nombre:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pkill</span> <span
+                            class="hl-arg">firefox</span><br><br>
+
+                        <span class="hl-comment"># Terminar TODOS los procesos de un programa:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">killall</span> <span
+                            class="hl-arg">chrome</span><br><br>
+
+                        <span class="hl-comment"># Buscar PID por nombre:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pgrep</span> <span
+                            class="hl-arg">nginx</span>
+                        <span class="hl-comment"># Retorna el PID del proceso</span><br><br>
+
+                        <span class="hl-comment"># Ver señales disponibles:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kill</span> <span class="hl-opt">-l</span>
+                        <span class="hl-comment"># Lista todas las señales (TERM, KILL, HUP, etc.)</span>
+                    </div>
                 </div>
             </div>
         </section>
