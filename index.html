@@ -117,6 +117,10 @@
                 data-tags="install snap vscode chrome latex texstudio cursor appimage">
                 Instalar Dev Tools
             </a>
+            <a class="nav-link nav-item" data-section="python-install"
+                data-tags="python install update upgrade pip venv virtualenv deadsnakes ppa version">
+                Instalación y Actualización Python
+            </a>
             <a class="nav-link nav-item" data-section="manim"
                 data-tags="manim python video math animation cli pip conda">
                 Manim (Animaciones)
@@ -942,6 +946,436 @@
                             class="hl-arg">texstudio</span>
                     </div>
                 </div>
+            </div>
+
+        </section>
+
+        <!-- PYTHON INSTALLATION MODULE -->
+        <section id="python-install" class="section">
+            <span class="badge" style="background: rgba(251, 146, 60, 0.15); color: #fb923c;">Python</span>
+            <h1>Instalación y Actualización de Python en Ubuntu (2026)</h1>
+            <p>Guía completa para gestionar versiones de Python en Ubuntu, siguiendo las mejores prácticas y recomendaciones críticas para 2026.</p>
+
+            <!-- QUICK REFERENCE TABLE -->
+            <div class="card" style="border-left: 4px solid var(--color-primary);">
+                <h2>📋 Comandos Clave para la Gestión de Python</h2>
+                <p>Tabla resumen de operaciones esenciales para mantener Python actualizado:</p>
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="background: rgba(56, 189, 248, 0.1); border-bottom: 2px solid var(--border);">
+                            <th style="padding: 0.75rem; text-align: left; color: var(--color-primary);">Acción</th>
+                            <th style="padding: 0.75rem; text-align: left; color: var(--color-primary);">Comando</th>
+                            <th style="padding: 0.75rem; text-align: left; color: var(--color-primary);">Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Verificar versión</td>
+                            <td style="padding: 0.75rem;"><code>python3 --version</code></td>
+                            <td style="padding: 0.75rem;">Muestra la versión actual instalada</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Actualizar índices</td>
+                            <td style="padding: 0.75rem;"><code>sudo apt update</code></td>
+                            <td style="padding: 0.75rem;">Sincroniza la lista de paquetes</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Instalación Estándar</td>
+                            <td style="padding: 0.75rem;"><code>sudo apt install python3</code></td>
+                            <td style="padding: 0.75rem;">Instala versión oficial del repositorio</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Versión Específica</td>
+                            <td style="padding: 0.75rem;"><code>sudo apt install python3.13</code></td>
+                            <td style="padding: 0.75rem;">Instala una versión puntual (ej. 3.13)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Repositorio PPA</td>
+                            <td style="padding: 0.75rem;"><code>sudo add-apt-repository ppa:deadsnakes/ppa</code></td>
+                            <td style="padding: 0.75rem;">Acceso a versiones nuevas de Python</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Instalar PIP</td>
+                            <td style="padding: 0.75rem;"><code>sudo apt install python3-pip</code></td>
+                            <td style="padding: 0.75rem;">Gestor de paquetes de Python</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem;">Cambiar Default</td>
+                            <td style="padding: 0.75rem;"><code>sudo update-alternatives --config python3</code></td>
+                            <td style="padding: 0.75rem;">Gestiona múltiples versiones</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem;">Desde Fuente</td>
+                            <td style="padding: 0.75rem;"><code>sudo make altinstall</code></td>
+                            <td style="padding: 0.75rem;">Compilación manual segura</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- STANDARD INSTALLATION -->
+            <div class="card">
+                <h2>1. Instalación Estándar de Python</h2>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Verificar Versión Actual</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ver versión de Python 3 instalada:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3 --version</span><br><br>
+
+                        <span class="hl-comment"># Ver ubicación del ejecutable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">which python3</span><br><br>
+
+                        <span class="hl-comment"># Ver todas las versiones instaladas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span
+                            class="hl-arg">/usr/bin/python*</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación desde Repositorios Oficiales</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Actualizar lista de paquetes:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br><br>
+
+                        <span class="hl-comment"># Instalar Python 3 (versión del repositorio oficial):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">python3</span><br><br>
+
+                        <span class="hl-comment"># Instalar paquetes de desarrollo (recomendado):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">python3-dev python3-venv</span><br><br>
+
+                        <span class="hl-comment"># Instalar PIP (gestor de paquetes):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">python3-pip</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEADSNAKES PPA -->
+            <div class="card">
+                <h2>2. Instalar Versiones Específicas (PPA Deadsnakes)</h2>
+                <p>Para obtener las últimas versiones de Python (3.12, 3.13, 3.14) que no están en los repositorios oficiales.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Agregar Repositorio Deadsnakes</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Agregar el PPA de Deadsnakes (fuente confiable):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository</span> <span
+                            class="hl-arg">ppa:deadsnakes/ppa</span><br><br>
+
+                        <span class="hl-comment"># Actualizar lista de paquetes:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalar Versión Específica</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Listar versiones disponibles:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">apt search</span> <span
+                            class="hl-arg">python3.</span> <span class="hl-opt">|</span> <span
+                            class="hl-cmd">grep</span> <span class="hl-arg">^python3</span><br><br>
+
+                        <span class="hl-comment"># Instalar Python 3.13 (ejemplo):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">python3.13</span><br><br>
+
+                        <span class="hl-comment"># Instalar con paquetes adicionales:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">python3.13 python3.13-dev python3.13-venv</span><br><br>
+
+                        <span class="hl-comment"># Verificar instalación:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3.13 --version</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MULTIPLE VERSIONS -->
+            <div class="card">
+                <h2>3. Gestionar Múltiples Versiones de Python</h2>
+                <p>Ubuntu permite tener varias versiones de Python instaladas simultáneamente.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Configurar update-alternatives</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Registrar Python 3.11 como alternativa:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo update-alternatives --install</span> <span
+                            class="hl-arg">/usr/bin/python3 python3 /usr/bin/python3.11 1</span><br><br>
+
+                        <span class="hl-comment"># Registrar Python 3.13 como alternativa:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo update-alternatives --install</span> <span
+                            class="hl-arg">/usr/bin/python3 python3 /usr/bin/python3.13 2</span><br><br>
+
+                        <span class="hl-comment"># Seleccionar versión por defecto interactivamente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo update-alternatives --config python3</span><br>
+                        <span class="hl-comment"># Aparecerá un menú para elegir la versión</span><br><br>
+
+                        <span class="hl-comment"># Ver configuración actual:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">update-alternatives --display python3</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Usar Versiones Específicas Directamente</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ejecutar script con versión específica:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3.11</span> <span
+                            class="hl-arg">script.py</span><br><br>
+
+                        <span class="hl-comment"># Crear alias en ~/.bashrc para acceso rápido:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span
+                            class="hl-arg">'alias py311="python3.11"'</span> <span class="hl-opt">>></span> <span
+                            class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                            class="hl-arg">~/.bashrc</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRITICAL RECOMMENDATIONS 2026 -->
+            <div class="card" style="border-left: 4px solid var(--color-warn); background: rgba(251, 146, 60, 0.05);">
+                <h2>⚠️ Recomendaciones Críticas para 2026</h2>
+                <p style="color: var(--color-warn); font-weight: 600;">Para garantizar la estabilidad del sistema operativo en Ubuntu 24.04 LTS y sucesoras:</p>
+
+                <h3 style="color: var(--color-sys); margin-top: 1.5rem;">1. Uso Obligatorio de Entornos Virtuales</h3>
+                <p>En 2026, Ubuntu aplica estrictamente la política de <strong>Externally Managed Environments</strong>.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># ❌ NO USAR (romperá el sistema):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd" style="text-decoration: line-through;">sudo pip install</span> <span
+                            class="hl-arg" style="text-decoration: line-through;">paquete</span><br><br>
+
+                        <span class="hl-comment"># ✅ CORRECTO - Crear entorno virtual:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3 -m venv</span> <span
+                            class="hl-arg">mi_entorno</span><br><br>
+
+                        <span class="hl-comment"># Activar entorno:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                            class="hl-arg">mi_entorno/bin/activate</span><br><br>
+
+                        <span class="hl-comment"># Ahora sí puedes instalar con pip:</span><br>
+                        <span class="hl-prompt">(mi_entorno) $</span><span class="hl-cmd">pip install</span> <span
+                            class="hl-arg">requests pandas numpy</span><br><br>
+
+                        <span class="hl-comment"># Desactivar entorno cuando termines:</span><br>
+                        <span class="hl-prompt">(mi_entorno) $</span><span class="hl-cmd">deactivate</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-sys); margin-top: 1.5rem;">2. Seguridad con el PPA Deadsnakes</h3>
+                <p>El repositorio <strong>Deadsnakes</strong> es la fuente más confiable para obtener las últimas actualizaciones de Python sin conflictos con las dependencias nativas del sistema.</p>
+                <ul style="font-size: 0.9rem; line-height: 1.8; margin-top: 0.5rem;">
+                    <li>✅ Mantenido activamente por la comunidad Python</li>
+                    <li>✅ Versiones probadas y estables para Ubuntu</li>
+                    <li>✅ No interfiere con el Python del sistema</li>
+                    <li>✅ Actualizaciones de seguridad regulares</li>
+                </ul>
+
+                <h3 style="color: var(--color-sys); margin-top: 1.5rem;">3. Precaución con la Compilación Manual</h3>
+                <p>Al instalar Python desde el código fuente:</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># ✅ CORRECTO - Usar altinstall (no sobrescribe binarios del sistema):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo make altinstall</span><br><br>
+
+                        <span class="hl-comment"># ❌ PELIGROSO - NUNCA usar make install:</span><br>
+                        <span class="hl-comment"># sudo make install  # ¡Esto sobrescribirá /usr/bin/python!</span><br>
+                        <span class="hl-comment"># Ubuntu usa Python para procesos críticos del sistema</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIRTUAL ENVIRONMENTS -->
+            <div class="card">
+                <h2>4. Entornos Virtuales (venv)</h2>
+                <p>Gestión completa de entornos aislados para proyectos Python.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Crear y Gestionar Entornos</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear entorno virtual:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3 -m venv</span> <span
+                            class="hl-arg">nombre_proyecto</span><br><br>
+
+                        <span class="hl-comment"># Crear con versión específica de Python:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3.13 -m venv</span> <span
+                            class="hl-arg">proyecto_python313</span><br><br>
+
+                        <span class="hl-comment"># Activar entorno:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                            class="hl-arg">nombre_proyecto/bin/activate</span><br><br>
+
+                        <span class="hl-comment"># Ver versión de Python en el entorno:</span><br>
+                        <span class="hl-prompt">(nombre_proyecto) $</span><span class="hl-cmd">python --version</span><br><br>
+
+                        <span class="hl-comment"># Instalar paquetes en el entorno:</span><br>
+                        <span class="hl-prompt">(nombre_proyecto) $</span><span class="hl-cmd">pip install</span> <span
+                            class="hl-arg">django flask requests</span><br><br>
+
+                        <span class="hl-comment"># Exportar dependencias:</span><br>
+                        <span class="hl-prompt">(nombre_proyecto) $</span><span class="hl-cmd">pip freeze</span> <span
+                            class="hl-opt">></span> <span class="hl-arg">requirements.txt</span><br><br>
+
+                        <span class="hl-comment"># Instalar desde requirements.txt:</span><br>
+                        <span class="hl-prompt">(nombre_proyecto) $</span><span class="hl-cmd">pip install</span> <span
+                            class="hl-opt">-r</span> <span class="hl-arg">requirements.txt</span><br><br>
+
+                        <span class="hl-comment"># Desactivar entorno:</span><br>
+                        <span class="hl-prompt">(nombre_proyecto) $</span><span class="hl-cmd">deactivate</span><br><br>
+
+                        <span class="hl-comment"># Eliminar entorno (simplemente borra la carpeta):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span
+                            class="hl-arg">nombre_proyecto</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPILE FROM SOURCE -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    🔨 Compilar Python desde el Código Fuente
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Para usuarios avanzados que necesitan versiones específicas no disponibles en repositorios.</p>
+
+                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">Paso 1: Instalar Dependencias</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                                class="hl-arg">build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">Paso 2: Descargar Código Fuente</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Descargar Python 3.13.1 (ejemplo):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                                class="hl-arg">/tmp</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span
+                                class="hl-arg">https://www.python.org/ftp/python/3.13.1/Python-3.13.1.tgz</span><br><br>
+
+                            <span class="hl-comment"># Extraer:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">tar -xf</span> <span
+                                class="hl-arg">Python-3.13.1.tgz</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                                class="hl-arg">Python-3.13.1</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">Paso 3: Configurar y Compilar</h3>
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Configurar con optimizaciones:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">./configure --enable-optimizations</span><br><br>
+
+                            <span class="hl-comment"># Compilar (usa todos los núcleos CPU):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">make</span> <span
+                                class="hl-opt">-j</span> <span class="hl-arg">$(nproc)</span><br><br>
+
+                            <span class="hl-comment"># ⚠️ CRÍTICO: Usar altinstall (NO install):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo make altinstall</span><br><br>
+
+                            <span class="hl-comment"># Verificar:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">python3.13 --version</span>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(251, 146, 60, 0.1); padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                        <strong style="color: var(--color-warn);">⚠️ Advertencia:</strong> <code>make altinstall</code> instala en <code>/usr/local/bin/python3.13</code> sin tocar <code>/usr/bin/python3</code>. Nunca uses <code>make install</code> ya que sobrescribiría el Python del sistema.
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPDATE PYTHON -->
+            <div class="card">
+                <h2>5. Actualizar Python Existente</h2>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizar via APT</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Actualizar todo el sistema (incluye Python):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt upgrade</span><br><br>
+
+                        <span class="hl-comment"># Actualizar solo Python:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install --only-upgrade</span> <span
+                            class="hl-arg">python3</span><br><br>
+
+                        <span class="hl-comment"># Ver si hay actualizaciones disponibles:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">apt list --upgradable</span> <span
+                            class="hl-opt">|</span> <span class="hl-cmd">grep</span> <span
+                            class="hl-arg">python</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizar PIP</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Actualizar pip en entorno virtual:</span><br>
+                        <span class="hl-prompt">(entorno) $</span><span class="hl-cmd">pip install --upgrade pip</span><br><br>
+
+                        <span class="hl-comment"># Ver versión de pip:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip --version</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TROUBLESHOOTING -->
+            <div class="card" style="border-left: 4px solid var(--color-warn); background: rgba(239, 68, 68, 0.05);">
+                <h2>🔧 Solución de Problemas Comunes</h2>
+
+                <h3 style="margin-top: 1rem;">Error: "externally-managed-environment"</h3>
+                <p style="font-size: 0.9rem;">Ubuntu 24.04+ bloquea <code>pip install</code> globalmente para proteger el sistema.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Solución: Usar entorno virtual (recomendado):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3 -m venv</span> <span
+                            class="hl-arg">mi_env</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                            class="hl-arg">mi_env/bin/activate</span><br>
+                        <span class="hl-prompt">(mi_env) $</span><span class="hl-cmd">pip install</span> <span
+                            class="hl-arg">paquete</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1rem;">python vs python3</h3>
+                <p style="font-size: 0.9rem;">En Ubuntu moderno, <code>python3</code> es el comando correcto. <code>python</code> puede no existir.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear alias 'python' que apunte a 'python3':</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">python-is-python3</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1rem;">Conflictos de Versiones</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ver qué Python se está ejecutando:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">which python3</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3 --version</span><br><br>
+
+                        <span class="hl-comment"># Ver todas las alternativas configuradas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">update-alternatives --list python3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESOURCES -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1)); border-left: 4px solid var(--color-primary);">
+                <h2>📚 Recursos y Referencias</h2>
+                <ul style="font-size: 0.9rem; line-height: 1.8;">
+                    <li><strong>Python.org:</strong> <code>python.org/downloads</code> - Versiones oficiales</li>
+                    <li><strong>Deadsnakes PPA:</strong> <code>launchpad.net/~deadsnakes/+archive/ubuntu/ppa</code></li>
+                    <li><strong>Documentación venv:</strong> <code>docs.python.org/3/library/venv.html</code></li>
+                    <li><strong>PIP User Guide:</strong> <code>pip.pypa.io/en/stable/user_guide/</code></li>
+                    <li><strong>Ubuntu Python Policy:</strong> <code>wiki.ubuntu.com/Python</code></li>
+                </ul>
             </div>
 
         </section>
@@ -1981,60 +2415,418 @@
         <section id="anaconda" class="section">
             <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Data Science</span>
             <h1>Anaconda Python Distribution</h1>
-            <p>La plataforma más popular para Ciencia de Datos y Machine Learning en Python.</p>
+            <p>La plataforma más popular para Ciencia de Datos y Machine Learning en Python. Incluye Python, Jupyter, Pandas, NumPy, Matplotlib y más de 250 paquetes científicos.</p>
 
+            <!-- REQUIREMENTS -->
+            <div class="card" style="border-left: 4px solid var(--color-primary);">
+                <h2>📋 Requisitos del Sistema</h2>
+                <ul style="font-size: 0.9rem; line-height: 1.8;">
+                    <li><strong>Sistema Operativo:</strong> Ubuntu 18.04 o superior (64-bit)</li>
+                    <li><strong>Espacio en disco:</strong> Mínimo 5 GB libres (recomendado 10 GB)</li>
+                    <li><strong>RAM:</strong> Mínimo 4 GB (recomendado 8 GB o más)</li>
+                    <li><strong>Arquitectura:</strong> x86_64 (64-bit) - <strong>NO soporta 32-bit</strong></li>
+                </ul>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                    💡 <strong>Nota:</strong> Visita <code>anaconda.com/download</code> para verificar la última versión disponible.
+                </p>
+            </div>
+
+            <!-- INSTALLATION STEP BY STEP -->
             <div class="card">
-                <h2>1. Instalación de Anaconda</h2>
-                <div class="cmd-box">
-                    <div class="cmd-header">Descarga e Instalación</div>
-                    <div class="cmd-content">
-                        <span class="hl-comment"># 1. Descargar el instalador (Revisa la versión en su web):</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span
-                            class="hl-arg">https://repo.anaconda.com/archive/Anaconda3-2023.09-0-Linux-x86_64.sh</span><br><br>
+                <h2>1. Instalación Completa de Anaconda en Ubuntu</h2>
 
-                        <span class="hl-comment"># 2. Verificar integridad (Opcional pero recomendado):</span><br>
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 1: Preparar el Sistema</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Actualizar sistema:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span> <span
+                            class="hl-opt">&&</span> <span class="hl-cmd">sudo apt upgrade</span> <span
+                            class="hl-opt">-y</span><br><br>
+
+                        <span class="hl-comment"># Instalar dependencias necesarias:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
+                            class="hl-arg">libgl1-mesa-glx libegl1-mesa libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 2: Descargar el Instalador</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ir a tu carpeta de descargas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
+                            class="hl-arg">~/Downloads</span><br><br>
+
+                        <span class="hl-comment"># Descargar la última versión (verifica en anaconda.com/download):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span
+                            class="hl-arg">https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh</span><br><br>
+
+                        <span class="hl-comment"># Alternativa: Descargar automáticamente la última versión:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span
+                            class="hl-arg">https://repo.anaconda.com/archive/$(wget -qO- https://repo.anaconda.com/archive/ | grep -oP 'Anaconda3-[0-9.]+-[0-9]+-Linux-x86_64\.sh' | head -1)</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 3: Verificar Integridad (Recomendado)</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Calcular el hash SHA256 del archivo descargado:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">sha256sum</span> <span
                             class="hl-arg">Anaconda3-*.sh</span><br><br>
 
-                        <span class="hl-comment"># 3. Ejecutar el instalador:</span><br>
+                        <span class="hl-comment"># Comparar con el hash oficial en:</span><br>
+                        <span class="hl-comment"># https://docs.anaconda.com/anaconda/install/hashes/</span><br>
+                        <span class="hl-comment"># Si coinciden, el archivo es auténtico y seguro.</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 4: Ejecutar el Instalador</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Hacer el archivo ejecutable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chmod +x</span> <span
+                            class="hl-arg">Anaconda3-*.sh</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar el instalador:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span
-                            class="hl-arg">Anaconda3-*.sh</span><br>
-                        <span class="hl-comment"># Sigue las instrucciones: 'yes' a la licencia, Enter para ubicación,
-                            'yes' para init.</span>
+                            class="hl-arg">Anaconda3-*.sh</span><br><br>
+
+                        <span class="hl-comment"># Durante la instalación:</span><br>
+                        <span class="hl-comment"># 1. Presiona ENTER para revisar la licencia</span><br>
+                        <span class="hl-comment"># 2. Escribe 'yes' para aceptar los términos</span><br>
+                        <span class="hl-comment"># 3. ENTER para instalar en ~/anaconda3 (o especifica otra ruta)</span><br>
+                        <span class="hl-comment"># 4. Escribe 'yes' cuando pregunte si quiere inicializar Anaconda3</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 5: Activar Anaconda</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Recargar la configuración del shell:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                            class="hl-arg">~/.bashrc</span><br><br>
+
+                        <span class="hl-comment"># Si usas Zsh:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                            class="hl-arg">~/.zshrc</span><br><br>
+
+                        <span class="hl-comment"># Alternativamente, cierra y reabre la terminal</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 6: Verificar Instalación</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Verificar versión de conda:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda --version</span><br>
+                        <span class="hl-comment"># Debería mostrar: conda X.X.X</span><br><br>
+
+                        <span class="hl-comment"># Ver información completa de Anaconda:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda info</span><br><br>
+
+                        <span class="hl-comment"># Listar paquetes instalados:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda list</span><br><br>
+
+                        <span class="hl-comment"># Verificar Python:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python --version</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">which python</span>
+                        <span class="hl-comment"># Debería apuntar a ~/anaconda3/bin/python</span>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--color-cmd); margin-top: 1.5rem;">Paso 7: Actualizar Anaconda (Opcional)</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Actualizar el gestor conda:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda update</span> <span
+                            class="hl-opt">-n</span> <span class="hl-arg">base</span> <span
+                            class="hl-opt">-c</span> <span class="hl-arg">defaults</span> <span
+                            class="hl-arg">conda</span><br><br>
+
+                        <span class="hl-comment"># Actualizar todos los paquetes de Anaconda:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda update</span> <span
+                            class="hl-arg">anaconda</span>
                     </div>
                 </div>
             </div>
 
+            <!-- ENVIRONMENT MANAGEMENT -->
             <div class="card">
-                <h2>2. Gestión de Entornos (Conda)</h2>
-                <p>Crea espacios aislados para tus proyectos.</p>
+                <h2>2. Gestión de Entornos Virtuales (Conda)</h2>
+                <p>Los entornos virtuales permiten tener múltiples proyectos con diferentes versiones de Python y paquetes sin conflictos.</p>
+
                 <div class="cmd-box">
+                    <div class="cmd-header">Crear y Gestionar Entornos</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Crear un entorno nuevo (llamado 'mi_proyecto'):</span><br>
+                        <span class="hl-comment"># Listar entornos existentes:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda env list</span><br>
+                        <span class="hl-comment"># o también:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda info --envs</span><br><br>
+
+                        <span class="hl-comment"># Crear entorno con Python específico:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">conda create</span> <span
                             class="hl-opt">--name</span> <span class="hl-arg">mi_proyecto</span> <span
-                            class="hl-arg">python=3.9</span><br><br>
+                            class="hl-arg">python=3.11</span><br><br>
 
-                        <span class="hl-comment"># Activar el entorno:</span><br>
+                        <span class="hl-comment"># Crear entorno con paquetes específicos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda create</span> <span
+                            class="hl-opt">-n</span> <span class="hl-arg">ml_project</span> <span
+                            class="hl-arg">python=3.10 numpy pandas matplotlib scikit-learn</span><br><br>
+
+                        <span class="hl-comment"># Activar un entorno:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">conda activate</span> <span
-                            class="hl-arg">mi_proyecto</span><br><br>
+                            class="hl-arg">mi_proyecto</span><br>
+                        <span class="hl-comment"># El prompt cambiará a: (mi_proyecto) $</span><br><br>
 
-                        <span class="hl-comment"># Instalar librerías:</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">conda install</span> <span
-                            class="hl-arg">pandas numpy matplotlib</span>
+                        <span class="hl-comment"># Desactivar entorno actual:</span><br>
+                        <span class="hl-prompt">(mi_proyecto) $</span><span class="hl-cmd">conda deactivate</span><br><br>
+
+                        <span class="hl-comment"># Eliminar un entorno:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda remove</span> <span
+                            class="hl-opt">--name</span> <span class="hl-arg">mi_proyecto</span> <span
+                            class="hl-opt">--all</span><br><br>
+
+                        <span class="hl-comment"># Clonar un entorno existente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda create</span> <span
+                            class="hl-opt">--name</span> <span class="hl-arg">copia_proyecto</span> <span
+                            class="hl-opt">--clone</span> <span class="hl-arg">mi_proyecto</span>
                     </div>
                 </div>
             </div>
 
+            <!-- PACKAGE MANAGEMENT -->
             <div class="card">
-                <h2>3. Jupyter Notebooks</h2>
+                <h2>3. Instalación y Gestión de Paquetes</h2>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Comandos de Conda para Paquetes</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Buscar un paquete:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda search</span> <span
+                            class="hl-arg">tensorflow</span><br><br>
+
+                        <span class="hl-comment"># Instalar paquete en entorno activo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda install</span> <span
+                            class="hl-arg">pandas</span><br><br>
+
+                        <span class="hl-comment"># Instalar versión específica:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda install</span> <span
+                            class="hl-arg">numpy=1.24.0</span><br><br>
+
+                        <span class="hl-comment"># Instalar múltiples paquetes:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda install</span> <span
+                            class="hl-arg">scipy matplotlib seaborn</span><br><br>
+
+                        <span class="hl-comment"># Actualizar un paquete:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda update</span> <span
+                            class="hl-arg">pandas</span><br><br>
+
+                        <span class="hl-comment"># Actualizar todos los paquetes:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda update --all</span><br><br>
+
+                        <span class="hl-comment"># Desinstalar paquete:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda remove</span> <span
+                            class="hl-arg">numpy</span><br><br>
+
+                        <span class="hl-comment"># Ver paquetes instalados en entorno actual:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda list</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Usar PIP dentro de Conda (cuando sea necesario)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Instalar paquete con pip (si no está en conda):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pip install</span> <span
+                            class="hl-arg">some-package</span><br><br>
+
+                        <span class="hl-comment"># ⚠️ Preferir conda sobre pip cuando sea posible</span><br>
+                        <span class="hl-comment"># Usar pip solo para paquetes no disponibles en conda</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JUPYTER -->
+            <div class="card">
+                <h2>4. Jupyter Notebook y JupyterLab</h2>
+                <p>Entorno interactivo para análisis de datos y desarrollo en Python.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Jupyter Notebook (Clásico)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Iniciar Jupyter Notebook:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter notebook</span><br>
+                        <span class="hl-comment"># Se abrirá automáticamente en http://localhost:8888</span><br><br>
+
+                        <span class="hl-comment"># Especificar puerto diferente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter notebook</span> <span
+                            class="hl-opt">--port</span> <span class="hl-arg">9999</span><br><br>
+
+                        <span class="hl-comment"># Abrir sin navegador (útil para servidores remotos):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter notebook</span> <span
+                            class="hl-opt">--no-browser</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">JupyterLab (Interfaz Moderna)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Instalar JupyterLab (si no viene preinstalado):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda install</span> <span
+                            class="hl-opt">-c</span> <span class="hl-arg">conda-forge</span> <span
+                            class="hl-arg">jupyterlab</span><br><br>
+
+                        <span class="hl-comment"># Iniciar JupyterLab:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter lab</span><br><br>
+
+                        <span class="hl-comment"># Ver kernels disponibles:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter kernelspec list</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPORT/IMPORT ENVIRONMENTS -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    📦 Exportar e Importar Entornos
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Útil para compartir configuraciones de proyecto o replicar entornos en otras máquinas.</p>
+
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Exportar entorno a archivo YAML:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda env export</span> <span
+                                class="hl-opt">></span> <span class="hl-arg">environment.yml</span><br><br>
+
+                            <span class="hl-comment"># Exportar solo paquetes explícitamente instalados:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda env export</span> <span
+                                class="hl-opt">--from-history</span> <span class="hl-opt">></span> <span
+                                class="hl-arg">environment.yml</span><br><br>
+
+                            <span class="hl-comment"># Crear entorno desde archivo YAML:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda env create</span> <span
+                                class="hl-opt">-f</span> <span class="hl-arg">environment.yml</span><br><br>
+
+                            <span class="hl-comment"># Actualizar entorno existente desde YAML:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda env update</span> <span
+                                class="hl-opt">-f</span> <span class="hl-arg">environment.yml</span> <span
+                                class="hl-opt">--prune</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONFIGURATION -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    ⚙️ Configuración Avanzada de Conda
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Deshabilitar activación automática del entorno base:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda config</span> <span
+                                class="hl-opt">--set</span> <span class="hl-arg">auto_activate_base false</span><br><br>
+
+                            <span class="hl-comment"># Habilitar activación automática:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda config</span> <span
+                                class="hl-opt">--set</span> <span class="hl-arg">auto_activate_base true</span><br><br>
+
+                            <span class="hl-comment"># Agregar canal de conda-forge:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda config</span> <span
+                                class="hl-opt">--add</span> <span class="hl-arg">channels conda-forge</span><br><br>
+
+                            <span class="hl-comment"># Ver configuración actual:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda config --show</span><br><br>
+
+                            <span class="hl-comment"># Limpiar caché de paquetes:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">conda clean --all</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNINSTALL -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    🗑️ Desinstalar Anaconda
+                    <span>+</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="cmd-box">
+                        <div class="cmd-content">
+                            <span class="hl-comment"># 1. Eliminar directorio de instalación:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span
+                                class="hl-arg">~/anaconda3</span><br><br>
+
+                            <span class="hl-comment"># 2. Limpiar archivos de configuración:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span
+                                class="hl-arg">~/.condarc ~/.conda ~/.continuum</span><br><br>
+
+                            <span class="hl-comment"># 3. Editar ~/.bashrc y eliminar las líneas de Anaconda:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">nano</span> <span
+                                class="hl-arg">~/.bashrc</span><br>
+                            <span class="hl-comment"># Buscar y borrar el bloque que empieza con "# >>> conda initialize >>>"</span><br><br>
+
+                            <span class="hl-comment"># 4. Recargar configuración:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span
+                                class="hl-arg">~/.bashrc</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TROUBLESHOOTING -->
+            <div class="card" style="border-left: 4px solid var(--color-warn); background: rgba(251, 146, 60, 0.05);">
+                <h2>⚠️ Solución de Problemas Comunes</h2>
+
+                <h3 style="margin-top: 1rem;">Problema: "conda: command not found"</h3>
                 <div class="cmd-box">
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">jupyter notebook</span><br>
-                        <span class="hl-comment"># Se abrirá en tu navegador automáticamente.</span>
+                        <span class="hl-comment"># Agregar Anaconda al PATH manualmente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export PATH</span>=<span
+                            class="hl-arg">"$HOME/anaconda3/bin:$PATH"</span><br><br>
+
+                        <span class="hl-comment"># O ejecutar el script de inicialización:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">~/anaconda3/bin/conda init bash</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source ~/.bashrc</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1rem;">Problema: Conflictos con Python del sistema</h3>
+                <p style="font-size: 0.9rem;">Si tienes múltiples instalaciones de Python, verifica cuál está usando:</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">which python</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">which conda</span><br><br>
+                        <span class="hl-comment"># Deberían apuntar a ~/anaconda3/bin/</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1rem;">Problema: "CondaHTTPError" al instalar paquetes</h3>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Limpiar caché y actualizar:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda clean --all</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">conda update conda</span>
                     </div>
                 </div>
             </div>
+
+            <!-- RESOURCES -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(139, 92, 246, 0.1)); border-left: 4px solid var(--color-primary);">
+                <h2>📚 Recursos Adicionales</h2>
+                <ul style="font-size: 0.9rem; line-height: 1.8;">
+                    <li><strong>Sitio oficial:</strong> <code>anaconda.com/download</code></li>
+                    <li><strong>Documentación:</strong> <code>docs.anaconda.com</code></li>
+                    <li><strong>Conda cheat sheet:</strong> <code>docs.conda.io/projects/conda/en/latest/user-guide/cheatsheet.html</code></li>
+                    <li><strong>Foro de la comunidad:</strong> <code>forum.anaconda.com</code></li>
+                    <li><strong>Repositorio de paquetes:</strong> <code>anaconda.org</code></li>
+                </ul>
+            </div>
+
         </section>
 
         <!-- MODULE: SYSTEM INFO & HARDWARE -->

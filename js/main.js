@@ -18,6 +18,7 @@
     'js/tabs/sys-debug.js',
     'js/tabs/pkg-uninstall.js',
     'js/tabs/devtools.js',
+    'js/tabs/python-install.js',
     'js/tabs/manim.js',
     'js/tabs/uv-python.js',
     'js/tabs/complementos-instalacion.js',
