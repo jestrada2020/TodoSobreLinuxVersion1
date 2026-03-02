@@ -67,6 +67,10 @@
             <a class="nav-link nav-item" data-section="term-scripting" data-tags="bash script variables env">
                 Scripting Intro
             </a>
+            <a class="nav-link nav-item" data-section="uso-bash"
+                data-tags="bash shell comandos practicos variables loops condicionales arrays funciones manipulacion sistema">
+                Uso de Bash
+            </a>
 
             <!-- 4. Admin Pro -->
             <div class="nav-group-title">Admin Avanzada</div>
@@ -1909,47 +1913,52 @@
 
             <div class="card">
                 <h2>1. Codex CLI</h2>
-                <p>Cliente oficial para interactuar con Codex desde la consola.</p>
+                <p>Agente de código oficial de OpenAI que corre localmente, puede leer tu repositorio, editar archivos y ejecutar comandos.</p>
                 <div class="cmd-box">
-                    <div class="cmd-header">Instalación Global</div>
+                    <div class="cmd-header">Instalación Global (npm)</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-opt">-fsSL</span>
-                        <span class="hl-arg">https://cli.codex.sh/install.sh</span> <span class="hl-opt">|</span>
-                        <span class="hl-cmd">bash</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo mv</span>
-                        <span class="hl-arg">codex</span> <span class="hl-arg">/usr/local/bin/</span>
+                        <span class="hl-comment"># Requiere Node.js 18 o superior.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-opt">install</span>
+                        <span class="hl-opt">-g</span> <span class="hl-arg">@openai/codex</span>
                     </div>
                 </div>
                 <div class="cmd-box">
-                    <div class="cmd-header">Autenticación</div>
+                    <div class="cmd-header">Autenticación y Primer Uso</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Añade tu API Key como variable y ejecuta login:</span><br>
+                        <span class="hl-comment"># Opción 1: Login interactivo con cuenta OpenAI (recomendado)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">codex</span><br>
+                        <span class="hl-comment"># Abre el navegador para autenticarse con ChatGPT Plus/Pro/Team</span><br><br>
+                        <span class="hl-comment"># Opción 2: Usar API Key de OpenAI</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">export</span>
-                        <span class="hl-arg">CODEX_API_KEY</span>=<span class="hl-arg">\"sk_codex_xxxx\"</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">codex</span> <span
-                            class="hl-arg">auth</span> <span class="hl-arg">login</span>
+                        <span class="hl-arg">OPENAI_API_KEY</span>=<span class="hl-arg">"sk-xxxx"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">codex</span> <span class="hl-opt">--version</span>
+                        <span class="hl-comment"># Verifica la instalación</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>2. Claude CLI</h2>
-                <p>Interface oficial de Anthropic para consultar Claude.</p>
+                <h2>2. Claude Code</h2>
+                <p>CLI oficial de Anthropic para usar Claude directamente en la terminal y en tu editor de código.</p>
                 <div class="cmd-box">
                     <div class="cmd-header">Instalación</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Requiere Node 18 o superior.</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-arg">install</span>
-                        <span class="hl-opt">-g</span> <span class="hl-arg">@anthropic-ai/claude-cli</span>
+                        <span class="hl-comment"># Requiere Node.js 18 o superior.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-opt">install</span>
+                        <span class="hl-opt">-g</span> <span class="hl-arg">@anthropic-ai/claude-code</span>
                     </div>
                 </div>
                 <div class="cmd-box">
-                    <div class="cmd-header">Configurar API Key</div>
+                    <div class="cmd-header">Primer Uso y Autenticación</div>
                     <div class="cmd-content">
+                        <span class="hl-comment"># Opción 1: Autenticación interactiva (recomendado)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">claude</span><br>
+                        <span class="hl-comment"># Abre el navegador para iniciar sesión con tu cuenta Anthropic</span><br><br>
+                        <span class="hl-comment"># Opción 2: Usar API Key directamente</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">export</span>
-                        <span class="hl-arg">ANTHROPIC_API_KEY</span>=<span class="hl-arg">\"sk-ant-xxxx\"</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">claude</span> <span
-                            class="hl-arg">whoami</span> <span class="hl-comment"># Verifica la conexión</span>
+                        <span class="hl-arg">ANTHROPIC_API_KEY</span>=<span class="hl-arg">"sk-ant-xxxx"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">claude</span> <span class="hl-opt">--version</span>
+                        <span class="hl-comment"># Verifica la instalación</span>
                     </div>
                 </div>
             </div>
@@ -2825,6 +2834,912 @@
                     <li><strong>Foro de la comunidad:</strong> <code>forum.anaconda.com</code></li>
                     <li><strong>Repositorio de paquetes:</strong> <code>anaconda.org</code></li>
                 </ul>
+            </div>
+
+        </section>
+
+        <!-- USO DE BASH -->
+        <section id="uso-bash" class="section">
+            <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">Bash</span>
+            <h1>Uso de Bash</h1>
+            <p>Comandos y técnicas prácticas para manipular el sistema directamente desde la terminal con Bash.
+                Clasificados por categoría para facilitar el aprendizaje.</p>
+
+            <!-- 1. VARIABLES Y ENTORNO -->
+            <div class="card">
+                <h2>1. Variables y Entorno</h2>
+                <p>Declarar, exportar y consultar variables de entorno en Bash.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Variables y entorno</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Declarar una variable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nombre</span>=<span class="hl-arg">"Linux"</span><br><br>
+
+                        <span class="hl-comment"># Usar la variable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"Hola $nombre"</span><br><br>
+
+                        <span class="hl-comment"># Exportar variable al entorno (disponible en subprocesos):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">MI_VAR</span>=<span class="hl-arg">"valor"</span><br><br>
+
+                        <span class="hl-comment"># Ver todas las variables de entorno:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">printenv</span><br><br>
+
+                        <span class="hl-comment"># Ver el valor de una variable específica:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$HOME</span> <span class="hl-arg">$USER</span> <span class="hl-arg">$SHELL</span><br><br>
+
+                        <span class="hl-comment"># Eliminar una variable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">unset</span> <span class="hl-arg">MI_VAR</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. MANIPULACIÓN DE CADENAS -->
+            <div class="card">
+                <h2>2. Manipulación de Cadenas</h2>
+                <p>Operaciones sobre texto directamente con Bash, sin herramientas externas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Operaciones con cadenas</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Longitud de una cadena:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">texto</span>=<span class="hl-arg">"hola mundo"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${#texto}</span>
+                        <span class="hl-comment"># → 10</span><br><br>
+
+                        <span class="hl-comment"># Subcadena (desde posición 5, 5 caracteres):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${texto:5:5}</span>
+                        <span class="hl-comment"># → mundo</span><br><br>
+
+                        <span class="hl-comment"># Reemplazar primera ocurrencia:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${texto/hola/adiós}</span>
+                        <span class="hl-comment"># → adiós mundo</span><br><br>
+
+                        <span class="hl-comment"># Convertir a mayúsculas / minúsculas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${texto^^}</span>
+                        <span class="hl-comment"># → HOLA MUNDO</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${texto,,}</span>
+                        <span class="hl-comment"># → hola mundo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. CONDICIONALES -->
+            <div class="card">
+                <h2>3. Condicionales (if / case)</h2>
+                <p>Tomar decisiones en Bash según el estado del sistema o valores de variables.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">if / elif / else</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Verificar si un archivo existe:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">if</span> [ <span class="hl-opt">-f</span> <span class="hl-arg">"archivo.txt"</span> ]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-prompt"> </span><span class="hl-cmd">echo</span> <span class="hl-arg">"El archivo existe"</span><br>
+                        <span class="hl-cmd">elif</span> [ <span class="hl-opt">-d</span> <span class="hl-arg">"archivo.txt"</span> ]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-prompt"> </span><span class="hl-cmd">echo</span> <span class="hl-arg">"Es un directorio"</span><br>
+                        <span class="hl-cmd">else</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-prompt"> </span><span class="hl-cmd">echo</span> <span class="hl-arg">"No existe"</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># Comparar números (-eq -ne -lt -gt -le -ge):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">if</span> [ <span class="hl-arg">$num</span> <span class="hl-opt">-gt</span> <span class="hl-arg">10</span> ]; <span class="hl-cmd">then</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"mayor"</span>; <span class="hl-cmd">fi</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">case</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">case</span> <span class="hl-arg">$1</span> <span class="hl-cmd">in</span><br>
+                        &nbsp;&nbsp;<span class="hl-arg">start</span>) <span class="hl-cmd">echo</span> <span class="hl-arg">"Iniciando..."</span> ;;<br>
+                        &nbsp;&nbsp;<span class="hl-arg">stop</span>)  <span class="hl-cmd">echo</span> <span class="hl-arg">"Deteniendo..."</span> ;;<br>
+                        &nbsp;&nbsp;<span class="hl-arg">*</span>)     <span class="hl-cmd">echo</span> <span class="hl-arg">"Uso: start|stop"</span> ;;<br>
+                        <span class="hl-cmd">esac</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. BUCLES -->
+            <div class="card">
+                <h2>4. Bucles (for / while / until)</h2>
+                <p>Iterar sobre listas, rangos o condiciones para automatizar tareas repetitivas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">for — iterar sobre lista y rango</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Iterar sobre una lista de valores:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> <span class="hl-arg">fruta</span> <span class="hl-cmd">in</span> manzana pera uva; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Fruta: $fruta"</span><br>
+                        <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-comment"># Iterar sobre un rango numérico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> <span class="hl-arg">i</span> <span class="hl-cmd">in</span> {1..5}; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">$i</span>; <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-comment"># Iterar sobre archivos de un directorio:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> <span class="hl-arg">f</span> <span class="hl-cmd">in</span> ~/Documentos/*.txt; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Procesando: $f"</span><br>
+                        <span class="hl-cmd">done</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">while / until</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># while: ejecuta mientras la condición sea verdadera:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">contador</span>=0<br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">while</span> [ <span class="hl-arg">$contador</span> <span class="hl-opt">-lt</span> 5 ]; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Vuelta $contador"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">((contador++))</span><br>
+                        <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-comment"># until: ejecuta hasta que la condición sea verdadera:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">until</span> [ <span class="hl-arg">$contador</span> <span class="hl-opt">-ge</span> 5 ]; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">$contador</span>; <span class="hl-cmd">((contador++))</span>; <span class="hl-cmd">done</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. ARRAYS -->
+            <div class="card">
+                <h2>5. Arrays (Arreglos)</h2>
+                <p>Almacenar y manipular listas de elementos en una sola variable.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Declarar y acceder a arrays</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Declarar un array:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">colores</span>=(<span class="hl-arg">"rojo" "verde" "azul"</span>)<br><br>
+
+                        <span class="hl-comment"># Acceder a un elemento (índice base 0):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${colores[0]}</span>
+                        <span class="hl-comment"># → rojo</span><br><br>
+
+                        <span class="hl-comment"># Todos los elementos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${colores[@]}</span><br><br>
+
+                        <span class="hl-comment"># Número de elementos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">${#colores[@]}</span>
+                        <span class="hl-comment"># → 3</span><br><br>
+
+                        <span class="hl-comment"># Agregar un elemento al array:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">colores</span>+=(<span class="hl-arg">"amarillo"</span>)<br><br>
+
+                        <span class="hl-comment"># Iterar sobre el array:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> <span class="hl-arg">c</span> <span class="hl-cmd">in</span> "${colores[@]}"; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">$c</span>; <span class="hl-cmd">done</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. FUNCIONES -->
+            <div class="card">
+                <h2>6. Funciones</h2>
+                <p>Reutilizar bloques de código y pasar argumentos dentro de un script Bash.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Definir y llamar funciones</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Definir una función:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">saludar</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Hola, $1!"</span>
+                        <span class="hl-comment"># $1 = primer argumento</span><br>
+                        }<br><br>
+
+                        <span class="hl-comment"># Llamar la función:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">saludar</span> <span class="hl-arg">mundo</span>
+                        <span class="hl-comment"># → Hola, mundo!</span><br><br>
+
+                        <span class="hl-comment"># Función con valor de retorno (via variable global):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sumar</span>() { <span class="hl-arg">resultado</span>=$(( $1 + $2 )); }<br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sumar</span> 3 7<br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$resultado</span>
+                        <span class="hl-comment"># → 10</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. REDIRECCIÓN Y PIPES -->
+            <div class="card">
+                <h2>7. Redirección de Entrada/Salida</h2>
+                <p>Controlar hacia dónde van los datos de entrada, salida y errores.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Operadores de redirección</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Redirigir stdout a un archivo (sobrescribe):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-la</span> <span class="hl-opt">&gt;</span> <span class="hl-arg">listado.txt</span><br><br>
+
+                        <span class="hl-comment"># Redirigir stdout a un archivo (agrega al final):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"nueva línea"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">listado.txt</span><br><br>
+
+                        <span class="hl-comment"># Redirigir stderr a archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">comando</span> <span class="hl-opt">2&gt;</span> <span class="hl-arg">errores.log</span><br><br>
+
+                        <span class="hl-comment"># Redirigir stdout y stderr juntos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">comando</span> <span class="hl-opt">&gt;</span> <span class="hl-arg">salida.log</span> <span class="hl-opt">2&gt;&amp;1</span><br><br>
+
+                        <span class="hl-comment"># Leer entrada desde archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">&lt;</span> <span class="hl-arg">listado.txt</span><br><br>
+
+                        <span class="hl-comment"># Descartar salida completamente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">comando</span> <span class="hl-opt">&gt;</span> <span class="hl-arg">/dev/null</span> <span class="hl-opt">2&gt;&amp;1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. SUSTITUCIÓN DE COMANDOS -->
+            <div class="card">
+                <h2>8. Sustitución de Comandos y Aritmética</h2>
+                <p>Usar la salida de un comando como argumento o valor de una variable.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Sustitución de comandos y cálculos</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Guardar salida de comando en variable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">fecha</span>=$(<span class="hl-arg">date +%Y-%m-%d</span>)<br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"Hoy es: $fecha"</span><br><br>
+
+                        <span class="hl-comment"># Usar la salida directamente como argumento:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"Usuarios: $(who | wc -l)"</span><br><br>
+
+                        <span class="hl-comment"># Aritmética entera con $(( )):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$(( 5 * 8 + 3 ))</span>
+                        <span class="hl-comment"># → 43</span><br><br>
+
+                        <span class="hl-comment"># Incrementar / decrementar variable:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">((n++))</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">((n--))</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">((n += 5))</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. GESTIÓN DE PROCESOS DESDE BASH -->
+            <div class="card">
+                <h2>9. Gestión de Procesos desde Bash</h2>
+                <p>Controlar procesos en primer y segundo plano directamente desde la terminal.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Jobs y procesos en background</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Lanzar proceso en segundo plano:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">comando</span> <span class="hl-opt">&amp;</span><br><br>
+
+                        <span class="hl-comment"># Ver jobs activos de la sesión:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">jobs</span> <span class="hl-opt">-l</span><br><br>
+
+                        <span class="hl-comment"># Traer job al primer plano (foreground):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">fg</span> <span class="hl-arg">%1</span><br><br>
+
+                        <span class="hl-comment"># Enviar proceso al fondo (tras Ctrl+Z):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bg</span> <span class="hl-arg">%1</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar y desligar del terminal (sobrevive al cierre):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nohup</span> <span class="hl-arg">./script.sh</span> <span class="hl-opt">&gt;</span> <span class="hl-arg">salida.log</span> <span class="hl-opt">&amp;</span><br><br>
+
+                        <span class="hl-comment"># Obtener el PID del último proceso en background:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$!</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. ALIAS Y FUNCIONES DE SHELL -->
+            <div class="card">
+                <h2>10. Alias y Personalización del Shell</h2>
+                <p>Crear atajos y personalizar el comportamiento de Bash de forma permanente.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Alias temporales y permanentes</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear alias temporal (solo en sesión actual):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">alias</span> <span class="hl-arg">ll</span>=<span class="hl-arg">"ls -lah --color=auto"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">alias</span> <span class="hl-arg">actualizar</span>=<span class="hl-arg">"sudo apt update &amp;&amp; sudo apt upgrade -y"</span><br><br>
+
+                        <span class="hl-comment"># Ver todos los alias activos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">alias</span><br><br>
+
+                        <span class="hl-comment"># Eliminar un alias:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">unalias</span> <span class="hl-arg">ll</span><br><br>
+
+                        <span class="hl-comment"># Hacer alias permanentes (agregar a ~/.bashrc):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'alias ll="ls -lah --color=auto"'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span>
+                        <span class="hl-comment"># Recarga la configuración</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. MANIPULACIÓN DE ARCHIVOS DESDE BASH -->
+            <div class="card">
+                <h2>11. Manipulación de Archivos con Bash</h2>
+                <p>Crear, renombrar, mover y procesar archivos de forma masiva con bucles y expansión.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Operaciones masivas sobre archivos</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Renombrar masivamente archivos .txt a .bak:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> <span class="hl-arg">f</span> <span class="hl-cmd">in</span> *.txt; <span class="hl-cmd">do</span> <span class="hl-cmd">mv</span> <span class="hl-arg">"$f"</span> <span class="hl-arg">"${f%.txt}.bak"</span>; <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-comment"># Crear múltiples directorios de una vez:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">proyecto/{src,docs,tests,bin}</span><br><br>
+
+                        <span class="hl-comment"># Crear 10 archivos numerados:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> <span class="hl-arg">i</span> <span class="hl-cmd">in</span> {01..10}; <span class="hl-cmd">do</span> <span class="hl-cmd">touch</span> <span class="hl-arg">archivo_$i.txt</span>; <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-comment"># Buscar y reemplazar texto en múltiples archivos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span class="hl-opt">-i</span> <span class="hl-arg">'s/viejo/nuevo/g'</span> *.txt<br><br>
+
+                        <span class="hl-comment"># Copiar con barra de progreso (rsync):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rsync</span> <span class="hl-opt">-av --progress</span> <span class="hl-arg">origen/</span> <span class="hl-arg">destino/</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. EXPRESIONES REGULARES CON GREP Y SED -->
+            <div class="card">
+                <h2>12. Grep y Sed — Búsqueda y Transformación</h2>
+                <p>Herramientas esenciales para filtrar y modificar texto de forma potente.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">grep — filtrar líneas</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Buscar patrón en archivos (ignora mayúsculas):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-ri</span> <span class="hl-arg">"error"</span> <span class="hl-arg">/var/log/</span><br><br>
+
+                        <span class="hl-comment"># Mostrar líneas que NO coinciden:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-v</span> <span class="hl-arg">"#"</span> <span class="hl-arg">/etc/fstab</span>
+                        <span class="hl-comment"># Filtra comentarios</span><br><br>
+
+                        <span class="hl-comment"># Mostrar número de línea y contexto (3 líneas antes/después):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-n -C 3</span> <span class="hl-arg">"fallo"</span> <span class="hl-arg">sistema.log</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">sed — editar texto en stream</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Reemplazar texto en un archivo (edición in-place):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span class="hl-opt">-i</span> <span class="hl-arg">'s/localhost/127.0.0.1/g'</span> <span class="hl-arg">config.conf</span><br><br>
+
+                        <span class="hl-comment"># Eliminar líneas en blanco de un archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span class="hl-opt">-i</span> <span class="hl-arg">'/^$/d'</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                        <span class="hl-comment"># Mostrar solo líneas 5 a 10 de un archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sed</span> <span class="hl-opt">-n</span> <span class="hl-arg">'5,10p'</span> <span class="hl-arg">archivo.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. LECTURA DE ENTRADA DEL USUARIO -->
+            <div class="card">
+                <h2>13. Leer Input del Usuario (read)</h2>
+                <p>Solicitar datos al usuario en tiempo de ejecución dentro de un script.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Comando read</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Leer entrada básica:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">read</span> <span class="hl-opt">-p</span> <span class="hl-arg">"¿Tu nombre? "</span> <span class="hl-arg">nombre</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"Hola, $nombre"</span><br><br>
+
+                        <span class="hl-comment"># Leer contraseña sin mostrarla en pantalla:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">read</span> <span class="hl-opt">-s -p</span> <span class="hl-arg">"Contraseña: "</span> <span class="hl-arg">pass</span><br><br>
+
+                        <span class="hl-comment"># Leer con tiempo límite (5 segundos):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">read</span> <span class="hl-opt">-t 5 -p</span> <span class="hl-arg">"Responde rápido: "</span> <span class="hl-arg">resp</span><br><br>
+
+                        <span class="hl-comment"># Leer varias variables en una línea:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">read</span> <span class="hl-arg">nombre apellido edad</span>
+                        <span class="hl-comment"># Entrada: "Ana García 30"</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 14. MANEJO DE ERRORES Y CÓDIGOS DE SALIDA -->
+            <div class="card">
+                <h2>14. Manejo de Errores y Códigos de Salida</h2>
+                <p>Controlar el flujo del script según el éxito o fallo de cada comando.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Exit codes y control de errores</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># $? guarda el código de salida del último comando (0=éxito):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">/ruta/inexistente</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$?</span>
+                        <span class="hl-comment"># → 2 (error)</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar segundo comando solo si el primero tuvo éxito (&&):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-arg">nueva-carpeta</span> <span class="hl-opt">&amp;&amp;</span> <span class="hl-cmd">cd</span> <span class="hl-arg">nueva-carpeta</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar segundo comando si el primero falló (||):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-arg">archivo.txt</span> <span class="hl-arg">/backup/</span> <span class="hl-opt">||</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"Error al copiar"</span><br><br>
+
+                        <span class="hl-comment"># Abortar script ante cualquier error (buena práctica):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">set</span> <span class="hl-opt">-e</span>
+                        <span class="hl-comment"># Agrega al inicio del script</span><br><br>
+
+                        <span class="hl-comment"># Salir del script con código personalizado:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">exit</span> <span class="hl-arg">1</span>
+                        <span class="hl-comment"># 0=éxito, 1=error genérico</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15. TRUCOS Y PRODUCTIVIDAD (30 trucos) -->
+            <div class="card">
+                <h2>15. 30 Trucos de Productividad en Bash</h2>
+                <p>Atajos, expansiones y técnicas avanzadas para dominar la terminal y trabajar al máximo rendimiento.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Historial y repetición de comandos (trucos 1–8)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Repetir el último comando con sudo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo</span> <span class="hl-arg">!!</span><br><br>
+
+                        <span class="hl-comment"># 2. Repetir el último comando que empieza con "apt":</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">!apt</span><br><br>
+
+                        <span class="hl-comment"># 3. Corregir un error tipográfico del comando anterior:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">^erro^error</span>
+                        <span class="hl-comment"># reemplaza "erro" por "error" y reejecutar</span><br><br>
+
+                        <span class="hl-comment"># 4. Buscar en el historial de forma interactiva (Ctrl+R):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">history</span> <span class="hl-opt">|</span> <span class="hl-cmd">grep</span> <span class="hl-arg">"docker"</span><br><br>
+
+                        <span class="hl-comment"># 5. Ejecutar comando número 120 del historial:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">!120</span><br><br>
+
+                        <span class="hl-comment"># 6. Aumentar el tamaño del historial guardado:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'HISTSIZE=10000'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">~/.bashrc</span><br><br>
+
+                        <span class="hl-comment"># 7. No guardar comandos duplicados en el historial:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">HISTCONTROL</span>=<span class="hl-arg">ignoredups:erasedups</span><br><br>
+
+                        <span class="hl-comment"># 8. Limpiar historial de la sesión actual:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">history</span> <span class="hl-opt">-c</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Argumentos y expansión de llaves (trucos 9–16)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 9. Usar el último argumento del comando anterior ($_ o Alt+.):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-arg">~/proyectos/nuevo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">$_</span>
+                        <span class="hl-comment"># equivale a cd ~/proyectos/nuevo</span><br><br>
+
+                        <span class="hl-comment"># 10. Primer argumento del último comando:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">!!:^</span><br><br>
+
+                        <span class="hl-comment"># 11. Hacer una copia de seguridad rápida con expansión de llaves:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-arg">nginx.conf{,.bak}</span><br><br>
+
+                        <span class="hl-comment"># 12. Crear estructura de directorios de un proyecto completo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">app/{src,tests,docs,assets/{img,css,js}}</span><br><br>
+
+                        <span class="hl-comment"># 13. Generar archivos con nombre secuencial:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span class="hl-arg">reporte_{enero,febrero,marzo,abril}.csv</span><br><br>
+
+                        <span class="hl-comment"># 14. Mover un archivo y mantener el original (con expansión):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">script.sh{,.old}</span><br><br>
+
+                        <span class="hl-comment"># 15. Ejecutar script sin permisos de ejecución:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span class="hl-arg">script.sh</span><br><br>
+
+                        <span class="hl-comment"># 16. Pasar variable temporal solo para un comando:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">env</span> <span class="hl-arg">DEBUG=1 NODE_ENV=production</span> <span class="hl-arg">./app.sh</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Navegación y directorios (trucos 17–22)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 17. Volver al directorio anterior:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-opt">-</span><br><br>
+
+                        <span class="hl-comment"># 18. Apilar directorios para navegar con pushd/popd:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pushd</span> <span class="hl-arg">/etc/nginx</span>
+                        <span class="hl-comment"># guarda el dir actual y cambia</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">popd</span>
+                        <span class="hl-comment"># regresa al dir guardado</span><br><br>
+
+                        <span class="hl-comment"># 19. Ver pila de directorios:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">dirs</span> <span class="hl-opt">-v</span><br><br>
+
+                        <span class="hl-comment"># 20. Crear y entrar a un directorio en un solo comando:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-arg">nuevo_dir</span> <span class="hl-opt">&amp;&amp;</span> <span class="hl-cmd">cd</span> <span class="hl-arg">$_</span><br><br>
+
+                        <span class="hl-comment"># 21. Ir al directorio home rápidamente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span>
+                        <span class="hl-comment"># sin argumento = cd $HOME</span><br><br>
+
+                        <span class="hl-comment"># 22. Ver árbol de directorios (si está instalado tree):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tree</span> <span class="hl-opt">-L 2</span> <span class="hl-arg">~/proyectos</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Atajos de teclado en la terminal (trucos 23–30)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 23. Ir al inicio de la línea: Ctrl+A</span><br>
+                        <span class="hl-comment"># 24. Ir al final de la línea: Ctrl+E</span><br>
+                        <span class="hl-comment"># 25. Borrar toda la línea actual: Ctrl+U</span><br>
+                        <span class="hl-comment"># 26. Borrar la palabra anterior: Ctrl+W</span><br>
+                        <span class="hl-comment"># 27. Limpiar pantalla (equivale a clear): Ctrl+L</span><br>
+                        <span class="hl-comment"># 28. Suspender proceso en primer plano: Ctrl+Z</span><br><br>
+
+                        <span class="hl-comment"># 29. Medir tiempo de ejecución de cualquier comando:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">time</span> <span class="hl-arg">apt list --installed 2&gt;/dev/null</span><br><br>
+
+                        <span class="hl-comment"># 30. Recargar el shell sin cerrar la sesión:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">exec</span> <span class="hl-arg">bash</span>
+                        <span class="hl-comment"># aplica cambios de ~/.bashrc al instante</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 16. PERMISOS Y PROPIETARIO -->
+            <div class="card">
+                <h2>16. Permisos y Propietario desde Bash</h2>
+                <p>Gestionar permisos, propietarios y atributos especiales de archivos y directorios.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">chmod, chown, umask y stat</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ver permisos detallados de un archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">stat</span> <span class="hl-arg">archivo.sh</span><br><br>
+
+                        <span class="hl-comment"># Dar permisos de ejecución al propietario:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span class="hl-arg">u+x</span> <span class="hl-arg">script.sh</span><br><br>
+
+                        <span class="hl-comment"># Permisos completos en notación octal (rwxr-xr-x):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span class="hl-arg">755</span> <span class="hl-arg">script.sh</span><br><br>
+
+                        <span class="hl-comment"># Aplicar permisos recursivamente a un directorio:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chmod</span> <span class="hl-opt">-R</span> <span class="hl-arg">644</span> <span class="hl-arg">~/documentos/</span><br><br>
+
+                        <span class="hl-comment"># Cambiar propietario y grupo de un archivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo chown</span> <span class="hl-arg">juan:juan</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                        <span class="hl-comment"># Establecer máscara de permisos para nuevos archivos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">umask</span> <span class="hl-arg">022</span>
+                        <span class="hl-comment"># nuevos archivos = 644, dirs = 755</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 17. FECHA, HORA Y TIEMPO -->
+            <div class="card">
+                <h2>17. Fecha, Hora y Programación de Tareas</h2>
+                <p>Comandos para trabajar con fechas, formatearlas y programar ejecuciones.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">date, sleep, at y cron</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Mostrar fecha y hora actuales:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">date</span><br><br>
+
+                        <span class="hl-comment"># Formato personalizado (YYYY-MM-DD HH:MM:SS):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">date</span> <span class="hl-arg">+"%Y-%m-%d %H:%M:%S"</span><br><br>
+
+                        <span class="hl-comment"># Fecha de ayer / mañana:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">date</span> <span class="hl-opt">-d</span> <span class="hl-arg">"yesterday" +%Y-%m-%d</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">date</span> <span class="hl-opt">-d</span> <span class="hl-arg">"tomorrow" +%Y-%m-%d</span><br><br>
+
+                        <span class="hl-comment"># Esperar N segundos antes de continuar:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sleep</span> <span class="hl-arg">5</span> <span class="hl-opt">&amp;&amp;</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"Listo"</span><br><br>
+
+                        <span class="hl-comment"># Programar un comando para ejecutarse en 10 minutos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"bash ~/backup.sh"</span> <span class="hl-opt">|</span> <span class="hl-cmd">at</span> <span class="hl-arg">now + 10 minutes</span><br><br>
+
+                        <span class="hl-comment"># Ver zona horaria del sistema:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">timedatectl</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 18. COMPRESIÓN Y ARCHIVADO -->
+            <div class="card">
+                <h2>18. Compresión y Archivado</h2>
+                <p>Comprimir, descomprimir y gestionar archivos tar, gzip, zip y más.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">tar, gzip, zip, unzip</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear archivo .tar.gz de un directorio:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-czf</span> <span class="hl-arg">backup.tar.gz</span> <span class="hl-arg">~/documentos/</span><br><br>
+
+                        <span class="hl-comment"># Extraer un .tar.gz en el directorio actual:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-xzf</span> <span class="hl-arg">backup.tar.gz</span><br><br>
+
+                        <span class="hl-comment"># Ver contenido de un tar sin extraer:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-tzf</span> <span class="hl-arg">backup.tar.gz</span><br><br>
+
+                        <span class="hl-comment"># Comprimir con gzip (reemplaza el original):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">gzip</span> <span class="hl-arg">archivo.log</span>
+                        <span class="hl-comment"># → archivo.log.gz</span><br><br>
+
+                        <span class="hl-comment"># Descomprimir .gz manteniendo el original:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">gzip</span> <span class="hl-opt">-dk</span> <span class="hl-arg">archivo.log.gz</span><br><br>
+
+                        <span class="hl-comment"># Comprimir con zip (múltiples archivos):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">zip</span> <span class="hl-opt">-r</span> <span class="hl-arg">proyecto.zip</span> <span class="hl-arg">~/proyecto/</span><br><br>
+
+                        <span class="hl-comment"># Descomprimir zip en directorio específico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">unzip</span> <span class="hl-arg">proyecto.zip</span> <span class="hl-opt">-d</span> <span class="hl-arg">~/destino/</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19. MONITOREO DEL SISTEMA -->
+            <div class="card">
+                <h2>19. Monitoreo del Sistema en Tiempo Real</h2>
+                <p>Comandos para vigilar el rendimiento de CPU, RAM, disco y red.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">free, df, du, vmstat, watch</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ver uso de RAM en formato legible:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">free</span> <span class="hl-opt">-h</span><br><br>
+
+                        <span class="hl-comment"># Espacio libre en todos los sistemas de archivos montados:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">df</span> <span class="hl-opt">-h</span><br><br>
+
+                        <span class="hl-comment"># Tamaño de un directorio específico:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">du</span> <span class="hl-opt">-sh</span> <span class="hl-arg">~/Descargas/</span><br><br>
+
+                        <span class="hl-comment"># Top 10 elementos más pesados de un directorio:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">du</span> <span class="hl-opt">-sh</span> <span class="hl-arg">~/*</span> <span class="hl-opt">|</span> <span class="hl-cmd">sort</span> <span class="hl-opt">-rh</span> <span class="hl-opt">|</span> <span class="hl-cmd">head</span> <span class="hl-opt">-10</span><br><br>
+
+                        <span class="hl-comment"># Estadísticas de CPU/memoria cada 2 segundos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">vmstat</span> <span class="hl-arg">2</span><br><br>
+
+                        <span class="hl-comment"># Repetir cualquier comando cada 2 segundos (watch):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">watch</span> <span class="hl-opt">-n 2</span> <span class="hl-arg">"df -h | grep sda"</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 20. RED DESDE BASH -->
+            <div class="card">
+                <h2>20. Red desde Bash</h2>
+                <p>Diagnóstico de red, transferencia de archivos y conexiones remotas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">curl, wget, nc, ss, ip</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Descargar un archivo con curl:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-opt">-L -O</span> <span class="hl-arg">https://example.com/archivo.zip</span><br><br>
+
+                        <span class="hl-comment"># Descargar continuando una descarga interrumpida:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span class="hl-opt">-c</span> <span class="hl-arg">https://example.com/archivo.iso</span><br><br>
+
+                        <span class="hl-comment"># Ver interfaces de red y direcciones IP:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ip</span> <span class="hl-arg">addr show</span><br><br>
+
+                        <span class="hl-comment"># Ver puertos TCP en escucha:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ss</span> <span class="hl-opt">-tlnp</span><br><br>
+
+                        <span class="hl-comment"># Probar si un puerto está abierto con netcat:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nc</span> <span class="hl-opt">-zv</span> <span class="hl-arg">192.168.1.1</span> <span class="hl-arg">80</span><br><br>
+
+                        <span class="hl-comment"># IP pública desde la terminal:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-arg">ifconfig.me</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 21. BÚSQUEDA AVANZADA CON FIND Y XARGS -->
+            <div class="card">
+                <h2>21. Búsqueda Avanzada con find y xargs</h2>
+                <p>Localizar archivos con criterios complejos y encadenar acciones sobre ellos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">find con -exec y xargs</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Buscar archivos modificados en los últimos 7 días:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">~</span> <span class="hl-opt">-mtime -7</span> <span class="hl-opt">-type f</span><br><br>
+
+                        <span class="hl-comment"># Buscar archivos mayores de 100MB:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/</span> <span class="hl-opt">-size +100M</span> <span class="hl-opt">-type f</span> <span class="hl-opt">2&gt;/dev/null</span><br><br>
+
+                        <span class="hl-comment"># Borrar todos los archivos .log vacíos:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/var/log</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.log"</span> <span class="hl-opt">-empty -delete</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar chmod sobre todos los scripts encontrados:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">~/scripts</span> <span class="hl-opt">-name "*.sh" -exec</span> <span class="hl-cmd">chmod</span> <span class="hl-arg">+x {} \;</span><br><br>
+
+                        <span class="hl-comment"># Buscar y mover archivos con xargs (más eficiente):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-name "*.bak"</span> <span class="hl-opt">|</span> <span class="hl-cmd">xargs</span> <span class="hl-opt">-I{}</span> <span class="hl-cmd">mv</span> <span class="hl-arg">{} ~/backup/</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 22. AWK — PROCESAMIENTO DE COLUMNAS -->
+            <div class="card">
+                <h2>22. Awk — Procesamiento de Columnas</h2>
+                <p>Extraer, filtrar y calcular sobre datos estructurados en columnas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">awk práctico</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Mostrar solo la segunda columna (separada por espacios):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-arg">'{print $2}'</span> <span class="hl-arg">datos.txt</span><br><br>
+
+                        <span class="hl-comment"># Separador personalizado (CSV con coma):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-opt">-F','</span> <span class="hl-arg">'{print $1, $3}'</span> <span class="hl-arg">datos.csv</span><br><br>
+
+                        <span class="hl-comment"># Sumar todos los valores de la columna 2:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-arg">'{suma += $2} END {print "Total:", suma}'</span> <span class="hl-arg">ventas.txt</span><br><br>
+
+                        <span class="hl-comment"># Filtrar líneas donde columna 3 sea mayor que 100:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-arg">'$3 &gt; 100 {print $0}'</span> <span class="hl-arg">inventario.txt</span><br><br>
+
+                        <span class="hl-comment"># Mostrar número de línea y contenido:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-arg">'{print NR": "$0}'</span> <span class="hl-arg">archivo.txt</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 23. HERE DOCUMENTS -->
+            <div class="card">
+                <h2>23. Here Documents (Heredoc)</h2>
+                <p>Escribir bloques de texto multilínea directamente en la terminal o en scripts.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Heredoc para crear archivos y pasar texto</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear un archivo de configuración multilínea:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-opt">&gt;</span> <span class="hl-arg">config.ini</span> <span class="hl-opt">&lt;&lt;EOF</span><br>
+                        <span class="hl-arg">[servidor]</span><br>
+                        <span class="hl-arg">host = localhost</span><br>
+                        <span class="hl-arg">puerto = 8080</span><br>
+                        <span class="hl-opt">EOF</span><br><br>
+
+                        <span class="hl-comment"># Heredoc con variables interpoladas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nombre</span>=<span class="hl-arg">"Ana"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-opt">&lt;&lt;EOF</span><br>
+                        <span class="hl-arg">Bienvenida, $nombre.</span><br>
+                        <span class="hl-arg">Hoy es: $(date +%Y-%m-%d)</span><br>
+                        <span class="hl-opt">EOF</span><br><br>
+
+                        <span class="hl-comment"># Heredoc sin interpolación (comillas en el marcador):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-opt">&lt;&lt;'EOF'</span><br>
+                        <span class="hl-arg">El valor de $HOME no se expande aquí.</span><br>
+                        <span class="hl-opt">EOF</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 24. DEPURACIÓN DE SCRIPTS -->
+            <div class="card">
+                <h2>24. Depuración de Scripts Bash</h2>
+                <p>Técnicas para detectar y corregir errores en scripts Bash.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">set -x, bash -n, trap</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Verificar sintaxis sin ejecutar:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span class="hl-opt">-n</span> <span class="hl-arg">script.sh</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar en modo verbose (imprime cada comando antes de correrlo):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span class="hl-opt">-x</span> <span class="hl-arg">script.sh</span><br><br>
+
+                        <span class="hl-comment"># Activar modo debug desde dentro del script:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">set</span> <span class="hl-opt">-x</span>
+                        <span class="hl-comment"># desactivar con set +x</span><br><br>
+
+                        <span class="hl-comment"># Abortar si una variable no definida es usada:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">set</span> <span class="hl-opt">-u</span><br><br>
+
+                        <span class="hl-comment"># Capturar errores con trap (ejecuta código al salir con error):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">trap</span> <span class="hl-arg">'echo "Error en línea $LINENO"'</span> <span class="hl-arg">ERR</span><br><br>
+
+                        <span class="hl-comment"># Limpiar archivos temporales al terminar el script:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">trap</span> <span class="hl-arg">'rm -f /tmp/tmp_$$'</span> <span class="hl-arg">EXIT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 25. TEXTO CON TR Y COLUMN -->
+            <div class="card">
+                <h2>25. Transformación de Texto con tr y column</h2>
+                <p>Convertir, filtrar y formatear texto de forma eficiente desde la terminal.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">tr, column, tee</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Convertir minúsculas a mayúsculas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"hola mundo"</span> <span class="hl-opt">|</span> <span class="hl-cmd">tr</span> <span class="hl-arg">'a-z' 'A-Z'</span><br><br>
+
+                        <span class="hl-comment"># Eliminar caracteres específicos (ej. saltos de línea):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tr</span> <span class="hl-opt">-d</span> <span class="hl-arg">'\n'</span> <span class="hl-opt">&lt;</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                        <span class="hl-comment"># Reemplazar espacios por tabulaciones:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tr</span> <span class="hl-arg">' ' '\t'</span> <span class="hl-opt">&lt;</span> <span class="hl-arg">datos.txt</span><br><br>
+
+                        <span class="hl-comment"># Formatear salida en columnas alineadas:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">datos.csv</span> <span class="hl-opt">|</span> <span class="hl-cmd">column</span> <span class="hl-opt">-t -s</span> <span class="hl-arg">','</span><br><br>
+
+                        <span class="hl-comment"># Escribir en archivo Y mostrar en pantalla al mismo tiempo (tee):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">apt list --installed 2&gt;/dev/null</span> <span class="hl-opt">|</span> <span class="hl-cmd">tee</span> <span class="hl-arg">paquetes.txt</span><br><br>
+
+                        <span class="hl-comment"># tee agregando sin sobrescribir:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"log nuevo"</span> <span class="hl-opt">|</span> <span class="hl-cmd">tee</span> <span class="hl-opt">-a</span> <span class="hl-arg">registro.log</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 26. SCRIPTS DE INSPECCIÓN DEL SISTEMA -->
+            <div class="card">
+                <h2>26. Scripts para Inspeccionar y Reportar el Sistema</h2>
+                <p>Combina comandos Bash para leer datos reales del hardware y software, y guardar informes en archivos.
+                    Estos scripts son prácticos para documentar tu máquina o preparar entornos.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Generar informe completo del PC en Markdown</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ir al directorio de trabajo y crear el informe:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">~/Enjambre_Pro</span><br><br>
+
+                        <span class="hl-comment"># Encabezado del informe:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"## DATOS REALES DEL SISTEMA"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Sección CPU:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### CPU"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lscpu</span> <span class="hl-opt">|</span> <span class="hl-cmd">grep</span> <span class="hl-opt">-E</span> <span class="hl-arg">"Model name|CPU|Thread|Core|Architecture"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Sección RAM:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Memoria RAM"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">free</span> <span class="hl-opt">-h</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Sección GPU:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### GPU"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lspci</span> <span class="hl-opt">|</span> <span class="hl-cmd">grep</span> <span class="hl-opt">-i</span> <span class="hl-arg">vga</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Sección Sistema Operativo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Sistema Operativo"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">lsb_release</span> <span class="hl-opt">-a</span> <span class="hl-arg">2&gt;/dev/null</span> <span class="hl-opt">||</span> <span class="hl-cmd">cat</span> <span class="hl-arg">/etc/os-release</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Sección Disco:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Espacio en Disco"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">df</span> <span class="hl-opt">-h</span> <span class="hl-arg">/</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">""</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Sección Python:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Version de Python"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-opt">--version</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'```'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Ver el informe completo generado:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"✅ Datos reales agregados al informe"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">informe_pc.md</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Qué hace cada comando de este script</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># lscpu → información detallada de la CPU (modelo, núcleos, hilos, arquitectura)</span><br>
+                        <span class="hl-comment"># free -h → RAM total, usada y libre en formato legible (MB/GB)</span><br>
+                        <span class="hl-comment"># lspci | grep -i vga → detecta la tarjeta gráfica instalada</span><br>
+                        <span class="hl-comment"># lsb_release -a → nombre, versión y codename de la distribución Linux</span><br>
+                        <span class="hl-comment"># df -h / → espacio total, usado y disponible en la partición raíz</span><br>
+                        <span class="hl-comment"># python3 --version → versión de Python instalada en el sistema</span><br>
+                        <span class="hl-comment"># echo '```' → inserta bloques de código Markdown para mejor formato</span><br>
+                        <span class="hl-comment"># >> archivo.md → agrega al final sin borrar el contenido anterior</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Variaciones útiles del mismo patrón</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Agregar versión del kernel al informe:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Kernel"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uname</span> <span class="hl-opt">-r</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Agregar uptime (tiempo encendido) al informe:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Uptime"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uptime</span> <span class="hl-opt">-p</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Agregar lista de paquetes instalados:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"### Paquetes instalados"</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">dpkg</span> <span class="hl-opt">-l</span> <span class="hl-opt">|</span> <span class="hl-cmd">wc</span> <span class="hl-opt">-l</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Crear el informe desde cero (sobrescribir con >):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">"# Informe del Sistema - $(date +%Y-%m-%d)"</span> <span class="hl-opt">&gt;</span> <span class="hl-arg">informe_pc.md</span><br><br>
+
+                        <span class="hl-comment"># Ver el informe con paginación:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">less</span> <span class="hl-arg">informe_pc.md</span>
+                    </div>
+                </div>
             </div>
 
         </section>

@@ -9,6 +9,7 @@
     'js/tabs/term-shell.js',
     'js/tabs/term-pipes.js',
     'js/tabs/term-scripting.js',
+    'js/tabs/uso-bash.js',
     'js/tabs/admin-perms.js',
     'js/tabs/admin-sys.js',
     'js/tabs/admin-net.js',
