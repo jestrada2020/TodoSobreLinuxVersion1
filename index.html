@@ -71,7 +71,7 @@
                 data-tags="bash shell comandos practicos variables loops condicionales arrays funciones manipulacion sistema">
                 Uso de Bash
             </a>
-            <a class="nav-link nav-item" data-section="bash-automation" data-tags="bash automatizacion cron systemd script backup monitoreo optimizacion">
+            <a class="nav-link nav-item" data-section="bash-automation" data-tags="bash automatizacion cron systemd anacron timers script backup rsync monitoreo alertas webhook logging seguridad shellcheck testing dry-run deploy produccion">
                 Automatización con Bash
             </a>
 
@@ -6229,231 +6229,600 @@
         <!-- AUTOMATIZACION BASH -->
         <section id="bash-automation" class="section">
             <span class="badge" style="background: rgba(34, 197, 94, 0.15); color: #22c55e;">Automatización</span>
-            <h1>Automatización del Sistema con Bash</h1>
-            <p>Estrategias prácticas y plantillas reutilizables para automatizar tareas repetitivas, monitorear el sistema y crear scripts robustos de mantenimiento.</p>
+            <h1>Automatización Profesional del Sistema con Bash</h1>
+            <p>Arquitectura, estrategias y plantillas de producción para construir scripts de automatización robustos, seguros y mantenibles. Diseñado para administradores de sistemas y DevOps.</p>
 
             <div class="card">
-                <h2>Plantilla Robusta de Script</h2>
-                <p>Toda automatización comienza con un script bien estructurado. Usa <code>set -euo pipefail</code> para detenerse ante errores.</p>
+                <h2>🏗️ Arquitectura de un Script Profesional</h2>
+                <p>Un script de producción no es un conjunto de comandos sueltos. Sigue una estructura modular que separa configuración, lógica, logging y manejo de errores.</p>
                 <div class="cmd-box">
+                    <div class="cmd-header">Plantilla Maestra de Producción</div>
                     <div class="cmd-content">
                         <span class="hl-comment">#!/bin/bash</span><br>
-                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br><br>
+                        <span class="hl-comment">#===============================================================================</span><br>
+                        <span class="hl-comment"># Nombre: deploy-app.sh</span><br>
+                        <span class="hl-comment"># Descripción: Despliega aplicación con backup, health check y rollback</span><br>
+                        <span class="hl-comment"># Autor: Tu Nombre</span><br>
+                        <span class="hl-comment"># Fecha: 2026-04-29</span><br>
+                        <span class="hl-comment"># Uso: ./deploy-app.sh [--dry-run] [--env staging]</span><br>
+                        <span class="hl-comment">#===============================================================================</span><br><br>
 
-                        <span class="hl-comment"># Configuración</span><br>
-                        <span class="hl-arg">LOG_FILE</span>=<span class="hl-arg">"/var/log/mi-script.log"</span><br>
-                        <span class="hl-arg">BACKUP_DIR</span>=<span class="hl-arg">"$HOME/backups"</span><br>
-                        <span class="hl-arg">FECHA</span>=<span class="hl-cmd">$(date +%Y%m%d_%H%M%S)</span><br><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br>
+                        <span class="hl-cmd">IFS</span>=<span class="hl-arg">$'\n\t'</span>
+                        <span class="hl-comment"># Prevenir problemas con espacios en nombres de archivo</span><br><br>
 
-                        <span class="hl-comment"># Función de logging</span><br>
+                        <span class="hl-comment"># --- CONFIGURACIÓN (modificar según entorno) ---</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &amp;&amp; pwd)"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">APP_NAME="mi-aplicacion"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">BACKUP_DIR="/var/backups/${APP_NAME}"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">LOG_DIR="/var/log/${APP_NAME}"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">LOG_FILE="${LOG_DIR}/deploy-$(date +%Y%m%d-%H%M%S).log"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">KEEP_BACKUPS=7</span>
+                        <span class="hl-comment"># Cuántos backups conservar</span><br>
+                        <span class="hl-arg">DRY_RUN=false</span><br><br>
+
+                        <span class="hl-comment"># --- FUNCIONES DE UTILIDAD ---</span><br>
                         <span class="hl-cmd">log</span>() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"[$(date '+%Y-%m-%d %H:%M:%S')] $1"</span> <span class="hl-opt">|</span> <span class="hl-cmd">tee -a</span> <span class="hl-arg">"$LOG_FILE"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">level="$1"</span> <span class="hl-arg">msg="$2"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">timestamp="$(date '+%Y-%m-%d %H:%M:%S')"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"[${timestamp}] [${level}] ${msg}"</span> <span class="hl-opt">|</span> <span class="hl-cmd">tee -a</span> <span class="hl-arg">"$LOG_FILE"</span><br>
                         }<br><br>
 
-                        <span class="hl-comment"># Función de limpieza al salir</span><br>
+                        <span class="hl-cmd">info</span>()  { <span class="hl-cmd">log</span> <span class="hl-arg">"INFO"</span>  <span class="hl-arg">"$1"</span>; }<br>
+                        <span class="hl-cmd">warn</span>()  { <span class="hl-cmd">log</span> <span class="hl-arg">"WARN"</span>  <span class="hl-arg">"$1"</span>; }<br>
+                        <span class="hl-cmd">error</span>() { <span class="hl-cmd">log</span> <span class="hl-arg">"ERROR"</span> <span class="hl-arg">"$1"</span>; }<br><br>
+
+                        <span class="hl-cmd">die</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">error</span> <span class="hl-arg">"$1"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">exit</span> <span class="hl-arg">"${2:-1}"</span><br>
+                        }<br><br>
+
                         <span class="hl-cmd">cleanup</span>() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">log</span> <span class="hl-arg">"Script finalizado. Código de salida: $?"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">exit_code=$?</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if</span> [[ <span class="hl-arg">"$exit_code"</span> <span class="hl-opt">-ne</span> <span class="hl-arg">0</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">error</span> <span class="hl-arg">"Script falló con código ${exit_code}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">rm -rf</span> <span class="hl-arg">"${TMPDIR:-}"</span><br>
                         }<br>
-                        <span class="hl-cmd">trap</span> <span class="hl-arg">cleanup EXIT</span><br><br>
+                        <span class="hl-cmd">trap</span> <span class="hl-arg">cleanup EXIT</span><br>
+                        <span class="hl-cmd">trap</span> <span class="hl-arg">'die "Interrumpido por usuario" 130'</span> <span class="hl-arg">INT TERM</span><br><br>
 
-                        <span class="hl-cmd">log</span> <span class="hl-arg">"Iniciando script..."</span>
+                        <span class="hl-cmd">run_or_dry</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if</span> [[ <span class="hl-arg">"$DRY_RUN"</span> == <span class="hl-arg">"true"</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">info</span> <span class="hl-arg">"[DRY-RUN] $*"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">else</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">"$@"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        }<br><br>
+
+                        <span class="hl-comment"># --- VALIDACIÓN DE ENTORNO ---</span><br>
+                        <span class="hl-cmd">check_requirements</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">deps=("rsync" "curl" "systemctl")</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">for</span> cmd <span class="hl-cmd">in</span> <span class="hl-arg">"${deps[@]}"</span>; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if ! command -v</span> <span class="hl-arg">"$cmd"</span> <span class="hl-opt">&gt;/dev/null 2&gt;&amp;1</span>; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">die</span> <span class="hl-arg">"Dependencia faltante: $cmd"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">done</span><br>
+                        }<br><br>
+
+                        <span class="hl-comment"># --- PUNTO DE ENTRADA ---</span><br>
+                        <span class="hl-cmd">main</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">mkdir -p</span> <span class="hl-arg">"$LOG_DIR"</span> <span class="hl-arg">"$BACKUP_DIR"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">info</span> <span class="hl-arg">"Iniciando despliegue de ${APP_NAME}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">check_requirements</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-comment"># ... lógica del script ...</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">info</span> <span class="hl-arg">"Despliegue completado exitosamente"</span><br>
+                        }<br><br>
+
+                        <span class="hl-cmd">main</span> <span class="hl-arg">"$@"</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>Cron Jobs (Tareas Programadas)</h2>
-                <p>Programa scripts para que se ejecuten automáticamente en horarios específicos.</p>
+                <h2>🛡️ Manejo de Errores, Logging y Seguridad</h2>
+                <p>La diferencia entre un script amateur y uno profesional está en cómo se comporta cuando algo sale mal.</p>
 
                 <div class="cmd-box">
-                    <div class="cmd-header">Formatos de Cron</div>
+                    <div class="cmd-header">set: Modo Estricto Explicado</div>
                     <div class="cmd-content">
-                        <span class="hl-arg">* * * * *</span>      <span class="hl-comment">→ cada minuto</span><br>
-                        <span class="hl-arg">0 2 * * *</span>      <span class="hl-comment">→ todos los días a las 2:00 AM</span><br>
-                        <span class="hl-arg">0 */6 * * *</span>    <span class="hl-comment">→ cada 6 horas</span><br>
-                        <span class="hl-arg">0 0 * * 0</span>      <span class="hl-comment">→ todos los domingos a medianoche</span><br>
-                        <span class="hl-arg">@reboot</span>        <span class="hl-comment">→ al iniciar el sistema</span>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-e</span>
+                        <span class="hl-comment"># Exit on error: el script se detiene si cualquier comando falla</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-u</span>
+                        <span class="hl-comment"># Exit on unset: error si usas variable no definida</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-o pipefail</span>
+                        <span class="hl-comment"># Si un pipe falla, el pipeline completo falla</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-x</span>
+                        <span class="hl-comment"># Debug: imprime cada comando antes de ejecutarlo (usar con --debug)</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-v</span>
+                        <span class="hl-comment"># Verbose: imprime cada línea del script al leerla</span>
                     </div>
                 </div>
 
                 <div class="cmd-box">
-                    <div class="cmd-header">Comandos Básicos</div>
+                    <div class="cmd-header">Logging Estructurado con Niveles</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">crontab</span> <span class="hl-opt">-e</span>              <span class="hl-comment"># Editar tareas del usuario</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">crontab</span> <span class="hl-opt">-l</span>              <span class="hl-comment"># Listar tareas activas</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo crontab</span> <span class="hl-opt">-e</span>         <span class="hl-comment"># Editar tareas del sistema</span>
+                        <span class="hl-cmd">exec</span> <span class="hl-opt">1&gt;&gt;</span><span class="hl-arg">"$LOG_FILE"</span> <span class="hl-opt">2&gt;&gt;</span><span class="hl-arg">"$LOG_FILE"</span><br>
+                        <span class="hl-comment"># Redirige TODO stdout y stderr al log (útil para cron)</span><br><br>
+
+                        <span class="hl-cmd">logger</span> <span class="hl-opt">-p</span> <span class="hl-arg">user.info -t mi-script</span> <span class="hl-arg">"Mensaje al syslog"</span><br>
+                        <span class="hl-comment"># Enviar logs al sistema (accesible con journalctl / var/log/syslog)</span><br><br>
+
+                        <span class="hl-cmd">journalctl</span> <span class="hl-opt">-t</span> <span class="hl-arg">mi-script --since "1 hour ago"</span><br>
+                        <span class="hl-comment"># Ver logs recientes de tu script en journald</span>
                     </div>
                 </div>
 
                 <div class="cmd-box">
-                    <div class="cmd-header">Ejemplos Prácticos</div>
+                    <div class="cmd-header">Validación de Inputs y Sanitización</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Backup diario a las 3:00 AM</span><br>
-                        <span class="hl-arg">0 3 * * *</span> <span class="hl-arg">/home/usuario/scripts/backup.sh</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">/var/log/backup.log</span> <span class="hl-opt">2&gt;&amp;1</span><br><br>
-
-                        <span class="hl-comment"># Limpiar /tmp cada domingo</span><br>
-                        <span class="hl-arg">0 0 * * 0</span> <span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-type f -atime +7 -delete</span><br><br>
-
-                        <span class="hl-comment"># Monitorear espacio en disco cada hora</span><br>
-                        <span class="hl-arg">0 * * * *</span> <span class="hl-cmd">df</span> <span class="hl-opt">-h</span> <span class="hl-opt">|</span> <span class="hl-cmd">grep -E</span> <span class="hl-arg">'(/dev/sda|Use%)'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">/var/log/disk.log</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Systemd Timers (Alternativa Moderna a Cron)</h2>
-                <p>Más flexible que cron. Permite manejar dependencias, logs con journalctl y reintentos.</p>
-
-                <div class="cmd-box">
-                    <div class="cmd-header">Servicio Systemd</div>
-                    <div class="cmd-content">
-                        <span class="hl-comment"># Crear servicio: /etc/systemd/system/mi-tarea.service</span><br>
-                        <span class="hl-cmd">[Unit]</span><br>
-                        <span class="hl-arg">Description</span>=<span class="hl-arg">Mi tarea automatizada</span><br>
-                        <span class="hl-arg">After</span>=<span class="hl-arg">network.target</span><br><br>
-
-                        <span class="hl-cmd">[Service]</span><br>
-                        <span class="hl-arg">Type</span>=<span class="hl-arg">oneshot</span><br>
-                        <span class="hl-arg">ExecStart</span>=<span class="hl-arg">/usr/local/bin/mi-script.sh</span><br>
-                        <span class="hl-arg">User</span>=<span class="hl-arg">john</span>
-                    </div>
-                </div>
-
-                <div class="cmd-box">
-                    <div class="cmd-header">Timer Systemd</div>
-                    <div class="cmd-content">
-                        <span class="hl-comment"># Crear timer: /etc/systemd/system/mi-tarea.timer</span><br>
-                        <span class="hl-cmd">[Unit]</span><br>
-                        <span class="hl-arg">Description</span>=<span class="hl-arg">Ejecutar mi tarea cada día</span><br><br>
-
-                        <span class="hl-cmd">[Timer]</span><br>
-                        <span class="hl-arg">OnCalendar</span>=<span class="hl-arg">daily</span><br>
-                        <span class="hl-arg">Persistent</span>=<span class="hl-arg">true</span><br><br>
-
-                        <span class="hl-cmd">[Install]</span><br>
-                        <span class="hl-arg">WantedBy</span>=<span class="hl-arg">timers.target</span>
-                    </div>
-                </div>
-
-                <div class="cmd-box">
-                    <div class="cmd-header">Comandos de Gestión</div>
-                    <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl daemon-reload</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl enable mi-tarea.timer</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl start mi-tarea.timer</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">systemctl list-timers --all</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">journalctl -u mi-tarea.service</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Scripts de Backup Automatizado</h2>
-                <div class="cmd-box">
-                    <div class="cmd-content">
-                        <span class="hl-comment">#!/bin/bash</span><br>
-                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br><br>
-
-                        <span class="hl-arg">ORIGEN</span>=<span class="hl-arg">"$HOME/Documentos"</span><br>
-                        <span class="hl-arg">DESTINO</span>=<span class="hl-arg">"$HOME/backups"</span><br>
-                        <span class="hl-arg">FECHA</span>=<span class="hl-cmd">$(date +%Y%m%d_%H%M%S)</span><br>
-                        <span class="hl-arg">ARCHIVO</span>=<span class="hl-arg">"backup_documentos_$FECHA.tar.gz"</span><br><br>
-
-                        <span class="hl-cmd">mkdir -p</span> <span class="hl-arg">"$DESTINO"</span><br>
-                        <span class="hl-cmd">tar -czf</span> <span class="hl-arg">"$DESTINO/$ARCHIVO"</span> <span class="hl-arg">"$ORIGEN"</span><br><br>
-
-                        <span class="hl-comment"># Mantener solo los últimos 7 backups</span><br>
-                        <span class="hl-cmd">ls -t "$DESTINO"/backup_*.tar.gz | tail -n +8 | xargs -r rm -f</span><br><br>
-
-                        <span class="hl-cmd">echo</span> <span class="hl-arg">"Backup completado: $DESTINO/$ARCHIVO"</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Monitoreo del Sistema</h2>
-                <div class="cmd-box">
-                    <div class="cmd-content">
-                        <span class="hl-comment">#!/bin/bash</span><br>
-                        <span class="hl-comment"># Verificar uso de disco</span><br>
-                        <span class="hl-arg">USO</span>=<span class="hl-cmd">$(df / | awk 'NR==2 {print $5}' | sed 's/%//')</span><br>
-                        <span class="hl-cmd">if</span> [ <span class="hl-arg">"$USO"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">80</span> ]; <span class="hl-cmd">then</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"ALERTA: Disco al ${USO}%"</span> <span class="hl-opt">|</span> <span class="hl-cmd">mail -s</span> <span class="hl-arg">"Alerta de Disco"</span> <span class="hl-arg">admin@ejemplo.com</span><br>
+                        <span class="hl-comment"># Verificar argumentos obligatorios</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">$#</span> <span class="hl-opt">-lt</span> <span class="hl-arg">1</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">die</span> <span class="hl-arg">"Uso: $0 &lt;archivo&gt;"</span><br>
                         <span class="hl-cmd">fi</span><br><br>
 
-                        <span class="hl-comment"># Verificar memoria</span><br>
-                        <span class="hl-arg">MEM</span>=<span class="hl-cmd">$(free | awk '/Mem:/ {printf("%.0f", $3/$2 * 100)}')</span><br>
-                        <span class="hl-cmd">if</span> [ <span class="hl-arg">"$MEM"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">90</span> ]; <span class="hl-cmd">then</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"ALERTA: Memoria al ${MEM}%"</span> <span class="hl-opt">|</span> <span class="hl-cmd">logger -t monitor</span><br>
+                        <span class="hl-comment"># Validar que archivo existe</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-opt">!</span> <span class="hl-opt">-f</span> <span class="hl-arg">"$1"</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">die</span> <span class="hl-arg">"Archivo no encontrado: $1"</span><br>
                         <span class="hl-cmd">fi</span><br><br>
 
-                        <span class="hl-comment"># Verificar si un servicio está activo</span><br>
-                        <span class="hl-cmd">if ! systemctl is-active --quiet nginx; then</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">systemctl restart nginx</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Nginx reiniciado"</span> <span class="hl-opt">|</span> <span class="hl-cmd">logger</span><br>
+                        <span class="hl-comment"># Sanitizar variables (evitar path traversal)</span><br>
+                        <span class="hl-cmd">local</span> <span class="hl-arg">filename="$(basename "$1")"</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">"$filename"</span> =~ <span class="hl-arg">[\.\.\/\;\&amp;\|]</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">die</span> <span class="hl-arg">"Nombre de archivo inválido"</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># Validar número</span><br>
+                        <span class="hl-cmd">if ! [[</span> <span class="hl-arg">"$PUERTO"</span> =~ <span class="hl-arg">^[0-9]+$</span> <span class="hl-cmd">]]</span>; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">die</span> <span class="hl-arg">"El puerto debe ser un número"</span><br>
                         <span class="hl-cmd">fi</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <h2>Optimización de Bash</h2>
                 <div class="cmd-box">
+                    <div class="cmd-header">Seguridad: Principio de Mínimo Privilegio</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># 1. Usar arrays en lugar de strings separados por espacio</span><br>
-                        <span class="hl-arg">archivos</span>=(<span class="hl-arg">"uno.txt"</span> <span class="hl-arg">"dos.txt"</span> <span class="hl-arg">"tres.txt"</span>)<br>
-                        <span class="hl-cmd">for</span> f <span class="hl-cmd">in</span> <span class="hl-arg">"${archivos[@]}"</span>; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$f"</span>; <span class="hl-cmd">done</span><br><br>
-
-                        <span class="hl-comment"># 2. Evitar subshells innecesarios (usa &lt;() en lugar de $(cat))</span><br>
-                        <span class="hl-cmd">while read</span> linea; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$linea"</span>; <span class="hl-cmd">done</span> <span class="hl-opt">&lt; &lt;(</span><span class="hl-cmd">ls</span><span class="hl-opt">)</span><br><br>
-
-                        <span class="hl-comment"># 3. Usar grep -q en lugar de redirigir a /dev/null</span><br>
-                        <span class="hl-cmd">if</span> <span class="hl-cmd">grep -q</span> <span class="hl-arg">"palabra"</span> <span class="hl-arg">archivo.txt</span>; <span class="hl-cmd">then</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"Encontrado"</span>; <span class="hl-cmd">fi</span><br><br>
-
-                        <span class="hl-comment"># 4. Usar [[ ]] en lugar de [ ] para comparaciones</span><br>
-                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">"$var"</span> == <span class="hl-arg">"hola"</span> <span class="hl-opt">&amp;&amp;</span> <span class="hl-arg">"$num"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">5</span> ]]; <span class="hl-cmd">then</span> ...; <span class="hl-cmd">fi</span><br><br>
-
-                        <span class="hl-comment"># 5. Usar read con -r para evitar interpretar backslashes</span><br>
-                        <span class="hl-cmd">while</span> <span class="hl-cmd">IFS= read -r</span> linea; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$linea"</span>; <span class="hl-cmd">done</span> <span class="hl-opt">&lt;</span> <span class="hl-arg">archivo.txt</span><br><br>
-
-                        <span class="hl-comment"># 6. Habilitar globbing recursivo</span><br>
-                        <span class="hl-cmd">shopt -s globstar</span><br>
-                        <span class="hl-cmd">for</span> f <span class="hl-cmd">in</span> <span class="hl-arg">/var/log/**/*.log</span>; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$f"</span>; <span class="hl-cmd">done</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Snippets Reutilizables</h2>
-                <div class="cmd-box">
-                    <div class="cmd-content">
-                        <span class="hl-comment"># Preguntar confirmación al usuario</span><br>
-                        <span class="hl-cmd">confirmar</span>() {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">read -r -p</span> <span class="hl-arg">"$1 [s/N] "</span> respuesta<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;[[ <span class="hl-arg">"$respuesta"</span> =~ <span class="hl-arg">^[Ss]$</span> ]]<br>
-                        }<br>
-                        <span class="hl-cmd">confirmar</span> <span class="hl-arg">"¿Continuar?"</span> <span class="hl-opt">||</span> <span class="hl-cmd">exit</span> <span class="hl-arg">0</span><br><br>
-
-                        <span class="hl-comment"># Crear directorio temporal seguro</span><br>
-                        <span class="hl-arg">TMPDIR</span>=<span class="hl-cmd">$(mktemp -d)</span><br>
-                        <span class="hl-cmd">trap</span> <span class="hl-arg">"rm -rf $TMPDIR"</span> <span class="hl-arg">EXIT</span><br><br>
-
-                        <span class="hl-comment"># Verificar si se ejecuta como root</span><br>
-                        <span class="hl-cmd">if</span> [ <span class="hl-arg">"$EUID"</span> <span class="hl-opt">-ne</span> <span class="hl-arg">0</span> ]; <span class="hl-cmd">then</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Ejecutar como root: sudo $0"</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">exit</span> <span class="hl-arg">1</span><br>
+                        <span class="hl-comment"># Evitar ejecutar como root accidentalmente</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">"$EUID"</span> <span class="hl-opt">-eq</span> <span class="hl-arg">0</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">die</span> <span class="hl-arg">"Este script NO debe ejecutarse como root"</span><br>
                         <span class="hl-cmd">fi</span><br><br>
 
-                        <span class="hl-comment"># Barra de progreso simple</span><br>
-                        <span class="hl-cmd">for</span> i <span class="hl-cmd">in</span> <span class="hl-arg">{1..100}</span>; <span class="hl-cmd">do</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">printf</span> <span class="hl-arg">"\rProgreso: [%-50s] %d%%"</span> <span class="hl-arg">"$(printf '#%.0s' $(seq 1 $((i/2))))"</span> <span class="hl-arg">"$i"</span><br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">sleep</span> <span class="hl-arg">0.05</span><br>
-                        <span class="hl-cmd">done</span><br>
-                        <span class="hl-cmd">echo</span>
+                        <span class="hl-comment"># Crear archivos con permisos restrictivos por defecto</span><br>
+                        <span class="hl-cmd">umask</span> <span class="hl-arg">077</span>
+                        <span class="hl-comment"># Nuevos archivos: 600, directorios: 700</span><br>
+                        <span class="hl-cmd">touch</span> <span class="hl-arg">datos_sensibles.conf</span>
+                        <span class="hl-comment"># Solo el propietario puede leer/escribir</span><br><br>
+
+                        <span class="hl-comment"># Variables sensibles: nunca en el código</span><br>
+                        <span class="hl-cmd">source</span> <span class="hl-arg">/etc/mi-app/secrets.env</span>
+                        <span class="hl-comment"># Cargar desde archivo externo con permisos 600</span><br>
+                        <span class="hl-cmd">chmod</span> <span class="hl-arg">600 /etc/mi-app/secrets.env</span>
                     </div>
                 </div>
             </div>
 
+            <div class="card">
+                <h2>⏰ Programación de Tareas: Cron vs Systemd Timers</h2>
+                <p>Estrategia: usa <strong>Cron</strong> para tareas simples y frecuentes, <strong>Systemd Timers</strong> para flujos complejos con dependencias y logging centralizado.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Cron Avanzado: Variables y Buenas Prácticas</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># ~/.config/crontab (preferible a crontab -e en sistemas modernos)</span><br>
+                        <span class="hl-cmd">SHELL</span>=<span class="hl-arg">/bin/bash</span><br>
+                        <span class="hl-cmd">PATH</span>=<span class="hl-arg">/usr/local/bin:/usr/bin:/bin</span><br>
+                        <span class="hl-cmd">MAILTO</span>=<span class="hl-arg">"admin@ejemplo.com"</span>
+                        <span class="hl-comment"># Recibir emails si el cron falla</span><br>
+                        <span class="hl-cmd">HOME</span>=<span class="hl-arg">/home/john</span><br><br>
+
+                        <span class="hl-comment"># --- Formato visual de cron ---</span><br>
+                        <span class="hl-comment"># minuto hora dia-mes mes dia-semana  comando</span><br>
+                        <span class="hl-arg">0  2  *  *  *</span>   <span class="hl-arg">/home/john/scripts/backup.sh &gt;&gt;/var/log/backup.log 2&gt;&amp;1</span><br>
+                        <span class="hl-arg">*/5 * * * *</span>   <span class="hl-arg">/home/john/scripts/health-check.sh</span>
+                        <span class="hl-comment"># Cada 5 minutos</span><br>
+                        <span class="hl-arg">0  0  *  *  0</span>   <span class="hl-arg">/home/john/scripts/limpieza-semanal.sh</span>
+                        <span class="hl-comment"># Domingos a medianoche</span><br>
+                        <span class="hl-arg">0  9  *  *  1-5</span> <span class="hl-arg">/home/john/scripts/reporte-diario.sh</span>
+                        <span class="hl-comment"># Lunes a viernes a las 9:00</span><br>
+                        <span class="hl-arg">@reboot</span>       <span class="hl-arg">/home/john/scripts/inicio.sh</span>
+                        <span class="hl-comment"># Al iniciar el sistema</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Anacron: Tareas que no pueden perderse</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># /etc/anacrontab — Ejecuta tareas que se perdieron mientras el PC estaba apagado</span><br>
+                        <span class="hl-cmd">SHELL</span>=<span class="hl-arg">/bin/sh</span><br>
+                        <span class="hl-cmd">PATH</span>=<span class="hl-arg">/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin</span><br><br>
+
+                        <span class="hl-comment"># periodo  retraso  identificador  comando</span><br>
+                        <span class="hl-arg">1</span>         <span class="hl-arg">5</span>        <span class="hl-arg">backup.daily</span>   <span class="hl-arg">/usr/local/bin/backup-diario.sh</span><br>
+                        <span class="hl-arg">7</span>         <span class="hl-arg">10</span>       <span class="hl-arg">backup.weekly</span>  <span class="hl-arg">/usr/local/bin/backup-semanal.sh</span><br>
+                        <span class="hl-arg">30</span>        <span class="hl-arg">15</span>       <span class="hl-arg">backup.monthly</span> <span class="hl-arg">/usr/local/bin/backup-mensual.sh</span><br><br>
+
+                        <span class="hl-comment"># 1 = cada día, 5 min de retraso, identificador único, comando</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">anacron</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Systemd Timer Profesional</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># /etc/systemd/system/backup-app.service</span><br>
+                        <span class="hl-cmd">[Unit]</span><br>
+                        <span class="hl-arg">Description</span>=<span class="hl-arg">Backup incremental de aplicación</span><br>
+                        <span class="hl-arg">After</span>=<span class="hl-arg">network-online.target</span><br>
+                        <span class="hl-arg">Wants</span>=<span class="hl-arg">network-online.target</span><br><br>
+
+                        <span class="hl-cmd">[Service]</span><br>
+                        <span class="hl-arg">Type</span>=<span class="hl-arg">oneshot</span><br>
+                        <span class="hl-arg">User</span>=<span class="hl-arg">backup</span><br>
+                        <span class="hl-arg">Group</span>=<span class="hl-arg">backup</span><br>
+                        <span class="hl-arg">WorkingDirectory</span>=<span class="hl-arg">/var/lib/app</span><br>
+                        <span class="hl-arg">ExecStart</span>=<span class="hl-arg">/usr/local/bin/backup.sh</span><br>
+                        <span class="hl-arg">StandardOutput</span>=<span class="hl-arg">journal</span><br>
+                        <span class="hl-arg">StandardError</span>=<span class="hl-arg">journal</span><br>
+                        <span class="hl-arg">Restart</span>=<span class="hl-arg">on-failure</span><br>
+                        <span class="hl-arg">RestartSec</span>=<span class="hl-arg">300</span>
+                        <span class="hl-comment"># Reintentar en 5 min si falla</span><br><br>
+
+                        <span class="hl-comment"># /etc/systemd/system/backup-app.timer</span><br>
+                        <span class="hl-cmd">[Unit]</span><br>
+                        <span class="hl-arg">Description</span>=<span class="hl-arg">Ejecutar backup cada 6 horas</span><br><br>
+
+                        <span class="hl-cmd">[Timer]</span><br>
+                        <span class="hl-arg">OnCalendar</span>=<span class="hl-arg">*-*-* 00,06,12,18:00:00</span><br>
+                        <span class="hl-arg">Persistent</span>=<span class="hl-arg">true</span><br>
+                        <span class="hl-arg">RandomizedDelaySec</span>=<span class="hl-arg">300</span>
+                        <span class="hl-comment"># Retraso aleatorio hasta 5 min (evitar picos)</span><br>
+                        <span class="hl-arg">OnBootSec</span>=<span class="hl-arg">5min</span>
+                        <span class="hl-comment"># Ejecutar 5 min después de iniciar</span><br><br>
+
+                        <span class="hl-cmd">[Install]</span><br>
+                        <span class="hl-arg">WantedBy</span>=<span class="hl-arg">timers.target</span><br><br>
+
+                        <span class="hl-comment"># --- Gestión ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl daemon-reload</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl enable --now backup-app.timer</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">systemctl list-timers --all</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">journalctl -u backup-app.service -f</span>
+                        <span class="hl-comment"># -f = seguir logs en tiempo real</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">systemctl status backup-app.service</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Cuándo usar cada uno</div>
+                    <div class="cmd-content">
+                        <span class="hl-arg">Cron</span>           <span class="hl-comment"># Tareas simples, usuarios individuales, compatibilidad universal</span><br>
+                        <span class="hl-arg">Anacron</span>        <span class="hl-comment"># PCs que se apagan (laptops), tareas diarias/semanales no críticas</span><br>
+                        <span class="hl-arg">Systemd Timers</span> <span class="hl-comment"># Servidores, dependencias entre servicios, reintentos, logs centralizados</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💾 Backup Profesional con rsync</h2>
+                <p><code>tar</code> es bueno para archivar; <code>rsync</code> es superior para backups incrementales, sincronización remota y rotación eficiente.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Backup Incremental Local</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br><br>
+
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">SRC="/home/john/Documentos"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">DEST="/mnt/backup/john"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">DATE="$(date +%Y-%m-%d_%H%M%S)"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">LATEST="${DEST}/latest"</span><br>
+                        <span class="hl-cmd">readonly</span> <span class="hl-arg">BACKUP_DIR="${DEST}/${DATE}"</span><br><br>
+
+                        <span class="hl-cmd">mkdir -p</span> <span class="hl-arg">"$DEST"</span><br><br>
+
+                        <span class="hl-cmd">rsync</span> <span class="hl-opt">-a --delete \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-opt">--link-dest="$LATEST" \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-opt">--exclude='.cache' --exclude='node_modules' \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-opt">--exclude='*.tmp' --exclude='.Trash*' \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">"$SRC/" "${BACKUP_DIR}/"</span><br><br>
+
+                        <span class="hl-cmd">rm -f</span> <span class="hl-arg">"$LATEST"</span><br>
+                        <span class="hl-cmd">ln -s</span> <span class="hl-arg">"$BACKUP_DIR" "$LATEST"</span><br><br>
+
+                        <span class="hl-comment"># Rotación: mantener solo últimos 7 días</span><br>
+                        <span class="hl-cmd">find</span> <span class="hl-arg">"$DEST"</span> <span class="hl-opt">-maxdepth 1 -type d -name '2*' -mtime +7 -exec rm -rf {} +</span><br><br>
+
+                        <span class="hl-cmd">echo</span> <span class="hl-arg">"Backup completado: ${BACKUP_DIR}"</span><br>
+                        <span class="hl-cmd">echo</span> <span class="hl-arg">"Espacio usado: $(du -sh "$BACKUP_DIR" | cut -f1)"</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Sincronización Remota (SSH)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rsync</span> <span class="hl-opt">-avz --progress \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">-e "ssh -i ~/.ssh/id_backup" \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">/var/www/html/ usuario@servidor:/var/www/html/</span><br>
+                        <span class="hl-comment"># -a = archive, -v = verbose, -z = comprimir durante transferencia</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rsync</span> <span class="hl-opt">-avz --delete \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">usuario@servidor:/var/log/nginx/ ./logs/</span><br>
+                        <span class="hl-comment"># --delete = eliminar en destino lo que ya no existe en origen</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rsync</span> <span class="hl-opt">-avz --bwlimit=1000 \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">/datos/ usuario@servidor:/datos/</span><br>
+                        <span class="hl-comment"># --bwlimit=1000 = limitar a ~1MB/s (no saturar red)</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Rotación de Logs Automatizada</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-cmd">LOG_DIR</span>=<span class="hl-arg">"/var/log/mi-app"</span><br>
+                        <span class="hl-cmd">MAX_SIZE</span>=<span class="hl-arg">"100M"</span>
+                        <span class="hl-comment"># Rotar cuando log supere 100MB</span><br>
+                        <span class="hl-cmd">KEEP</span>=<span class="hl-arg">10</span>
+                        <span class="hl-comment"># Mantener 10 archivos rotados</span><br><br>
+
+                        <span class="hl-cmd">for</span> log <span class="hl-cmd">in</span> <span class="hl-arg">"${LOG_DIR}"/*.log</span>; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[[ <span class="hl-opt">-f</span> <span class="hl-arg">"$log"</span> ]] <span class="hl-opt">||</span> <span class="hl-cmd">continue</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">size</span>=<span class="hl-arg">"$(stat -c%s "$log")"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if</span> [[ <span class="hl-arg">"$size"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">104857600</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">mv</span> <span class="hl-arg">"$log" "${log}.$(date +%Y%m%d-%H%M%S)"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">gzip</span> <span class="hl-arg">"${log}".*</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">touch</span> <span class="hl-arg">"$log"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">systemctl reload</span> <span class="hl-arg">mi-app</span>
+                        <span class="hl-comment"># Notificar a la app que reabra el log</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-cmd">ls -t "${LOG_DIR}"/*.gz 2&gt;/dev/null | tail -n +$((KEEP + 1)) | xargs -r rm -f</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔔 Monitoreo, Alertas y Health Checks</h2>
+                <p>Un script de automatización debe notificar cuando algo falla o cuando se completa una tarea crítica.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Health Check con Notificaciones</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br><br>
+
+                        <span class="hl-cmd">WEBHOOK_URL</span>=<span class="hl-arg">"https://hooks.slack.com/services/T00/B00/XXX"</span><br>
+                        <span class="hl-cmd">DISCORD_URL</span>=<span class="hl-arg">"https://discord.com/api/webhooks/..."</span><br>
+                        <span class="hl-cmd">ALERT_DISK</span>=<span class="hl-arg">85</span>
+                        <span class="hl-comment"># % de disco para alertar</span><br>
+                        <span class="hl-cmd">ALERT_MEM</span>=<span class="hl-arg">90</span>
+                        <span class="hl-comment"># % de memoria para alertar</span><br><br>
+
+                        <span class="hl-cmd">notify</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">msg="$1"</span> <span class="hl-arg">severity="${2:-info}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">logger</span> <span class="hl-opt">-t</span> <span class="hl-arg">system-monitor</span> <span class="hl-arg">"[$severity] $msg"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if command -v notify-send &gt;/dev/null; then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">notify-send</span> <span class="hl-arg">"Monitor del Sistema" "$msg" --urgency=normal</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">curl -s -X POST -H 'Content-type: application/json' \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">--data "{\"text\":\"[$severity] $msg\"}" "$WEBHOOK_URL" &gt;/dev/null || true</span><br>
+                        }<br><br>
+
+                        <span class="hl-comment"># --- Verificar disco ---</span><br>
+                        <span class="hl-cmd">disk_usage</span>=<span class="hl-arg">"$(df / | awk 'NR==2 {gsub(/%/,"",$5); print $5}')"</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">"$disk_usage"</span> <span class="hl-opt">-ge</span> <span class="hl-arg">"$ALERT_DISK"</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">notify</span> <span class="hl-arg">"Disco raíz al ${disk_usage}%"</span> <span class="hl-arg">"warning"</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># --- Verificar memoria ---</span><br>
+                        <span class="hl-cmd">mem_usage</span>=<span class="hl-arg">"$(free | awk '/Mem:/ {printf("%.0f", $3/$2 * 100)}')"</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">"$mem_usage"</span> <span class="hl-opt">-ge</span> <span class="hl-arg">"$ALERT_MEM"</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">notify</span> <span class="hl-arg">"Memoria al ${mem_usage}%"</span> <span class="hl-arg">"critical"</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># --- Verificar servicios críticos ---</span><br>
+                        <span class="hl-cmd">for</span> svc <span class="hl-cmd">in</span> <span class="hl-arg">nginx ssh docker</span>; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if ! systemctl is-active --quiet</span> <span class="hl-arg">"$svc"</span>; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">notify</span> <span class="hl-arg">"Servicio $svc está INACTIVO"</span> <span class="hl-arg">"critical"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">systemctl restart</span> <span class="hl-arg">"$svc"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">sleep</span> <span class="hl-arg">5</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if</span> <span class="hl-cmd">systemctl is-active --quiet</span> <span class="hl-arg">"$svc"</span>; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">notify</span> <span class="hl-arg">"Servicio $svc reiniciado exitosamente"</span> <span class="hl-arg">"info"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">else</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">notify</span> <span class="hl-arg">"FALLO al reiniciar $svc"</span> <span class="hl-arg">"critical"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        <span class="hl-cmd">done</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Webhook a Discord / Slack / Telegram</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Discord</span><br>
+                        <span class="hl-cmd">curl</span> <span class="hl-opt">-H "Content-Type: application/json" \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">-d '{"content":"Backup completado ✓"}' \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">"$DISCORD_WEBHOOK"</span><br><br>
+
+                        <span class="hl-comment"># Slack</span><br>
+                        <span class="hl-cmd">curl</span> <span class="hl-opt">-X POST -H 'Content-type: application/json' \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">--data '{"text":"Servidor reiniciado ⚠️"}' \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">"$SLACK_WEBHOOK"</span><br><br>
+
+                        <span class="hl-comment"># Telegram</span><br>
+                        <span class="hl-cmd">curl</span> <span class="hl-opt">-s \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">"https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-opt">-d "chat_id=${CHAT_ID}" \</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-opt">-d "text=Alerta: Disco al ${USO}%"</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>✅ Testing y Calidad de Código</h2>
+                <p>Un script profesional se prueba antes de llegar a producción. Estas herramientas detectan errores antes de que causen problemas.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">ShellCheck: Análisis Estático</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">shellcheck</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">shellcheck</span> <span class="hl-arg">mi-script.sh</span><br>
+                        <span class="hl-comment"># Detecta: variables sin comillas, expansión de globs, subshells problemáticas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">shellcheck</span> <span class="hl-opt">-S error</span> <span class="hl-arg">mi-script.sh</span><br>
+                        <span class="hl-comment"># Solo mostrar errores (ignorar warnings)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">shellcheck</span> <span class="hl-opt">-x</span> <span class="hl-arg">mi-script.sh</span><br>
+                        <span class="hl-comment"># -x = seguir sourced files (analizar dependencias)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">scripts/</span> <span class="hl-opt">-name '*.sh' -exec shellcheck {} +</span><br>
+                        <span class="hl-comment"># Analizar todos los scripts de un directorio</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Modo Dry-Run y Validación</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-cmd">DRY_RUN</span>=<span class="hl-arg">false</span><br>
+                        <span class="hl-cmd">[[</span> <span class="hl-arg">"${1:-}"</span> == <span class="hl-arg">"--dry-run"</span> <span class="hl-cmd">]]</span> <span class="hl-opt">&amp;&amp;</span> <span class="hl-cmd">DRY_RUN</span>=<span class="hl-arg">true</span><br><br>
+
+                        <span class="hl-cmd">run</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if</span> [[ <span class="hl-arg">"$DRY_RUN"</span> == <span class="hl-arg">"true"</span> ]]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"[DRY-RUN] $*"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">else</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">"$@"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        }<br><br>
+
+                        <span class="hl-cmd">run</span> <span class="hl-cmd">rm</span> <span class="hl-opt">-rf</span> <span class="hl-arg">/importante</span>
+                        <span class="hl-comment"># Ejecutar con --dry-run primero para ver qué haría</span><br><br>
+
+                        <span class="hl-comment"># Validar sintaxis sin ejecutar</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span class="hl-opt">-n</span> <span class="hl-arg">mi-script.sh</span>
+                        <span class="hl-comment"># -n = read but do not execute (solo valida sintaxis)</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">shunit2: Tests Unitarios para Bash</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">shunit2</span><br><br>
+
+                        <span class="hl-comment"># test_mi_script.sh</span><br>
+                        <span class="hl-cmd">test_suma</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">resultado="$(echo 2+2 | bc)"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">assertEquals</span> <span class="hl-arg">"La suma falló" "4" "$resultado"</span><br>
+                        }<br><br>
+
+                        <span class="hl-cmd">test_archivo_existe</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">assertTrue</span> <span class="hl-arg">"/etc/passwd debería existir" "[ -f /etc/passwd ]"</span><br>
+                        }<br><br>
+
+                        <span class="hl-cmd">source</span> <span class="hl-arg">shunit2</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span class="hl-arg">test_mi_script.sh</span><br>
+                        <span class="hl-comment"># Ejecuta tests y reporta resultados</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚡ One-Liners y Comandos de Administración</h2>
+                <p>Soluciones de una línea para tareas comunes de administración de sistemas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Encontrar y matar procesos por nombre</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pkill</span> <span class="hl-opt">-f</span> <span class="hl-arg">"proceso_viejo"</span><br><br>
+
+                        <span class="hl-comment"># Ver conexiones de red activas con programa asociado</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ss</span> <span class="hl-opt">-tulnp</span><br><br>
+
+                        <span class="hl-comment"># Ver quién consume más memoria</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ps</span> <span class="hl-opt">aux --sort=-%mem | head -n 11</span><br><br>
+
+                        <span class="hl-comment"># Ver quién consume más CPU</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ps</span> <span class="hl-opt">aux --sort=-%cpu | head -n 11</span><br><br>
+
+                        <span class="hl-comment"># Ejecutar comando en todos los archivos en paralelo (4 jobs)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">*.log</span> <span class="hl-opt">|</span> <span class="hl-cmd">xargs -P 4 -I {}</span> <span class="hl-cmd">gzip</span> <span class="hl-arg">{}</span><br><br>
+
+                        <span class="hl-comment"># Sustituir texto en múltiples archivos</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-name '*.conf' -exec sed -i 's/viejo/nuevo/g' {} +</span><br><br>
+
+                        <span class="hl-comment"># Descargar y ejecutar script de forma segura (verificar primero)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl -fsSL</span> <span class="hl-arg">https://ejemplo.com/script.sh</span> <span class="hl-opt">-o /tmp/script.sh</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">/tmp/script.sh</span>
+                        <span class="hl-comment"># REVISAR antes de ejecutar</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bash</span> <span class="hl-arg">/tmp/script.sh</span><br><br>
+
+                        <span class="hl-comment"># Crear usuario con shell restringida (solo sftp)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo useradd</span> <span class="hl-opt">-m -s /usr/sbin/nologin</span> <span class="hl-arg">usuario-sftp</span><br><br>
+
+                        <span class="hl-comment"># Ver últimos logins fallidos (seguridad)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo lastb</span> <span class="hl-opt">| head -n 20</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🛠️ Snippets de Producción</h2>
+                <p>Fragmentos de código listos para copiar y adaptar a tus proyectos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Parseo de Argumentos con getopts</div>
+                    <div class="cmd-content">
+                        <span class="hl-cmd">while getopts ":he:d:" opt; do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">case</span> <span class="hl-arg">$opt</span> <span class="hl-cmd">in</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">h)</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"Uso: $0 [-e entorno] [-d directorio]"</span>; <span class="hl-cmd">exit</span> <span class="hl-arg">0</span> ;;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">e)</span> <span class="hl-cmd">ENV</span>=<span class="hl-arg">"$OPTARG"</span> ;;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">d)</span> <span class="hl-cmd">DIR</span>=<span class="hl-arg">"$OPTARG"</span> ;;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-arg">\?)</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"Opción inválida: -$OPTARG"</span> <span class="hl-opt">&gt;&amp;2</span>; <span class="hl-cmd">exit</span> <span class="hl-arg">1</span> ;;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">esac</span><br>
+                        <span class="hl-cmd">done</span><br>
+                        <span class="hl-cmd">shift</span> <span class="hl-arg">$((OPTIND - 1))</span><br>
+                        <span class="hl-comment"># ./script.sh -e production -d /var/www</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Bloqueo con flock (evitar ejecuciones simultáneas)</div>
+                    <div class="cmd-content">
+                        <span class="hl-cmd">exec 200&gt;/var/lock/mi-script.lock</span><br>
+                        <span class="hl-cmd">if ! flock -n 200; then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Script ya en ejecución"</span> <span class="hl-opt">&gt;&amp;2</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">exit</span> <span class="hl-arg">1</span><br>
+                        <span class="hl-cmd">fi</span><br>
+                        <span class="hl-comment"># Útil para cron: evita que un job lento se solape con el siguiente</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Esperar a que un servicio esté disponible</div>
+                    <div class="cmd-content">
+                        <span class="hl-cmd">wait_for_service</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">host="$1" port="$2" timeout="${3:-30}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">for</span> i <span class="hl-cmd">in</span> <span class="hl-arg">$(seq 1 "$timeout")</span>; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">if nc -z "$host" "$port" 2&gt;/dev/null; then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Servicio disponible en ${host}:${port}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">return</span> <span class="hl-arg">0</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">fi</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">sleep</span> <span class="hl-arg">1</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">done</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Timeout esperando ${host}:${port}"</span> <span class="hl-opt">&gt;&amp;2</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">return</span> <span class="hl-arg">1</span><br>
+                        }<br><br>
+                        <span class="hl-cmd">wait_for_service</span> <span class="hl-arg">localhost 5432 60</span>
+                        <span class="hl-comment"># Espera hasta 60 segundos a que PostgreSQL esté listo</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Confirmación interactiva con opciones por defecto</div>
+                    <div class="cmd-content">
+                        <span class="hl-cmd">confirm</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">local</span> <span class="hl-arg">msg="${1:-¿Continuar?}"</span> <span class="hl-arg">default="${2:-N}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">read</span> <span class="hl-opt">-rp</span> <span class="hl-arg">"${msg} [s/N] "</span> <span class="hl-arg">resp</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[[ <span class="hl-arg">"${resp:-$default}"</span> =~ <span class="hl-arg">^[SsYy]$</span> ]]<br>
+                        }<br><br>
+                        <span class="hl-cmd">confirm</span> <span class="hl-arg">"Eliminar ${#archivos[@]} archivos"</span> <span class="hl-opt">||</span> <span class="hl-cmd">exit</span> <span class="hl-arg">0</span>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </main>
