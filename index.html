@@ -44,20 +44,20 @@
             <a class="nav-link nav-item" data-section="fs-hierarchy" data-tags="root etc var home tree">
                 Jerarquía (The Tree)
             </a>
-            <a class="nav-link nav-item" data-section="fs-nav" data-tags="cd ls pwd navigation">
+            <a class="nav-link nav-item" data-section="fs-nav" data-tags="cd ls pwd navigation tree du pushd popd rutas autocompletado atajos teclado">
                 Navegación
             </a>
-            <a class="nav-link nav-item" data-section="fs-manip" data-tags="cp mv rm touch mkdir">
+            <a class="nav-link nav-item" data-section="fs-manip" data-tags="cp mv rm touch mkdir rmdir wildcards globbing brace trash-cli copiar mover renombrar eliminar seguridad">
                 Gestión Básica
             </a>
             <a class="nav-link nav-item" data-section="fs-advanced"
-                data-tags="tar zip gzip ln find locate head tail">
+                data-tags="tar zip gzip bz2 xz ln find locate grep ripgrep head tail less bat wc sort uniq cut awk shred eliminar busqueda compresion">
                 Archivos Avanzado
             </a>
 
             <!-- 3. Terminal & Comandos -->
             <div class="nav-group-title">Power User</div>
-            <a class="nav-link nav-item" data-section="term-shell" data-tags="bash zsh terminal echo">
+            <a class="nav-link nav-item" data-section="term-shell" data-tags="bash zsh fish shell terminal consola alias ps1 prompt variables entorno PATH atajos teclado configuracion">
                 Shell Basics
             </a>
             <a class="nav-link nav-item" data-section="term-pipes"
@@ -70,6 +70,9 @@
             <a class="nav-link nav-item" data-section="uso-bash"
                 data-tags="bash shell comandos practicos variables loops condicionales arrays funciones manipulacion sistema">
                 Uso de Bash
+            </a>
+            <a class="nav-link nav-item" data-section="bash-automation" data-tags="bash automatizacion cron systemd script backup monitoreo optimizacion">
+                Automatización con Bash
             </a>
 
             <!-- 4. Admin Pro -->
@@ -118,7 +121,7 @@
             <!-- 8. Software -->
             <div class="nav-group-title">Software y Tools</div>
             <a class="nav-link nav-item" data-section="devtools"
-                data-tags="install snap vscode chrome latex texstudio cursor appimage">
+                data-tags="install snap vscode chrome latex texstudio cursor appimage github desktop windsurf uv uvx nvm node docker homebrew brew rust rustup cargo">
                 Instalar Dev Tools
             </a>
             <a class="nav-link nav-item" data-section="python-install"
@@ -138,7 +141,7 @@
                 Complementos de Instalación
             </a>
             <a class="nav-link nav-item" data-section="configuracion-ia-cli"
-                data-tags="ia cli codex claude gemini codin antigravity ai tools">
+                data-tags="ia cli codex claude gemini ollama cursor agent antigravity ai tools kimi">
                 Configuración IA_CLI
             </a>
 
@@ -948,6 +951,210 @@
                         <span class="hl-comment"># Instala la última versión vía Snap:</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
                             class="hl-arg">texstudio</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UV / UVX -->
+            <div class="card">
+                <h2>UV / UVX (Python Package Manager)</h2>
+                <p>Gestor de paquetes Python ultrarrápido escrito en Rust. Reemplaza a <code>pip</code>, <code>venv</code>, <code>virtualenv</code>, <code>pip-tools</code> y <code>poetry</code>.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl -LsSf https://astral.sh/uv/install.sh | sh</span><br>
+                        <span class="hl-comment"># Agregar al PATH:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export PATH="$HOME/.local/bin:$PATH"</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso básico</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv venv</span> <span class="hl-comment"># crear entorno virtual</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv pip install requests</span> <span class="hl-comment"># instalar paquetes</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv run script.py</span> <span class="hl-comment"># ejecutar script</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uvx ruff check .</span> <span class="hl-comment"># ejecutar herramientas sin instalar (similar a npx)</span>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header">
+                        🗑️ Desinstalación
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">rm ~/.local/bin/uv ~/.local/bin/uvx</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NVM -->
+            <div class="card">
+                <h2>NVM (Node Version Manager)</h2>
+                <p>Gestiona múltiples versiones de Node.js en el mismo sistema.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source ~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nvm install --lts</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nvm use --lts</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso básico</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nvm install 20</span> <span class="hl-comment"># instalar Node 20</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nvm use 20</span> <span class="hl-comment"># usar Node 20</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">nvm list</span> <span class="hl-comment"># ver versiones instaladas</span>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header">
+                        🗑️ Desinstalación
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Elimina la carpeta de NVM y quita las líneas de tu <code>~/.bashrc</code>:</p>
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf ~/.nvm</span><br>
+                                <span class="hl-comment"># Editar ~/.bashrc y eliminar las líneas de NVM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Docker -->
+            <div class="card">
+                <h2>Docker</h2>
+                <p>Plataforma de contenedores para desarrollo y despliegue.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install -y ca-certificates curl gnupg</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo install -m 0755 -d /etc/apt/keyrings</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo chmod a+r /etc/apt/keyrings/docker.gpg</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo usermod -aG docker $USER</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso básico</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">docker --version</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">docker run hello-world</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">docker compose up</span>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header">
+                        🗑️ Desinstalación
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove docker-ce docker-ce-cli containerd.io</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Homebrew -->
+            <div class="card">
+                <h2>Homebrew (Linux)</h2>
+                <p>El gestor de paquetes que falta para Linux. Útil para instalar herramientas de desarrollo de última versión.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Agregar al PATH</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso básico</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">brew install git</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">brew install node</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">brew install neovim</span>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header">
+                        🗑️ Desinstalación
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rust -->
+            <div class="card">
+                <h2>Rust (rustup)</h2>
+                <p>Lenguaje de sistemas con gestor de toolchains oficial.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso básico</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source $HOME/.cargo/env</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rustc --version</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cargo new proyecto</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cargo run</span>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header">
+                        🗑️ Desinstalación
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">rustup self uninstall</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1923,6 +2130,16 @@
                     </div>
                 </div>
                 <div class="cmd-box">
+                    <div class="cmd-header">Solución a errores de permisos (EACCES)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Si ves EACCES, NO uses sudo. Configura npm en tu carpeta de usuario:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">~/.npm-global</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm config set prefix</span> <span class="hl-arg">'~/.npm-global'</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'export PATH="$HOME/.npm-global/bin:$PATH"'</span> <span class="hl-opt">>></span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
                     <div class="cmd-header">Autenticación y Primer Uso</div>
                     <div class="cmd-content">
                         <span class="hl-comment"># Opción 1: Login interactivo con cuenta OpenAI (recomendado)</span><br>
@@ -1949,6 +2166,16 @@
                     </div>
                 </div>
                 <div class="cmd-box">
+                    <div class="cmd-header">Solución a errores de permisos (EACCES)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Si ves EACCES, NO uses sudo. Configura npm en tu carpeta de usuario:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">~/.npm-global</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm config set prefix</span> <span class="hl-arg">'~/.npm-global'</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'export PATH="$HOME/.npm-global/bin:$PATH"'</span> <span class="hl-opt">>></span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
                     <div class="cmd-header">Primer Uso y Autenticación</div>
                     <div class="cmd-content">
                         <span class="hl-comment"># Opción 1: Autenticación interactiva (recomendado)</span><br>
@@ -1965,63 +2192,142 @@
 
             <div class="card">
                 <h2>3. Gemini CLI</h2>
-                <p>Cliente experimental para los modelos de Google Gemini.</p>
+                <p>Cliente oficial de Google para interactuar con los modelos Gemini desde la terminal.</p>
                 <div class="cmd-box">
-                    <div class="cmd-header">Instalación via Pipx</div>
+                    <div class="cmd-header">Instalación Global (npm)</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">pipx</span> <span
-                            class="hl-arg">install</span> <span class="hl-arg">gemini-cli</span><br>
-                        <span class="hl-comment"># Si no tienes pipx:</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
-                        <span class="hl-arg">pip</span> <span class="hl-arg">install</span>
-                        <span class="hl-arg">--user</span> <span class="hl-arg">pipx</span>
+                        <span class="hl-comment"># Requiere Node.js 20 o superior.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-opt">install</span>
+                        <span class="hl-opt">-g</span> <span class="hl-arg">@google/gemini-cli</span>
                     </div>
                 </div>
                 <div class="cmd-box">
-                    <div class="cmd-header">Inicialización</div>
+                    <div class="cmd-header">Solución a errores de permisos (EACCES)</div>
                     <div class="cmd-content">
+                        <span class="hl-comment"># Si ves EACCES, NO uses sudo. Configura npm en tu carpeta de usuario:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">~/.npm-global</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">npm config set prefix</span> <span class="hl-arg">'~/.npm-global'</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'export PATH="$HOME/.npm-global/bin:$PATH"'</span> <span class="hl-opt">>></span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Autenticación y Primer Uso</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ejecuta gemini para autenticarte interactivamente (recomendado)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">gemini</span><br>
+                        <span class="hl-comment"># Abre el navegador para iniciar sesión con tu cuenta Google</span><br><br>
+                        <span class="hl-comment"># Opción alternativa: usar API Key</span><br>
                         <span class="hl-prompt">$</span><span class="hl-cmd">export</span>
-                        <span class="hl-arg">GEMINI_API_KEY</span>=<span class="hl-arg">\"ya29.a0AfH6SMA\"</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">gemini</span> <span class="hl-arg">init</span>
-                        <span class="hl-arg">--project</span> <span class="hl-arg">mi-proyecto</span>
+                        <span class="hl-arg">GOOGLE_API_KEY</span>=<span class="hl-arg">"tu-api-key"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">gemini</span> <span class="hl-opt">--version</span>
+                        <span class="hl-comment"># Verifica la instalación</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>4. Codin CLI</h2>
-                <p>CLI ligera para gestionar proyectos asistidos por IA.</p>
+                <h2>4. Ollama (IA Local)</h2>
+                <p>Ejecuta modelos de lenguaje localmente sin depender de la nube. Ideal para privacidad y trabajo offline.</p>
                 <div class="cmd-box">
-                    <div class="cmd-header">Descarga y Setup</div>
+                    <div class="cmd-header">Instalación</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">git</span> <span class="hl-arg">clone</span>
-                        <span class="hl-arg">https://github.com/codinlabs/codin-cli.git</span>
-                        <span class="hl-arg">~/apps/codin-cli</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
-                            class="hl-arg">~/apps/codin-cli</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span class="hl-arg">install</span>
-                        <br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">npm</span> <span
-                            class="hl-arg">run</span> <span class="hl-arg">build</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo ln</span> <span
-                            class="hl-arg">-s</span> <span class="hl-arg">~/apps/codin-cli/bin/codin</span>
-                        <span class="hl-arg">/usr/local/bin/codin</span>
+                        <span class="hl-comment"># Script oficial de instalación:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-opt">-fsSL</span> <span class="hl-arg">https://ollama.com/install.sh</span> <span class="hl-opt">|</span> <span class="hl-cmd">sh</span>
                     </div>
                 </div>
                 <div class="cmd-box">
-                    <div class="cmd-header">Primer Uso</div>
+                    <div class="cmd-header">Verificar instalación</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">codin</span> <span class="hl-arg">setup</span>
-                        <span class="hl-arg">--provider</span> <span class="hl-arg">openai</span>
-                        <span class="hl-arg">--model</span> <span class="hl-arg">gpt-4o</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">codin</span> <span class="hl-arg">project</span>
-                        <span class="hl-arg">init</span> <span class="hl-arg">mi-app</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama</span> <span class="hl-opt">--version</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Modelos recomendados</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Ligero y rápido (ideal para CPU con pocos cores)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama pull</span> <span class="hl-arg">llama3.2</span><br><br>
+                        <span class="hl-comment"># Balance calidad/tamaño (estándar para 16 GB RAM)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama pull</span> <span class="hl-arg">llama3.1</span><br><br>
+                        <span class="hl-comment"># Especializado en código</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama pull</span> <span class="hl-arg">qwen2.5-coder:7b</span><br><br>
+                        <span class="hl-comment"># Razonamiento avanzado (más pesado)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama pull</span> <span class="hl-arg">deepseek-r1:7b</span><br><br>
+                        <span class="hl-comment"># Alternativa ligera y eficiente</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama pull</span> <span class="hl-arg">phi4:14b</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso básico</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama run</span> <span class="hl-arg">llama3.1</span> <span class="hl-comment"># Chat interactivo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama run</span> <span class="hl-arg">llama3.2</span> <span class="hl-arg">"Hola"</span> <span class="hl-comment"># Prompt directo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama list</span> <span class="hl-comment"># Ver modelos instalados</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ollama rm</span> <span class="hl-arg">llama3.1</span> <span class="hl-comment"># Eliminar modelo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. Kimi CLI (Moonshot AI)</h2>
+                <p>Agente de IA para terminal de Moonshot AI. Puede leer y editar código, ejecutar comandos de shell, buscar en la web y planificar tareas de forma autónoma.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Método oficial (instala UV automáticamente si falta):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl -LsSf https://code.kimi.com/install.sh | bash</span><br><br>
+                        <span class="hl-comment"># Si ya tienes UV:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv tool install --python 3.13 kimi-cli</span><br><br>
+                        <span class="hl-comment"># Verificar:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kimi --version</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Configuración y Uso</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Configuración inicial (API key)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kimi /setup</span><br><br>
+                        <span class="hl-comment"># Chat interactivo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kimi</span><br><br>
+                        <span class="hl-comment"># Interfaz web en navegador</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kimi web</span><br><br>
+                        <span class="hl-comment"># Modo agente para IDEs</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kimi acp</span><br><br>
+                        <span class="hl-comment"># Prompt directo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">kimi chat</span> <span class="hl-arg">"Hola, ayúdame con este código"</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizar y Desinstalar</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Actualizar</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv tool upgrade kimi-cli --no-cache</span><br><br>
+                        <span class="hl-comment"># Desinstalar</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv tool uninstall kimi-cli</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>6. Cursor Agent (CLI)</h2>
+                <p>Agente de terminal oficial de Cursor AI. Permite interactuar con la IA directamente desde la línea de comandos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación del Agent</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Script oficial de instalación:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-arg">https://cursor.com/install</span> <span class="hl-opt">-fsS</span> <span class="hl-opt">|</span> <span class="hl-cmd">bash</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Uso</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">agent</span>
                     </div>
                 </div>
             </div>
 
             <div class="card" style="border-left: 4px solid var(--color-warn);">
-                <h2>5. Antigravity (Google)</h2>
+                <h2>7. Antigravity (Google)</h2>
                 <p>Basado en la guía oficial (<a href="https://antigravity.google" target="_blank"
                         style="color:var(--color-primary);">antigravity.google</a>) y el tutorial del video
                     <a href="https://www.youtube.com/watch?v=RKJ9_94O4rQ" target="_blank"
@@ -2099,8 +2405,21 @@
                 <!-- VS CODE -->
                 <div class="card">
                     <h3 style="color: #23a9f2;">Visual Studio Code</h3>
-                    <p style="font-size: 0.9rem;">El editor estándar. Versión oficial Snap.</p>
+                    <p style="font-size: 0.9rem;">El editor estándar. Método recomendado con APT o vía Snap.</p>
                     <div class="cmd-box" style="margin:0">
+                        <div class="cmd-header">A. Instalación con APT (Recomendado)</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Añadir repositorio oficial de Microsoft:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">wget -qO-</span> <span class="hl-arg">https://packages.microsoft.com/keys/microsoft.asc</span> <span class="hl-opt">|</span> <span class="hl-cmd">gpg --dearmor</span> <span class="hl-opt">></span> <span class="hl-arg">packages.microsoft.gpg</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo install -D -o root -g root -m 644</span> <span class="hl-arg">packages.microsoft.gpg</span> <span class="hl-arg">/etc/apt/keyrings/packages.microsoft.gpg</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo sh -c</span> <span class="hl-arg">'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">rm -f</span> <span class="hl-arg">packages.microsoft.gpg</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install -y</span> <span class="hl-arg">code</span>
+                        </div>
+                    </div>
+                    <div class="cmd-box" style="margin:0; margin-top: 0.75rem;">
+                        <div class="cmd-header">B. Instalación con Snap</div>
                         <div class="cmd-content">
                             <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap install</span> <span
                                 class="hl-arg">code</span> <span class="hl-opt">--classic</span>
@@ -2119,6 +2438,9 @@
                         <div class="accordion-content">
                             <div class="cmd-box">
                                 <div class="cmd-content">
+                                    <span class="hl-comment"># Si usaste APT:</span><br>
+                                    <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span class="hl-opt">--purge</span> <span class="hl-arg">code</span><br><br>
+                                    <span class="hl-comment"># Si usaste Snap:</span><br>
                                     <span class="hl-prompt">$</span><span class="hl-cmd">sudo snap remove</span> <span
                                         class="hl-arg">code</span>
                                 </div>
@@ -2164,16 +2486,95 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- GITHUB DESKTOP -->
+                <div class="card">
+                    <h3 style="color: #8b5cf6;">GitHub Desktop</h3>
+                    <p style="font-size: 0.9rem;">Cliente Git GUI oficial de la comunidad (ShiftKey/Mwt) para Linux.</p>
+                    <div class="cmd-box" style="margin:0">
+                        <div class="cmd-header">Instalación con APT (Recomendado)</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># Añadir repositorio del mirror Mwt:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">wget -qO -</span> <span class="hl-arg">https://mirror.mwt.me/shiftkey-desktop/gpgkey</span> <span class="hl-opt">|</span> <span class="hl-cmd">gpg --dearmor</span> <span class="hl-opt">|</span> <span class="hl-cmd">sudo tee</span> <span class="hl-arg">/etc/apt/keyrings/mwt-desktop.gpg</span> <span class="hl-opt">></span> <span class="hl-arg">/dev/null</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo sh -c</span> <span class="hl-arg">'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/mwt-desktop.gpg] https://mirror.mwt.me/shiftkey-desktop/deb/ any main" > /etc/apt/sources.list.d/mwt-desktop.list'</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install -y</span> <span class="hl-arg">github-desktop</span>
+                        </div>
+                    </div>
+
+                    <!-- UNINSTALL GITHUB DESKTOP -->
+                    <div class="accordion" style="margin-top: 1rem;">
+                        <div class="accordion-header"
+                            style="font-size: 0.85rem; padding: 0.5rem;">
+                            🗑️ Desinstalar GitHub Desktop
+                            <span>+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="cmd-box">
+                                <div class="cmd-content">
+                                    <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span class="hl-opt">--purge</span> <span class="hl-arg">github-desktop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WINDSURF -->
+                <div class="card">
+                    <h3 style="color: #ec4899;">Windsurf</h3>
+                    <p style="font-size: 0.9rem;">IDE con IA integrada de Codeium. Requiere descarga manual.</p>
+                    <div class="cmd-box" style="margin:0">
+                        <div class="cmd-header">Descarga e Instalación</div>
+                        <div class="cmd-content">
+                            <span class="hl-comment"># 1. Descarga desde el sitio oficial:</span><br>
+                            <span class="hl-prompt">#</span> <a href="https://codeium.com/windsurf" target="_blank" style="color:var(--color-primary); text-decoration: underline;">https://codeium.com/windsurf</a><br><br>
+                            <span class="hl-comment"># 2. Instalar el .deb descargado:</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo dpkg -i</span> <span class="hl-arg">windsurf-*.deb</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt-get install -f</span><br><br>
+                            <span class="hl-comment"># O usa el AppImage (cualquier distro):</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">chmod +x</span> <span class="hl-arg">windsurf-*.AppImage</span><br>
+                            <span class="hl-prompt">$</span><span class="hl-cmd">./windsurf-*.AppImage</span>
+                        </div>
+                    </div>
+
+                    <!-- UNINSTALL WINDSURF -->
+                    <div class="accordion" style="margin-top: 1rem;">
+                        <div class="accordion-header"
+                            style="font-size: 0.85rem; padding: 0.5rem;">
+                            🗑️ Desinstalar Windsurf
+                            <span>+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="cmd-box">
+                                <div class="cmd-content">
+                                    <span class="hl-comment"># Si usaste .deb:</span><br>
+                                    <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span class="hl-opt">--purge</span> <span class="hl-arg">windsurf</span><br><br>
+                                    <span class="hl-comment"># Si usaste AppImage:</span><br>
+                                    <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-arg">~/Descargas/windsurf-*.AppImage</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
 
             <!-- CURSOR AI -->
             <div class="card">
                 <h2>Cursor AI Editor</h2>
-                <p><strong>No existe Snap oficial.</strong> Se usa un formato llamado <code>.AppImage</code>.</p>
-                <div class="accordion">
+                <p><strong>No existe Snap oficial.</strong> Editor desktop + Agent CLI disponibles.</p>
+                <div class="cmd-box" style="margin:0">
+                    <div class="cmd-header">Cursor Agent (CLI)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Instalar el agente de terminal:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl</span> <span class="hl-arg">https://cursor.com/install</span> <span class="hl-opt">-fsS</span> <span class="hl-opt">|</span> <span class="hl-cmd">bash</span><br><br>
+                        <span class="hl-comment"># Uso:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">agent</span>
+                    </div>
+                </div>
+                <div class="accordion" style="margin-top: 1rem;">
                     <div class="accordion-header">
-                        Instrucciones AppImage
+                        Instrucciones AppImage (Editor Desktop)
                         <span>+</span>
                     </div>
                     <div class="accordion-content">
@@ -4590,250 +4991,951 @@
         </section>
 
         <section id="fs-nav" class="section">
-            <h1>Navegación</h1>
-            <p>Aprende a moverte sin el ratón. Estos son los comandos que usarás el 90% del tiempo.</p>
+            <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Fundamentos</span>
+            <h1>Navegación por el Sistema de Archivos</h1>
+            <p>Aprende a moverte por el árbol de directorios sin usar el ratón. Estos comandos son el 90% de tu interacción diaria con Linux.</p>
 
-            <!-- PWD -->
-            <div class="cmd-box">
-                <div class="cmd-header">
-                    <span>Saber dónde estoy</span>
-                    <button class="copy-btn" data-copy-target="pwd">Copiar</button>
-                </div>
-                <div class="cmd-content">
-                    <span class="hl-prompt">$</span><span class="hl-cmd">pwd</span>
-                    <span class="hl-comment"># Print Working Directory (Imprimir directorio actual)</span>
-                    <span class="hl-comment"># Salida ejemplo: /home/john</span>
-                </div>
-            </div>
+            <div class="card">
+                <h2>📍 Dónde Estoy · pwd</h2>
+                <p>Muestra la ruta absoluta del directorio actual. Útil cuando te pierdes entre carpetas anidadas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pwd</span><br>
+                        <span class="hl-comment"># Salida: /home/john/Proyectos/mi-app/src</span><br><br>
 
-            <!-- CD -->
-            <div class="cmd-box">
-                <div class="cmd-header">
-                    <span>CD (Change Directory)</span>
-                    <button class="copy-btn" data-copy-target="cd-cmds">Copiar</button>
-                </div>
-                <div class="cmd-content" id="cd-cmds">
-                    <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">Descargas</span>
-                    <span class="hl-comment"># Entrar en la carpeta Descargas</span><br><br>
-
-                    <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">..</span>
-                    <span class="hl-comment"># Subir un nivel (salir de la carpeta actual)</span><br><br>
-
-                    <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">~</span>
-                    <span class="hl-comment"># Ir directamente a tu carpeta Home (/home/tu_usuario)</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pwd</span> <span class="hl-opt">-P</span><br>
+                        <span class="hl-comment"># -P = Physical: resuelve symlinks, muestra ruta real</span><br>
+                        <span class="hl-comment"># Si estás en un enlace simbólico, muestra el destino real</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- LS -->
-            <div class="cmd-box">
-                <div class="cmd-header">
-                    <span>LS (Listar archivos)</span>
-                    <button class="copy-btn" data-copy-target="ls-cmds">Copiar</button>
-                </div>
-                <div class="cmd-content" id="ls-cmds">
-                    <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-la</span>
-                    <span class="hl-comment"># -l: Lista detallada (permisos, tamaño)</span>
-                    <span class="hl-comment"># -a: Muestra ocultos (archivos que inician con .)</span><br><br>
+            <div class="card">
+                <h2>🚶 Moverse entre Directorios · cd</h2>
+                <p>Cambia de directorio. Conoce los atajos para navegar a velocidad.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Movimientos básicos ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">Documentos</span>
+                        <span class="hl-comment"># Entrar a subcarpeta (relativa)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">/var/log</span>
+                        <span class="hl-comment"># Ir a ruta absoluta</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">..</span>
+                        <span class="hl-comment"># Subir un nivel (directorio padre)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">../..</span>
+                        <span class="hl-comment"># Subir dos niveles</span><br><br>
 
-                    <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-lh</span>
-                    <span class="hl-comment"># -h: Human readable (tamaños en KB, MB, GB)</span>
+                        <span class="hl-comment"># --- Atajos imprescindibles ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">~</span>
+                        <span class="hl-comment"># Ir a Home (/home/usuario)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span>
+                        <span class="hl-comment"># Sin argumentos = ir a Home (igual que cd ~)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">-</span>
+                        <span class="hl-comment"># Volver al directorio ANTERIOR (útil para alternar)</span><br><br>
+
+                        <span class="hl-comment"># --- Pilas de directorios ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pushd</span> <span class="hl-arg">/var/www</span>
+                        <span class="hl-comment"># Guarda ubicación actual y salta a /var/www</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">pushd</span> <span class="hl-arg">/etc/nginx</span>
+                        <span class="hl-comment"># Guarda /var/www y salta a /etc/nginx</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">dirs</span>
+                        <span class="hl-comment"># Ver la pila de directorios</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">popd</span>
+                        <span class="hl-comment"># Regresa al directorio guardado en la pila</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Listar Archivos · ls</h2>
+                <p>El comando más usado. Conoce sus flags para obtener exactamente la información que necesitas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Combinaciones esenciales ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-la</span><br>
+                        <span class="hl-comment"># -l = lista detallada (permisos, dueño, tamaño, fecha)</span><br>
+                        <span class="hl-comment"># -a = all: muestra archivos ocultos (empiezan con .)</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-lh</span><br>
+                        <span class="hl-comment"># -h = human readable: KB, MB, GB en lugar de bytes</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-ltr</span><br>
+                        <span class="hl-comment"># -t = ordenar por fecha (más reciente primero)</span><br>
+                        <span class="hl-comment"># -r = reverse: invierte el orden (útil: más antiguos primero)</span><br><br>
+
+                        <span class="hl-comment"># --- Flags adicionales útiles ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-lS</span><br>
+                        <span class="hl-comment"># -S = ordenar por tamaño (más grande primero)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-d</span> <span class="hl-arg">*/</span><br>
+                        <span class="hl-comment"># -d = listar solo directorios (sin entrar en ellos)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-1</span><br>
+                        <span class="hl-comment"># -1 = un archivo por línea (ideal para pipes)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-R</span><br>
+                        <span class="hl-comment"># -R = recursivo: lista subdirectorios también</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">--color=auto</span><br>
+                        <span class="hl-comment"># Colorea archivos por tipo (azul=directorios, verde=ejecutables)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🖥️ Explorar Directorios · tree / du</h2>
+                <p>Visualiza la estructura de carpetas y descubre qué está ocupando espacio.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tree</span><br>
+                        <span class="hl-comment"># Muestra árbol visual de directorios (instalar: sudo apt install tree)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tree</span> <span class="hl-opt">-L 2</span><br>
+                        <span class="hl-comment"># -L 2 = limitar profundidad a 2 niveles</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tree</span> <span class="hl-opt">-I 'node_modules|__pycache__'</span><br>
+                        <span class="hl-comment"># -I = ignorar patrones (útil para excluir carpetas de dependencias)</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">du</span> <span class="hl-opt">-sh</span> <span class="hl-arg">*</span><br>
+                        <span class="hl-comment"># -s = summarize, -h = human: tamaño de cada elemento</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">du</span> <span class="hl-opt">-sh</span> <span class="hl-arg">.</span> <span class="hl-opt">|</span> <span class="hl-cmd">sort</span> <span class="hl-opt">-h</span><br>
+                        <span class="hl-comment"># Ordena por tamaño (de menor a mayor, -h sort entiende KB/MB/GB)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">du</span> <span class="hl-opt">-h --max-depth=1</span> <span class="hl-arg">/var/log</span><br>
+                        <span class="hl-comment"># Muestra tamaño de cada subdirectorio de /var/log</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⌨️ Autocompletado y Atajos del Terminal</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Autocompletado ---</span><br>
+                        <span class="hl-arg">Tab</span>         <span class="hl-comment"># Completa nombres de archivo/comando</span><br>
+                        <span class="hl-arg">Tab Tab</span>     <span class="hl-comment"># Muestra todas las opciones posibles</span><br><br>
+
+                        <span class="hl-comment"># --- Edición de línea ---</span><br>
+                        <span class="hl-arg">Ctrl+A</span>      <span class="hl-comment"># Ir al INICIO de la línea</span><br>
+                        <span class="hl-arg">Ctrl+E</span>      <span class="hl-comment"># Ir al FINAL de la línea</span><br>
+                        <span class="hl-arg">Ctrl+U</span>      <span class="hl-comment"># Borrar todo desde cursor hasta INICIO</span><br>
+                        <span class="hl-arg">Ctrl+K</span>      <span class="hl-comment"># Borrar todo desde cursor hasta FINAL</span><br>
+                        <span class="hl-arg">Ctrl+W</span>      <span class="hl-comment"># Borrar la PALABRA anterior al cursor</span><br>
+                        <span class="hl-arg">Alt+B</span>       <span class="hl-comment"># Mover cursor una palabra atrás</span><br>
+                        <span class="hl-arg">Alt+F</span>       <span class="hl-comment"># Mover cursor una palabra adelante</span><br><br>
+
+                        <span class="hl-comment"># --- Historial ---</span><br>
+                        <span class="hl-arg">↑ / ↓</span>       <span class="hl-comment"># Navegar historial de comandos</span><br>
+                        <span class="hl-arg">Ctrl+R</span>      <span class="hl-comment"># Buscar en historial (interactivo, repetir Ctrl+R para siguiente)</span><br>
+                        <span class="hl-arg">Ctrl+G</span>      <span class="hl-comment"># Cancelar búsqueda Ctrl+R</span><br>
+                        <span class="hl-arg">!!</span>          <span class="hl-comment"># Repetir último comando</span><br>
+                        <span class="hl-arg">!comando</span>    <span class="hl-comment"># Repetir último comando que empiece con "comando"</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🗺️ Rutas Absolutas vs Relativas</h2>
+                <p>Entender la diferencia es clave para no perderse en el sistema de archivos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Rutas Absolutas ---</span><br>
+                        <span class="hl-comment"># Empiezan con / y describen la ruta completa desde la raíz</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">/home/john/Documentos/proyecto</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">/etc/passwd</span><br><br>
+
+                        <span class="hl-comment"># --- Rutas Relativas ---</span><br>
+                        <span class="hl-comment"># Parten del directorio actual (NO empiezan con /)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">src/components</span>
+                        <span class="hl-comment"># Entra a src/components desde donde estés</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">../../config.ini</span>
+                        <span class="hl-comment"># Sube 2 niveles y lee config.ini</span><br><br>
+
+                        <span class="hl-comment"># --- Atajos de ruta ---</span><br>
+                        <span class="hl-arg">.</span>  <span class="hl-comment"># Directorio ACTUAL</span><br>
+                        <span class="hl-arg">..</span> <span class="hl-comment"># Directorio PADRE (un nivel arriba)</span><br>
+                        <span class="hl-arg">~</span>  <span class="hl-comment"># Carpeta HOME del usuario</span><br>
+                        <span class="hl-arg">~john</span> <span class="hl-comment"># Carpeta HOME del usuario "john"</span><br>
+                        <span class="hl-arg">-</span>  <span class="hl-comment"># Directorio anterior (cd -)</span>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="fs-manip" class="section">
-            <h1>Gestión Básica</h1>
-            <p>Crear, copiar y manipular archivos y directorios básicos.</p>
+            <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Fundamentos</span>
+            <h1>Gestión Básica de Archivos</h1>
+            <p>Operaciones esenciales para crear, copiar, mover, renombrar y eliminar archivos y directorios de forma segura y eficiente.</p>
 
             <div class="info-grid">
                 <!-- MKDIR -->
                 <div class="cmd-box" style="margin:0">
-                    <div class="cmd-header">Crear Carpeta (MKDIR)</div>
+                    <div class="cmd-header">Crear Carpetas · mkdir</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span
-                            class="hl-arg">Proyectos</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span>
-                        <span class="hl-arg">app/src/imgs</span>
-                        <span class="hl-comment"># -p crea toda la ruta</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-arg">Proyectos</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">app/src/imgs</span>
+                        <span class="hl-comment"># -p = --parents: crea toda la ruta intermedia</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-v</span> <span class="hl-arg">dir1 dir2 dir3</span>
+                        <span class="hl-comment"># -v = verbose: muestra cada carpeta creada</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-m 750</span> <span class="hl-arg">privado</span>
+                        <span class="hl-comment"># Crea con permisos específicos (rwxr-x---)</span>
                     </div>
                 </div>
                 <!-- TOUCH -->
                 <div class="cmd-box" style="margin:0">
-                    <div class="cmd-header">Crear Archivo (TOUCH)</div>
+                    <div class="cmd-header">Crear / Actualizar · touch</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span
-                            class="hl-arg">notas.txt</span><br>
-                        <span class="hl-comment"># Actualiza fecha si ya existe</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span class="hl-arg">notas.txt</span>
+                        <span class="hl-comment"># Crea archivo vacío o actualiza timestamp</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span class="hl-arg">{a,b,c}.txt</span>
+                        <span class="hl-comment"># Crea a.txt, b.txt y c.txt (brace expansion)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span class="hl-opt">-t 202601151200</span> <span class="hl-arg">archivo.log</span>
+                        <span class="hl-comment"># Establece fecha/hora específica (AAAAMMDDhhmm)</span>
                     </div>
                 </div>
             </div>
 
             <br>
-            <div class="cmd-box">
-                <div class="cmd-header">CP / MV / RM</div>
-                <div class="cmd-content">
-                    <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-r</span> <span
-                        class="hl-arg">carpeta1/</span> <span class="hl-arg">carpeta_copia/</span>
-                    <span class="hl-comment"># Copiar recursivamente (para carpetas)</span><br><br>
 
-                    <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">viejo.txt</span>
-                    <span class="hl-arg">nuevo.txt</span>
-                    <span class="hl-comment"># Renombrar (mover al mismo sitio con otro nombre)</span><br><br>
+            <div class="card">
+                <h2>📋 Copiar Archivos · cp</h2>
+                <p>Copia archivos y directorios. Siempre verifica el destino antes de sobrescribir.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Archivos individuales ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-arg">origen.txt destino.txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-i</span> <span class="hl-arg">*.txt backups/</span>
+                        <span class="hl-comment"># -i = interactive: pregunta antes de sobrescribir</span><br><br>
 
-                    <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-opt">-rf</span> <span
-                        class="hl-arg">carpeta_peligrosa/</span>
-                    <span class="hl-comment"># Eliminar carpeta y contenido a la fuerza (-f)</span>
+                        <span class="hl-comment"># --- Directorios ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-r</span> <span class="hl-arg">proyecto/ proyecto_backup/</span>
+                        <span class="hl-comment"># -r = recursivo (copia subdirectorios)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-a</span> <span class="hl-arg">proyecto/ proyecto_backup/</span>
+                        <span class="hl-comment"># -a = archive: preserva permisos, symlinks, timestamps</span><br><br>
+
+                        <span class="hl-comment"># --- Opciones útiles ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-v</span> <span class="hl-arg">archivo.txt /otra/ruta/</span>
+                        <span class="hl-comment"># -v = verbose: muestra cada archivo copiado</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-u</span> <span class="hl-arg">*.csv datos/</span>
+                        <span class="hl-comment"># -u = update: solo copia si origen es más nuevo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-opt">-n</span> <span class="hl-arg">config.ini config.ini.dist</span>
+                        <span class="hl-comment"># -n = no-clobber: nunca sobrescribe existentes</span>
+                    </div>
                 </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Mover y Renombrar · mv</h2>
+                <p>Mueve archivos entre directorios o renombra en la misma ubicación. Más rápido que copiar porque solo cambia los metadatos (mismo filesystem).</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Mover ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">descargas.zip Documentos/</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">*.pdf ~/Documentos/Libros/</span>
+                        <span class="hl-comment"># Mueve todos los PDF con wildcard</span><br><br>
+
+                        <span class="hl-comment"># --- Renombrar ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">viejo.txt nuevo.txt</span>
+                        <span class="hl-comment"># Renombrar archivo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">carpeta_old/ carpeta_new/</span>
+                        <span class="hl-comment"># Renombrar directorio</span><br><br>
+
+                        <span class="hl-comment"># --- Opciones útiles ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-opt">-i</span> <span class="hl-arg">archivo.txt destino/</span>
+                        <span class="hl-comment"># -i = interactive: pregunta antes de sobrescribir</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-opt">-v</span> <span class="hl-arg">foto*.jpg Fotos/2026/</span>
+                        <span class="hl-comment"># -v = verbose: muestra cada operación</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-opt">-n</span> <span class="hl-arg">*.txt backup/</span>
+                        <span class="hl-comment"># -n = no-clobber: no sobrescribe archivos existentes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🗑️ Eliminar · rm / rmdir</h2>
+                <p>⚠️ <strong>Atención:</strong> En Linux no hay "Papelera de Reciclaje" por defecto. <code>rm</code> elimina permanentemente. Considera instalar <code>trash-cli</code> para mayor seguridad.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Archivos ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-arg">archivo_temp.txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-opt">-i</span> <span class="hl-arg">*.log</span>
+                        <span class="hl-comment"># -i = interactive: pregunta antes de cada eliminación</span><br><br>
+
+                        <span class="hl-comment"># --- Directorios ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rmdir</span> <span class="hl-arg">carpeta_vacia/</span>
+                        <span class="hl-comment"># Solo elimina directorios VACÍOS (seguro)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-opt">-r</span> <span class="hl-arg">carpeta/</span>
+                        <span class="hl-comment"># -r = recursivo: elimina directorio y contenido</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-opt">-rf</span> <span class="hl-arg">carpeta_peligrosa/</span>
+                        <span class="hl-comment"># -f = force: sin confirmaciones (¡MUY PELIGROSO!)</span><br><br>
+
+                        <span class="hl-comment"># --- Alternativa segura: trash-cli ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">trash-cli</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">trash-put</span> <span class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Mueve a la papelera (recuperable)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">trash-list</span>
+                        <span class="hl-comment"># Ver elementos en la papelera</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">trash-restore</span>
+                        <span class="hl-comment"># Interactivo: restaura un archivo</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">trash-empty</span>
+                        <span class="hl-comment"># Vacía la papelera permanentemente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎯 Wildcards y Patrones (Globbing)</h2>
+                <p>Los caracteres comodín te permiten operar sobre múltiples archivos sin escribir cada nombre.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># * = cualquier secuencia de caracteres</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">*.txt</span>
+                        <span class="hl-comment"># Todos los archivos .txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-arg">log_2026*</span>
+                        <span class="hl-comment"># Todos que empiecen con log_2026</span><br><br>
+
+                        <span class="hl-comment"># ? = un solo caracter</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">foto?.jpg</span>
+                        <span class="hl-comment"># foto1.jpg, fotoA.jpg (NO foto10.jpg)</span><br><br>
+
+                        <span class="hl-comment"># [...] = rango o conjunto</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">[a-d]*.txt</span>
+                        <span class="hl-comment"># Empiezan con a, b, c o d</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">foto[0-9].jpg</span>
+                        <span class="hl-comment"># foto0.jpg hasta foto9.jpg</span><br><br>
+
+                        <span class="hl-comment"># Brace expansion {a,b,c}</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-arg">proyecto/{src,tests,docs}</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">touch</span> <span class="hl-arg">archivo.{txt,md,pdf}</span>
+                        <span class="hl-comment"># Crea archivo.txt, archivo.md, archivo.pdf</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-arg">config.{ini,bak}</span>
+                        <span class="hl-comment"># Copia config.ini a config.bak</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚡ Flujos de Trabajo Prácticos</h2>
+                <p>Combinaciones comunes que usarás frecuentemente en tu día a día.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Organizar descargas por fecha</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span> <span class="hl-opt">-p</span> <span class="hl-arg">Descargas/{2025,2026}</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">Descargas/*2025* Descargas/2025/</span> <span class="hl-opt">2&gt;/dev/null</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Backup rápido antes de editar</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cp</span> <span class="hl-arg">config.yml config.yml.bak.$(date +%Y%m%d)</span><br>
+                        <span class="hl-comment"># Crea config.yml.bak.20260429 (solo si no existe usa -n)</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Limpiar archivos temporales con seguridad</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.tmp"</span> <span class="hl-opt">-mtime +7</span>
+                        <span class="hl-comment"># Primero VISTA PREVIA de lo que se eliminaría</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.tmp"</span> <span class="hl-opt">-mtime +7 -delete</span>
+                        <span class="hl-comment"># Elimina solo tras confirmar la vista previa</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Renombrar múltiples archivos en lote</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">for</span> f <span class="hl-cmd">in</span> <span class="hl-arg">*.txt</span>; <span class="hl-cmd">do</span> <span class="hl-cmd">mv</span> <span class="hl-arg">"$f"</span> <span class="hl-arg">"${f%.txt}.md"</span>; <span class="hl-cmd">done</span><br>
+                        <span class="hl-comment"># Convierte todos .txt → .md (maneja espacios seguros)</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rename</span> <span class="hl-arg">'s/ /_/g'</span> <span class="hl-arg">*.pdf</span><br>
+                        <span class="hl-comment"># Reemplaza espacios por guiones bajos en nombres</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🛡️ Buenas Prácticas y Seguridad</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Nunca uses rm -rf / o rm -rf /* (destruye el sistema)</span><br>
+                        <span class="hl-comment"># 2. Antes de usar wildcards con rm, prueba con ls primero:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-arg">*.log</span>
+                        <span class="hl-comment"># Verifica qué archivos coinciden...</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm</span> <span class="hl-arg">*.log</span>
+                        <span class="hl-comment"># ...y luego elimina</span><br><br>
+
+                        <span class="hl-comment"># 3. Alias seguro para rm (agrega a ~/.bashrc)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'alias rm="rm -i"'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span><br><br>
+
+                        <span class="hl-comment"># 4. Usa rmdir para directorios vacíos (más seguro que rm -r)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rmdir</span> <span class="hl-arg">carpeta_vacia/</span><br><br>
+
+                        <span class="hl-comment"># 5. Siempre entrecomilla variables con espacios</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">"mi archivo.txt"</span> <span class="hl-arg">"Documentos/"</span>
+                        <span class="hl-comment"># Las comillas evitan errores con nombres que tienen espacios</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Tabla Rápida de Comandos</h2>
+                <table style="width:100%; border-collapse:collapse; margin-top:1rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #3b82f6;">
+                            <th style="text-align:left; padding:0.6rem; color:#93c5fd;">Comando</th>
+                            <th style="text-align:left; padding:0.6rem; color:#93c5fd;">Uso Principal</th>
+                            <th style="text-align:left; padding:0.6rem; color:#93c5fd;">Flags Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;"><code>mkdir</code></td>
+                            <td style="padding:0.6rem;">Crear directorios</td>
+                            <td style="padding:0.6rem;"><code>-p</code> (crear ruta), <code>-v</code> (verbose)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;"><code>touch</code></td>
+                            <td style="padding:0.6rem;">Crear archivo / actualizar fecha</td>
+                            <td style="padding:0.6rem;"><code>-t</code> (fecha específica)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;"><code>cp</code></td>
+                            <td style="padding:0.6rem;">Copiar archivos/directorios</td>
+                            <td style="padding:0.6rem;"><code>-r</code> (recursivo), <code>-a</code> (archivo), <code>-i</code> (interactivo), <code>-v</code> (verbose)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;"><code>mv</code></td>
+                            <td style="padding:0.6rem;">Mover o renombrar</td>
+                            <td style="padding:0.6rem;"><code>-i</code> (interactivo), <code>-v</code> (verbose)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;"><code>rm</code></td>
+                            <td style="padding:0.6rem;">Eliminar archivos/directorios</td>
+                            <td style="padding:0.6rem;"><code>-r</code> (recursivo), <code>-f</code> (force), <code>-i</code> (interactivo)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;"><code>rmdir</code></td>
+                            <td style="padding:0.6rem;">Eliminar directorios vacíos</td>
+                            <td style="padding:0.6rem;"><code>-p</code> (eliminar padres vacíos)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0.6rem;"><code>trash-put</code></td>
+                            <td style="padding:0.6rem;">Mover a papelera</td>
+                            <td style="padding:0.6rem;"><code>trash-list</code>, <code>trash-restore</code></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
         <section id="fs-advanced" class="section">
             <span class="badge badge-imp">Deep Dive</span>
             <h1>Archivos Avanzado</h1>
-            <p>Compresión, enlaces simbólicos y búsqueda profunda.</p>
+            <p>Compresión, enlaces, búsqueda profunda, manipulación de texto y visualización de archivos.</p>
 
-            <!-- ACORDEON COMPRESION -->
-            <div class="accordion">
-                <div class="accordion-header">
-                    📦 Archivos y Compresión (tar, zip)
-                    <span>+</span>
+            <div class="card">
+                <h2>📦 Compresión y Archivado · tar / zip</h2>
+                <p>En Linux el estándar es <strong>.tar.gz</strong>, pero conviene conocer todos los formatos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Opciones de tar (memotécnica)</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># c = Create (crear) | x = eXtract (extraer) | t = lisT (listar)</span><br>
+                        <span class="hl-comment"># z = gZip | j = bz2 (Bzip2) | J = xz (máxima compresión)</span><br>
+                        <span class="hl-comment"># v = Verbose | f = File (archivo de salida)</span>
+                    </div>
                 </div>
-                <div class="accordion-content">
-                    <p>En Linux raramente usas .zip. El estándar es <strong>.tar.gz</strong> (Tarjeta de cinta + Gzip).
-                    </p>
-                    <div class="cmd-box">
-                        <div class="cmd-content">
-                            <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span
-                                class="hl-opt">-czvf</span> <span class="hl-arg">backup.tar.gz</span> <span
-                                class="hl-arg">/carpeta</span>
-                            <span class="hl-comment"># c=Create, z=Gzip, v=Verbose, f=File</span><br><br>
+                <div class="cmd-box">
+                    <div class="cmd-header">Crear archivos comprimidos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-czvf</span> <span class="hl-arg">backup.tar.gz</span> <span class="hl-arg">carpeta/</span><br>
+                        <span class="hl-comment"># .tar.gz = compresión media, muy compatible</span><br><br>
 
-                            <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span
-                                class="hl-opt">-xzvf</span> <span class="hl-arg">backup.tar.gz</span>
-                            <span class="hl-comment"># x=Extract</span><br><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-cjvf</span> <span class="hl-arg">backup.tar.bz2</span> <span class="hl-arg">carpeta/</span><br>
+                        <span class="hl-comment"># .tar.bz2 = mejor compresión que gzip, más lento</span><br><br>
 
-                            <span class="hl-prompt">$</span><span class="hl-cmd">unzip</span> <span
-                                class="hl-arg">archivo.zip</span>
-                        </div>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-cJvf</span> <span class="hl-arg">backup.tar.xz</span> <span class="hl-arg">carpeta/</span><br>
+                        <span class="hl-comment"># .tar.xz = máxima compresión, ideal para archivar grandes</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">zip</span> <span class="hl-opt">-r</span> <span class="hl-arg">backup.zip</span> <span class="hl-arg">carpeta/</span><br>
+                        <span class="hl-comment"># .zip = compatible con Windows/Mac</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Extraer archivos comprimidos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-xzvf</span> <span class="hl-arg">backup.tar.gz</span>
+                        <span class="hl-comment"># Extrae en el directorio actual</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-xzvf</span> <span class="hl-arg">backup.tar.gz</span> <span class="hl-opt">-C</span> <span class="hl-arg">/destino/</span>
+                        <span class="hl-comment"># -C = extraer en directorio específico</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-tzvf</span> <span class="hl-arg">backup.tar.gz</span>
+                        <span class="hl-comment"># -t = listar contenido SIN extraer (vista previa)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">unzip</span> <span class="hl-arg">archivo.zip</span> <span class="hl-opt">-d</span> <span class="hl-arg">/destino/</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar</span> <span class="hl-opt">-xJvf</span> <span class="hl-arg">backup.tar.xz</span>
+                        <span class="hl-comment"># Extraer .tar.xz</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Comparativa de formatos</div>
+                    <div class="cmd-content">
+                        <span class="hl-arg">.tar.gz</span>  <span class="hl-comment"># Rápido, buena compresión, estándar Linux</span><br>
+                        <span class="hl-arg">.tar.bz2</span> <span class="hl-comment"># Mejor compresión, más lento</span><br>
+                        <span class="hl-arg">.tar.xz</span>  <span class="hl-comment"># Máxima compresión, muy lento (ideal para distribución)</span><br>
+                        <span class="hl-arg">.zip</span>     <span class="hl-comment"># Compatible Windows/Mac, no preserva permisos Unix</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ACORDEON ENLACES -->
-            <div class="accordion">
-                <div class="accordion-header">
-                    🔗 Enlaces Simbólicos (ln)
-                    <span>+</span>
+            <div class="card">
+                <h2>🔗 Enlaces Simbólicos y Hard Links · ln</h2>
+                <p>Los enlaces permiten que un archivo tenga múltiples nombres o ubicaciones. Son más potentes que los accesos directos de Windows.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Enlace Simbólico (Soft Link)</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span class="hl-opt">-s</span> <span class="hl-arg">/ruta/origen.txt enlace.txt</span><br>
+                        <span class="hl-comment"># -s = simbólico: apunta al original (como acceso directo)</span><br>
+                        <span class="hl-comment"># Si borras el original, el enlace queda roto (puntero colgante)</span><br>
+                        <span class="hl-comment"># Puede enlazar directorios y cruzar filesystems</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-l</span> <span class="hl-arg">enlace.txt</span><br>
+                        <span class="hl-comment"># Muestra: enlace.txt -> /ruta/origen.txt</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">readlink</span> <span class="hl-opt">-f</span> <span class="hl-arg">enlace.txt</span>
+                        <span class="hl-comment"># Muestra la ruta REAL del destino</span>
+                    </div>
                 </div>
-                <div class="accordion-content">
-                    <p>Son como los "Accesos directos" de Windows pero más potentes.</p>
-                    <div class="cmd-box">
-                        <div class="cmd-content">
-                            <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span
-                                class="hl-opt">-s</span> <span class="hl-arg">/ruta/archivo_original</span> <span
-                                class="hl-arg">enlace_simbolico</span>
-                            <span class="hl-comment"># -s = Soft Link (Simbólico). Sin -s crea un Hard Link.</span>
-                        </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Hard Link</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span class="hl-arg">/ruta/origen.txt hardlink.txt</span><br>
+                        <span class="hl-comment"># SIN -s: crea un hard link (mismo inode, misma data)</span><br>
+                        <span class="hl-comment"># Si borras el original, hardlink.txt sigue funcionando</span><br>
+                        <span class="hl-comment"># NO puede enlazar directorios ni cruzar filesystems</span><br>
+                        <span class="hl-comment"># Ambos nombres son iguales; no hay "original" ni "copia"</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Usos prácticos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span class="hl-opt">-s</span> <span class="hl-arg">/mnt/datos/Proyectos ~/Proyectos</span><br>
+                        <span class="hl-comment"># Acceder a disco externo como si fuera carpeta del home</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span class="hl-opt">-s</span> <span class="hl-arg">/usr/share/themes/mi-tema ~/.themes/mi-tema</span><br>
+                        <span class="hl-comment"># Enlazar tema del sistema a carpeta personal de configuración</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ln</span> <span class="hl-opt">-sf</span> <span class="hl-arg">nueva_version config.ini</span><br>
+                        <span class="hl-comment"># -f = force: sobrescribe enlace existente (cambiar versión al vuelo)</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ACORDEON BUSQUEDA -->
-            <div class="accordion">
-                <div class="accordion-header">
-                    🔍 Búsqueda Profunda (find, locate)
-                    <span>+</span>
-                </div>
-                <div class="accordion-content">
-                    <p><strong>find</strong> busca en tiempo real. <strong>locate</strong> usa un índice (más rápido pero requiere actualización).</p>
+            <div class="card">
+                <h2>🔍 Búsqueda Avanzada · find / locate / grep</h2>
+                <p>Encuentra archivos por nombre, contenido, fecha, tamaño o permisos.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">find — Búsqueda en tiempo real</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Por nombre ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-name</span> <span class="hl-arg">"documento.txt"</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-iname</span> <span class="hl-arg">"*.jpg"</span>
+                        <span class="hl-comment"># -iname = ignorar mayúsculas/minúsculas</span><br><br>
 
-                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">FIND - Búsqueda en Tiempo Real</h3>
-                    <div class="cmd-box">
-                        <div class="cmd-content">
-                            <span class="hl-comment"># Buscar archivo por nombre (case sensitive):</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/home</span> <span class="hl-opt">-name</span> <span
-                                class="hl-arg">"documento.txt"</span><br><br>
+                        <span class="hl-comment"># --- Por tipo, tamaño, fecha ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/var</span> <span class="hl-opt">-type d -name</span> <span class="hl-arg">"log*"</span>
+                        <span class="hl-comment"># -type d = solo directorios (f = archivos)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-size</span> <span class="hl-arg">+100M</span>
+                        <span class="hl-comment"># Archivos mayores a 100MB (+ = mayor, - = menor)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-mtime</span> <span class="hl-arg">-7</span>
+                        <span class="hl-comment"># Modificados en los últimos 7 días (-7 = menos de 7 días)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-mtime</span> <span class="hl-arg">+30</span>
+                        <span class="hl-comment"># Modificados hace MÁS de 30 días (candidatos a limpieza)</span><br><br>
 
-                            <span class="hl-comment"># Buscar ignorando mayúsculas/minúsculas:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/home</span> <span class="hl-opt">-iname</span> <span
-                                class="hl-arg">"*.jpg"</span><br><br>
+                        <span class="hl-comment"># --- Limitar profundidad ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-maxdepth 2 -name</span> <span class="hl-arg">"*.py"</span>
+                        <span class="hl-comment"># Busca solo 2 niveles de profundidad (evita node_modules/)</span><br><br>
 
-                            <span class="hl-comment"># Buscar archivos por tamaño (más de 50MB):</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/var</span> <span class="hl-opt">-size</span> <span
-                                class="hl-arg">+50M</span><br><br>
+                        <span class="hl-comment"># --- Por permisos y propietario ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/var/www</span> <span class="hl-opt">-perm</span> <span class="hl-arg">777</span>
+                        <span class="hl-comment"># Archivos con permisos 777 (posible riesgo de seguridad)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-user</span> <span class="hl-arg">john</span> <span class="hl-opt">-group</span> <span class="hl-arg">devs</span><br><br>
 
-                            <span class="hl-comment"># Buscar archivos modificados en los últimos 7 días:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/home</span> <span class="hl-opt">-mtime</span> <span
-                                class="hl-arg">-7</span><br><br>
-
-                            <span class="hl-comment"># Buscar solo directorios:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/var</span> <span class="hl-opt">-type d</span> <span
-                                class="hl-opt">-name</span> <span class="hl-arg">"log*"</span><br><br>
-
-                            <span class="hl-comment"># Buscar y ejecutar acción (ej: borrar archivos .tmp):</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span
-                                class="hl-arg">"*.tmp"</span> <span class="hl-opt">-exec</span> <span
-                                class="hl-cmd">rm</span> <span class="hl-arg">{} \;</span><br><br>
-
-                            <span class="hl-comment"># Buscar archivos vacíos:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span
-                                class="hl-arg">/home</span> <span class="hl-opt">-empty</span>
-                        </div>
+                        <span class="hl-comment"># --- Ejecutar acciones ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.tmp"</span> <span class="hl-opt">-delete</span>
+                        <span class="hl-comment"># -delete = eliminar (más seguro que -exec rm)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.log"</span> <span class="hl-opt">-exec</span> <span class="hl-cmd">gzip</span> <span class="hl-arg">{} +</span><br>
+                        <span class="hl-comment"># -exec ... {} + = más eficiente (pasa múltiples archivos)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-type f -print0</span> <span class="hl-opt">|</span> <span class="hl-cmd">xargs</span> <span class="hl-opt">-0</span> <span class="hl-cmd">chmod</span> <span class="hl-arg">644</span><br>
+                        <span class="hl-comment"># -print0 + xargs -0 = maneja nombres con espacios de forma segura</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/home</span> <span class="hl-opt">-empty</span>
+                        <span class="hl-comment"># Archivos y directorios vacíos</span>
                     </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">locate — Búsqueda rápida indexada</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">plocate</span>
+                        <span class="hl-comment"># Instalar (reemplazo moderno de mlocate, más rápido)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-arg">nginx.conf</span>
+                        <span class="hl-comment"># Instantáneo (usa base de datos indexada)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-i</span> <span class="hl-arg">readme.md</span>
+                        <span class="hl-comment"># -i = ignorar mayúsculas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-n 10</span> <span class="hl-arg">"*.pdf"</span>
+                        <span class="hl-comment"># -n = limitar resultados</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo updatedb</span>
+                        <span class="hl-comment"># Actualizar índice (necesario para archivos nuevos)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-e</span> <span class="hl-arg">miarchivo</span>
+                        <span class="hl-comment"># -e = verificar que el archivo realmente existe (evita falsos positivos)</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">grep / ripgrep — Buscar DENTRO de archivos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-r</span> <span class="hl-arg">"función_buscar"</span> <span class="hl-arg">src/</span><br>
+                        <span class="hl-comment"># -r = recursivo: busca en todos los archivos del directorio</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-ri</span> <span class="hl-arg">"error"</span> <span class="hl-arg">/var/log/</span><br>
+                        <span class="hl-comment"># -i = ignorar mayúsculas, busca "Error", "ERROR", etc.</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-n</span> <span class="hl-arg">"TODO"</span> <span class="hl-arg">*.py</span>
+                        <span class="hl-comment"># -n = muestra número de línea</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-v</span> <span class="hl-arg">"comentario"</span> <span class="hl-arg">archivo.log</span>
+                        <span class="hl-comment"># -v = invertir: muestra líneas que NO coinciden</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">grep</span> <span class="hl-opt">-c</span> <span class="hl-arg">"fallo"</span> <span class="hl-arg">errores.log</span>
+                        <span class="hl-comment"># -c = contar ocurrencias</span><br><br>
 
-                    <h3 style="margin-top: 1rem; color: var(--color-cmd);">LOCATE - Búsqueda Rápida Indexada</h3>
-                    <div class="cmd-box">
-                        <div class="cmd-content">
-                            <span class="hl-comment"># Búsqueda instantánea por nombre:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span
-                                class="hl-arg">nginx.conf</span><br><br>
-
-                            <span class="hl-comment"># Buscar ignorando mayúsculas:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-i</span> <span
-                                class="hl-arg">readme.md</span><br><br>
-
-                            <span class="hl-comment"># Actualizar base de datos (necesario para archivos nuevos):</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">sudo updatedb</span><br><br>
-
-                            <span class="hl-comment"># Limitar número de resultados:</span><br>
-                            <span class="hl-prompt">$</span><span class="hl-cmd">locate</span> <span class="hl-opt">-n 10</span> <span
-                                class="hl-arg">"*.pdf"</span>
-                        </div>
+                        <span class="hl-comment"># --- ripgrep (rg) = grep ultrarrápido ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">ripgrep</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rg</span> <span class="hl-arg">"función"</span> <span class="hl-arg">--type py</span>
+                        <span class="hl-comment"># Busca solo en archivos Python (ignora .git, node_modules)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rg</span> <span class="hl-arg">"TODO|FIXME|HACK"</span> <span class="hl-opt">-i</span>
+                        <span class="hl-comment"># Expresiones regulares, color automático</span>
                     </div>
                 </div>
             </div>
 
-            <!-- CONTENIDO -->
-            <div class="cmd-box">
-                <div class="cmd-header">Lectura de Archivos (Head/Tail)</div>
-                <div class="cmd-content">
-                    <span class="hl-prompt">$</span><span class="hl-cmd">head</span> <span class="hl-opt">-n 5</span>
-                    <span class="hl-arg">archivo.txt</span> <span class="hl-comment"># Primeras 5 líneas</span><br>
-                    <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-n 5</span>
-                    <span class="hl-arg">archivo.txt</span> <span class="hl-comment"># Últimas 5 líneas</span><br>
-                    <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-f</span>
-                    <span class="hl-arg">server.log</span> <span class="hl-comment"># (Follow) Ver logs en tiempo
-                        real</span>
+            <div class="card">
+                <h2>📖 Lectura y Navegación de Archivos</h2>
+                <p>Visualiza contenido sin abrir un editor completo.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Por partes ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">head</span> <span class="hl-opt">-n 20</span> <span class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Primeras 20 líneas (por defecto 10)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-n 20</span> <span class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Últimas 20 líneas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-f</span> <span class="hl-arg">/var/log/syslog</span>
+                        <span class="hl-comment"># -f = Follow: ver logs en TIEMPO REAL (Ctrl+C para salir)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tail</span> <span class="hl-opt">-f</span> <span class="hl-arg">*.log</span>
+                        <span class="hl-comment"># Seguir múltiples archivos de log a la vez</span><br><br>
+
+                        <span class="hl-comment"># --- Paginadores ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">less</span> <span class="hl-arg">archivo_grande.txt</span><br>
+                        <span class="hl-comment"># Navegable con flechas, PageUp/Down, / para buscar, q para salir</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">less</span> <span class="hl-opt">+F</span> <span class="hl-arg">server.log</span>
+                        <span class="hl-comment"># Modo Follow dentro de less (Ctrl+C pausa, F reanuda)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">archivo.txt</span> <span class="hl-opt">|</span> <span class="hl-cmd">more</span>
+                        <span class="hl-comment"># more = paginador simple (solo avanza)</span><br><br>
+
+                        <span class="hl-comment"># --- Visualización mejorada ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">bat</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bat</span> <span class="hl-arg">script.py</span>
+                        <span class="hl-comment"># cat con sintaxis coloreada, números de línea, paginador integrado</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">bat</span> <span class="hl-opt">--line-range 50:100</span> <span class="hl-arg">archivo.log</span>
+                        <span class="hl-comment"># Ver solo líneas 50 a 100</span>
+                    </div>
                 </div>
             </div>
 
+            <div class="card">
+                <h2>✂️ Manipulación Rápida de Texto · wc / sort / uniq / cut</h2>
+                <p>Procesa datos directamente en la terminal sin necesidad de abrir un editor.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wc</span> <span class="hl-opt">-l</span> <span class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Contar líneas (-w = palabras, -c = bytes, -m = caracteres)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">ls</span> <span class="hl-opt">-1</span> <span class="hl-arg">*.py</span> <span class="hl-opt">|</span> <span class="hl-cmd">wc</span> <span class="hl-opt">-l</span>
+                        <span class="hl-comment"># Contar cuántos archivos .py hay</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-arg">nombres.txt</span>
+                        <span class="hl-comment"># Ordenar alfabéticamente</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">-r</span> <span class="hl-arg">nombres.txt</span>
+                        <span class="hl-comment"># -r = reverse (orden inverso)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">-n</span> <span class="hl-arg">numeros.txt</span>
+                        <span class="hl-comment"># -n = orden numérico (1, 2, 10 en vez de 1, 10, 2)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">-k 3 -n</span> <span class="hl-arg">datos.csv</span>
+                        <span class="hl-comment"># Ordenar por la 3ª columna numéricamente</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sort</span> <span class="hl-opt">-u</span> <span class="hl-arg">lista.txt</span>
+                        <span class="hl-comment"># -u = únicos (elimina duplicados al ordenar)</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uniq</span> <span class="hl-arg">ordenado.txt</span>
+                        <span class="hl-comment"># Eliminar líneas duplicadas ADYACENTES (requiere sort primero)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uniq</span> <span class="hl-opt">-c</span> <span class="hl-arg">ordenado.txt</span>
+                        <span class="hl-comment"># -c = contar ocurrencias de cada línea</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cut</span> <span class="hl-opt">-d':' -f1,3</span> <span class="hl-arg">/etc/passwd</span>
+                        <span class="hl-comment"># Extrae campos 1 y 3 separados por : (usuario y UID)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cut</span> <span class="hl-opt">-c1-10</span> <span class="hl-arg">archivo.txt</span>
+                        <span class="hl-comment"># Extrae caracteres 1 a 10 de cada línea</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-arg">'{print $1, $NF}'</span> <span class="hl-arg">datos.txt</span>
+                        <span class="hl-comment"># Imprime 1ª y última columna de cada línea</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">awk</span> <span class="hl-opt">-F':'</span> <span class="hl-arg">'$3 &gt;= 1000 {print $1}'</span> <span class="hl-arg">/etc/passwd</span>
+                        <span class="hl-comment"># Usuarios con UID &gt;= 1000 (usuarios normales)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🗑️ Eliminación Segura y Limpieza</h2>
+                <p>Técnicas para eliminar archivos de forma controlada y segura.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- find + delete seguro ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.tmp"</span> <span class="hl-opt">-mtime +7</span>
+                        <span class="hl-comment"># PASO 1: vista previa SIN -delete</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-name</span> <span class="hl-arg">"*.tmp"</span> <span class="hl-opt">-mtime +7 -delete</span>
+                        <span class="hl-comment"># PASO 2: eliminar SOLO tras confirmar vista previa</span><br><br>
+
+                        <span class="hl-comment"># --- shred (sobrescribe antes de borrar) ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">shred</span> <span class="hl-opt">-u -n 3 -z</span> <span class="hl-arg">secreto.txt</span><br>
+                        <span class="hl-comment"># -u = eliminar tras sobrescribir, -n 3 = 3 pasadas, -z = pasada final con ceros</span><br>
+                        <span class="hl-comment"># NOTA: No funciona bien en SSDs (usa cifrado del disco para datos sensibles)</span><br><br>
+
+                        <span class="hl-comment"># --- Limpiar archivos vacíos recursivamente ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-type f -empty -delete</span>
+                        <span class="hl-comment"># Elimina archivos vacíos en directorio actual y subdirectorios</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">find</span> <span class="hl-arg">.</span> <span class="hl-opt">-type d -empty -delete</span>
+                        <span class="hl-comment"># Elimina directorios vacíos (cascada)</span>
+                    </div>
+                </div>
+            </div>
         </section>
 
 
         <!-- TERMINAL -->
         <section id="term-shell" class="section">
+            <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">Shell</span>
             <h1>Shell Basics</h1>
-            <p>Diferencias entre shells y trucos básicos.</p>
-            <ul>
-                <li><strong>Bash:</strong> Estándar. Scripts portables.</li>
-                <li><strong>Zsh:</strong> Interactivo. Plugins como "Oh My Zsh".</li>
-            </ul>
+            <p>Entiende qué es el shell, cómo funciona y cómo personalizarlo para trabajar más rápido.</p>
+
+            <div class="card">
+                <h2>🖥️ ¿Qué es el Shell, la Terminal y la Consola?</h2>
+                <p>Estos términos se confunden frecuentemente. Son tres cosas distintas que trabajan juntas.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Consola = dispositivo físico o virtual para interactuar con el sistema</span><br>
+                        <span class="hl-comment"># Terminal = programa emulador (GNOME Terminal, Konsole, Alacritty, Ptyxis)</span><br>
+                        <span class="hl-comment"># Shell = intérprete de comandos (Bash, Zsh, Fish) que ejecuta lo que escribes</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$SHELL</span><br>
+                        <span class="hl-comment"># Muestra tu shell actual: /bin/bash o /usr/bin/zsh</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">/etc/shells</span><br>
+                        <span class="hl-comment"># Lista todos los shells instalados en el sistema</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚔️ Bash vs Zsh vs Fish</h2>
+                <p>Comparativa de los shells más populares para elegir el que mejor se adapte a ti.</p>
+                <table style="width:100%; border-collapse:collapse; margin-top:1rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #8b5cf6;">
+                            <th style="text-align:left; padding:0.6rem; color:#c4b5fd;">Característica</th>
+                            <th style="text-align:left; padding:0.6rem; color:#c4b5fd;">Bash</th>
+                            <th style="text-align:left; padding:0.6rem; color:#c4b5fd;">Zsh</th>
+                            <th style="text-align:left; padding:0.6rem; color:#c4b5fd;">Fish</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;">Compatibilidad</td>
+                            <td style="padding:0.6rem;">✅ Estándar universal</td>
+                            <td style="padding:0.6rem;">⚠️ Casi compatible con Bash</td>
+                            <td style="padding:0.6rem;">❌ No compatible con Bash</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;">Autocompletado</td>
+                            <td style="padding:0.6rem;">Básico (Tab)</td>
+                            <td style="padding:0.6rem;">Avanzado (fuzzy, menú)</td>
+                            <td style="padding:0.6rem;">Inteligente (histórico, visual)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;">Configuración</td>
+                            <td style="padding:0.6rem;">~/.bashrc</td>
+                            <td style="padding:0.6rem;">~/.zshrc</td>
+                            <td style="padding:0.6rem;">~/.config/fish/config.fish</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:0.6rem;">Plugins/Frameworks</td>
+                            <td style="padding:0.6rem;">Limitado</td>
+                            <td style="padding:0.6rem;">Oh My Zsh, Powerlevel10k</td>
+                            <td style="padding:0.6rem;">Fisher, Oh My Fish</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0.6rem;">Ideal para</td>
+                            <td style="padding:0.6rem;">Scripts, servidores</td>
+                            <td style="padding:0.6rem;">Uso interactivo diario</td>
+                            <td style="padding:0.6rem;">Usuarios nuevos, UX moderna</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cmd-box" style="margin-top:1rem;">
+                    <div class="cmd-header">Cambiar de shell</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span class="hl-arg">zsh fish</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chsh</span> <span class="hl-opt">-s</span> <span class="hl-arg">$(which zsh)</span><br>
+                        <span class="hl-comment"># Cambia shell por defecto (necesita cerrar sesión y volver a entrar)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">zsh</span>
+                        <span class="hl-comment"># Probar Zsh temporalmente (sin cambiar el default)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚙️ Configuración del Shell</h2>
+                <p>Los shells cargan archivos de configuración al iniciar. Saber cuándo se ejecuta cada uno te evita dolores de cabeza.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Bash — Archivos de inicio</div>
+                    <div class="cmd-content">
+                        <span class="hl-arg">~/.bashrc</span>     <span class="hl-comment"># Se ejecuta en shells INTERACTIVOS (terminal nueva)</span><br>
+                        <span class="hl-arg">~/.bash_profile</span> <span class="hl-comment"># Se ejecuta al INICIAR SESIÓN (login)</span><br>
+                        <span class="hl-arg">~/.profile</span>    <span class="hl-comment"># Genérico, usado si no existe .bash_profile</span><br>
+                        <span class="hl-arg">~/.bash_logout</span> <span class="hl-comment"># Se ejecuta al CERRAR sesión</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-comment"># Recargar configuración sin cerrar terminal</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Zsh — Archivos de inicio</div>
+                    <div class="cmd-content">
+                        <span class="hl-arg">~/.zshrc</span>      <span class="hl-comment"># Shell interactivo (alias, prompt, plugins)</span><br>
+                        <span class="hl-arg">~/.zprofile</span>   <span class="hl-comment"># Login shell (variables de entorno, PATH)</span><br>
+                        <span class="hl-arg">~/.zlogin</span>     <span class="hl-comment"># Se ejecuta tras .zshrc al iniciar sesión</span><br>
+                        <span class="hl-arg">~/.zlogout</span>    <span class="hl-comment"># Al cerrar sesión</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.zshrc</span><br>
+                        <span class="hl-comment"># Recargar configuración de Zsh</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔤 Variables de Entorno Esenciales</h2>
+                <p>Configuraciones que afectan el comportamiento de programas y el propio shell.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$PATH</span><br>
+                        <span class="hl-comment"># Directorios donde el shell busca ejecutables (separados por :)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$HOME</span>
+                        <span class="hl-comment"># Carpeta personal del usuario (/home/john)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$USER</span>
+                        <span class="hl-comment"># Nombre del usuario actual</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$SHELL</span>
+                        <span class="hl-comment"># Ruta del shell actual</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$EDITOR</span>
+                        <span class="hl-comment"># Editor por defecto (nano, vim, code)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">$LANG</span>
+                        <span class="hl-comment"># Idioma y codificación del sistema (es_ES.UTF-8)</span><br><br>
+
+                        <span class="hl-comment"># --- Añadir directorio al PATH ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">PATH="$HOME/.local/bin:$PATH"</span><br>
+                        <span class="hl-comment"># Añade ~/.local/bin al inicio del PATH (para esta sesión)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'export PATH="$HOME/.local/bin:$PATH"'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-comment"># Hace el cambio permanente (agrega al final de .bashrc)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>✨ Alias Útiles para Tu Shell</h2>
+                <p>Los alias son atajos de texto que expanden a comandos completos. Te ahorran tiempo y errores de tipeo.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Alias básicos (agregar a ~/.bashrc o ~/.zshrc) ---</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">ll='ls -alF'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">la='ls -A'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">l='ls -CF'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">..='cd ..'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">...='cd ../..'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">grep='grep --color=auto'</span><br><br>
+
+                        <span class="hl-comment"># --- Alias de seguridad ---</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">rm='rm -i'</span>
+                        <span class="hl-comment"># Pregunta antes de eliminar</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">cp='cp -i'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">mv='mv -i'</span><br><br>
+
+                        <span class="hl-comment"># --- Alias prácticos ---</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">update='sudo apt update && sudo apt upgrade -y'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">ports='ss -tuln'</span>
+                        <span class="hl-comment"># Ver puertos abiertos</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">mem='free -h'</span><br>
+                        <span class="hl-cmd">alias</span> <span class="hl-arg">df='df -h'</span><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">alias</span><br>
+                        <span class="hl-comment"># Lista todos los alias definidos</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">unalias</span> <span class="hl-arg">ll</span><br>
+                        <span class="hl-comment"># Eliminar un alias temporalmente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎨 Prompt Personalizado (PS1)</h2>
+                <p>El prompt es la línea que muestra el shell antes de cada comando. Puedes personalizarlo con información útil.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Variables de prompt comunes ---</span><br>
+                        <span class="hl-arg">\u</span>  <span class="hl-comment"># Nombre de usuario</span><br>
+                        <span class="hl-arg">\h</span>  <span class="hl-comment"># Nombre del host (hasta el primer punto)</span><br>
+                        <span class="hl-arg">\w</span>  <span class="hl-comment"># Ruta completa del directorio actual</span><br>
+                        <span class="hl-arg">\W</span>  <span class="hl-comment"># Solo el nombre del directorio actual</span><br>
+                        <span class="hl-arg">\$</span>  <span class="hl-comment"># $ para usuario, # para root</span><br>
+                        <span class="hl-arg">\t</span>  <span class="hl-comment"># Hora actual (24h HH:MM:SS)</span><br>
+                        <span class="hl-arg">\n</span>  <span class="hl-comment"># Nueva línea</span><br><br>
+
+                        <span class="hl-comment"># --- Ejemplo de prompt personalizado ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">PS1='\u@\h:\w\$ '</span><br>
+                        <span class="hl-comment"># Salida: john@laptop:/home/john/Proyectos$</span><br><br>
+
+                        <span class="hl-comment"># --- Prompt con colores (Bash) ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">export</span> <span class="hl-arg">PS1='\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '</span><br>
+                        <span class="hl-comment"># \e[32m = verde, \e[34m = azul, \e[0m = reset</span><br><br>
+
+                        <span class="hl-comment"># --- Prompt con rama Git (requiere script adicional) ---</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">curl -sS https://starship.rs/install.sh</span> <span class="hl-opt">|</span> <span class="hl-cmd">sh</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">echo</span> <span class="hl-arg">'eval "$(starship init bash)"'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">~/.bashrc</span><br>
+                        <span class="hl-comment"># Starship: prompt moderno con info de Git, lenguajes, errores</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⌨️ Atajos de Teclado del Shell</h2>
+                <p>Domina la edición de línea de comandos para trabajar sin levantar las manos del teclado.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># --- Navegación en la línea ---</span><br>
+                        <span class="hl-arg">Ctrl+A</span>  <span class="hl-comment"># Inicio de línea</span><br>
+                        <span class="hl-arg">Ctrl+E</span>  <span class="hl-comment"># Fin de línea</span><br>
+                        <span class="hl-arg">Alt+B</span>   <span class="hl-comment"># Una palabra atrás</span><br>
+                        <span class="hl-arg">Alt+F</span>   <span class="hl-comment"># Una palabra adelante</span><br><br>
+
+                        <span class="hl-comment"># --- Edición ---</span><br>
+                        <span class="hl-arg">Ctrl+U</span>  <span class="hl-comment"># Borrar desde cursor hasta INICIO</span><br>
+                        <span class="hl-arg">Ctrl+K</span>  <span class="hl-comment"># Borrar desde cursor hasta FINAL</span><br>
+                        <span class="hl-arg">Ctrl+W</span>  <span class="hl-comment"># Borrar PALABRA anterior</span><br>
+                        <span class="hl-arg">Ctrl+Y</span>  <span class="hl-comment"># Pegar lo último borrado (yank)</span><br>
+                        <span class="hl-arg">Ctrl+T</span>  <span class="hl-comment"># Intercambiar dos caracteres antes del cursor</span><br>
+                        <span class="hl-arg">Alt+U</span>   <span class="hl-comment"># Mayúsculas desde cursor hasta fin de palabra</span><br>
+                        <span class="hl-arg">Alt+L</span>   <span class="hl-comment"># Minúsculas desde cursor hasta fin de palabra</span><br><br>
+
+                        <span class="hl-comment"># --- Control de procesos ---</span><br>
+                        <span class="hl-arg">Ctrl+C</span>  <span class="hl-comment"># Interrumpir (kill) proceso actual</span><br>
+                        <span class="hl-arg">Ctrl+Z</span>  <span class="hl-comment"># Suspender (pausar) proceso actual</span><br>
+                        <span class="hl-arg">Ctrl+D</span>  <span class="hl-comment"># Enviar EOF (cerrar shell o finalizar input)</span><br>
+                        <span class="hl-arg">Ctrl+L</span>  <span class="hl-comment"># Limpiar pantalla (igual que el comando clear)</span><br><br>
+
+                        <span class="hl-comment"># --- Historial ---</span><br>
+                        <span class="hl-arg">↑ / ↓</span>   <span class="hl-comment"># Navegar historial</span><br>
+                        <span class="hl-arg">Ctrl+R</span>  <span class="hl-comment"># Buscar en historial (repetir para siguiente coincidencia)</span><br>
+                        <span class="hl-arg">Ctrl+G</span>  <span class="hl-comment"># Cancelar búsqueda Ctrl+R</span><br>
+                        <span class="hl-arg">!!</span>      <span class="hl-comment"># Repetir último comando</span><br>
+                        <span class="hl-arg">!$</span>      <span class="hl-comment"># Último argumento del comando anterior</span><br>
+                        <span class="hl-arg">!com</span>    <span class="hl-comment"># Último comando que empiece con "com"</span>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="term-pipes" class="section">
@@ -5119,6 +6221,236 @@
                 <div class="cmd-content">
                     <span class="hl-prompt">$</span><span class="hl-cmd">ss</span> <span class="hl-opt">-tulpn</span>
                     <span class="hl-comment"># Ver puertos escuchando (listening) y qué proceso los usa.</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- AUTOMATIZACION BASH -->
+        <section id="bash-automation" class="section">
+            <span class="badge" style="background: rgba(34, 197, 94, 0.15); color: #22c55e;">Automatización</span>
+            <h1>Automatización del Sistema con Bash</h1>
+            <p>Estrategias prácticas y plantillas reutilizables para automatizar tareas repetitivas, monitorear el sistema y crear scripts robustos de mantenimiento.</p>
+
+            <div class="card">
+                <h2>Plantilla Robusta de Script</h2>
+                <p>Toda automatización comienza con un script bien estructurado. Usa <code>set -euo pipefail</code> para detenerse ante errores.</p>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br><br>
+
+                        <span class="hl-comment"># Configuración</span><br>
+                        <span class="hl-arg">LOG_FILE</span>=<span class="hl-arg">"/var/log/mi-script.log"</span><br>
+                        <span class="hl-arg">BACKUP_DIR</span>=<span class="hl-arg">"$HOME/backups"</span><br>
+                        <span class="hl-arg">FECHA</span>=<span class="hl-cmd">$(date +%Y%m%d_%H%M%S)</span><br><br>
+
+                        <span class="hl-comment"># Función de logging</span><br>
+                        <span class="hl-cmd">log</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"[$(date '+%Y-%m-%d %H:%M:%S')] $1"</span> <span class="hl-opt">|</span> <span class="hl-cmd">tee -a</span> <span class="hl-arg">"$LOG_FILE"</span><br>
+                        }<br><br>
+
+                        <span class="hl-comment"># Función de limpieza al salir</span><br>
+                        <span class="hl-cmd">cleanup</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">log</span> <span class="hl-arg">"Script finalizado. Código de salida: $?"</span><br>
+                        }<br>
+                        <span class="hl-cmd">trap</span> <span class="hl-arg">cleanup EXIT</span><br><br>
+
+                        <span class="hl-cmd">log</span> <span class="hl-arg">"Iniciando script..."</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Cron Jobs (Tareas Programadas)</h2>
+                <p>Programa scripts para que se ejecuten automáticamente en horarios específicos.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Formatos de Cron</div>
+                    <div class="cmd-content">
+                        <span class="hl-arg">* * * * *</span>      <span class="hl-comment">→ cada minuto</span><br>
+                        <span class="hl-arg">0 2 * * *</span>      <span class="hl-comment">→ todos los días a las 2:00 AM</span><br>
+                        <span class="hl-arg">0 */6 * * *</span>    <span class="hl-comment">→ cada 6 horas</span><br>
+                        <span class="hl-arg">0 0 * * 0</span>      <span class="hl-comment">→ todos los domingos a medianoche</span><br>
+                        <span class="hl-arg">@reboot</span>        <span class="hl-comment">→ al iniciar el sistema</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Comandos Básicos</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">crontab</span> <span class="hl-opt">-e</span>              <span class="hl-comment"># Editar tareas del usuario</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">crontab</span> <span class="hl-opt">-l</span>              <span class="hl-comment"># Listar tareas activas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo crontab</span> <span class="hl-opt">-e</span>         <span class="hl-comment"># Editar tareas del sistema</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Ejemplos Prácticos</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Backup diario a las 3:00 AM</span><br>
+                        <span class="hl-arg">0 3 * * *</span> <span class="hl-arg">/home/usuario/scripts/backup.sh</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">/var/log/backup.log</span> <span class="hl-opt">2&gt;&amp;1</span><br><br>
+
+                        <span class="hl-comment"># Limpiar /tmp cada domingo</span><br>
+                        <span class="hl-arg">0 0 * * 0</span> <span class="hl-cmd">find</span> <span class="hl-arg">/tmp</span> <span class="hl-opt">-type f -atime +7 -delete</span><br><br>
+
+                        <span class="hl-comment"># Monitorear espacio en disco cada hora</span><br>
+                        <span class="hl-arg">0 * * * *</span> <span class="hl-cmd">df</span> <span class="hl-opt">-h</span> <span class="hl-opt">|</span> <span class="hl-cmd">grep -E</span> <span class="hl-arg">'(/dev/sda|Use%)'</span> <span class="hl-opt">&gt;&gt;</span> <span class="hl-arg">/var/log/disk.log</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Systemd Timers (Alternativa Moderna a Cron)</h2>
+                <p>Más flexible que cron. Permite manejar dependencias, logs con journalctl y reintentos.</p>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Servicio Systemd</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear servicio: /etc/systemd/system/mi-tarea.service</span><br>
+                        <span class="hl-cmd">[Unit]</span><br>
+                        <span class="hl-arg">Description</span>=<span class="hl-arg">Mi tarea automatizada</span><br>
+                        <span class="hl-arg">After</span>=<span class="hl-arg">network.target</span><br><br>
+
+                        <span class="hl-cmd">[Service]</span><br>
+                        <span class="hl-arg">Type</span>=<span class="hl-arg">oneshot</span><br>
+                        <span class="hl-arg">ExecStart</span>=<span class="hl-arg">/usr/local/bin/mi-script.sh</span><br>
+                        <span class="hl-arg">User</span>=<span class="hl-arg">john</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Timer Systemd</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Crear timer: /etc/systemd/system/mi-tarea.timer</span><br>
+                        <span class="hl-cmd">[Unit]</span><br>
+                        <span class="hl-arg">Description</span>=<span class="hl-arg">Ejecutar mi tarea cada día</span><br><br>
+
+                        <span class="hl-cmd">[Timer]</span><br>
+                        <span class="hl-arg">OnCalendar</span>=<span class="hl-arg">daily</span><br>
+                        <span class="hl-arg">Persistent</span>=<span class="hl-arg">true</span><br><br>
+
+                        <span class="hl-cmd">[Install]</span><br>
+                        <span class="hl-arg">WantedBy</span>=<span class="hl-arg">timers.target</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Comandos de Gestión</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl daemon-reload</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl enable mi-tarea.timer</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo systemctl start mi-tarea.timer</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">systemctl list-timers --all</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">journalctl -u mi-tarea.service</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Scripts de Backup Automatizado</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-cmd">set</span> <span class="hl-opt">-euo</span> <span class="hl-arg">pipefail</span><br><br>
+
+                        <span class="hl-arg">ORIGEN</span>=<span class="hl-arg">"$HOME/Documentos"</span><br>
+                        <span class="hl-arg">DESTINO</span>=<span class="hl-arg">"$HOME/backups"</span><br>
+                        <span class="hl-arg">FECHA</span>=<span class="hl-cmd">$(date +%Y%m%d_%H%M%S)</span><br>
+                        <span class="hl-arg">ARCHIVO</span>=<span class="hl-arg">"backup_documentos_$FECHA.tar.gz"</span><br><br>
+
+                        <span class="hl-cmd">mkdir -p</span> <span class="hl-arg">"$DESTINO"</span><br>
+                        <span class="hl-cmd">tar -czf</span> <span class="hl-arg">"$DESTINO/$ARCHIVO"</span> <span class="hl-arg">"$ORIGEN"</span><br><br>
+
+                        <span class="hl-comment"># Mantener solo los últimos 7 backups</span><br>
+                        <span class="hl-cmd">ls -t "$DESTINO"/backup_*.tar.gz | tail -n +8 | xargs -r rm -f</span><br><br>
+
+                        <span class="hl-cmd">echo</span> <span class="hl-arg">"Backup completado: $DESTINO/$ARCHIVO"</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Monitoreo del Sistema</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-comment"># Verificar uso de disco</span><br>
+                        <span class="hl-arg">USO</span>=<span class="hl-cmd">$(df / | awk 'NR==2 {print $5}' | sed 's/%//')</span><br>
+                        <span class="hl-cmd">if</span> [ <span class="hl-arg">"$USO"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">80</span> ]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"ALERTA: Disco al ${USO}%"</span> <span class="hl-opt">|</span> <span class="hl-cmd">mail -s</span> <span class="hl-arg">"Alerta de Disco"</span> <span class="hl-arg">admin@ejemplo.com</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># Verificar memoria</span><br>
+                        <span class="hl-arg">MEM</span>=<span class="hl-cmd">$(free | awk '/Mem:/ {printf("%.0f", $3/$2 * 100)}')</span><br>
+                        <span class="hl-cmd">if</span> [ <span class="hl-arg">"$MEM"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">90</span> ]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"ALERTA: Memoria al ${MEM}%"</span> <span class="hl-opt">|</span> <span class="hl-cmd">logger -t monitor</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># Verificar si un servicio está activo</span><br>
+                        <span class="hl-cmd">if ! systemctl is-active --quiet nginx; then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">systemctl restart nginx</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Nginx reiniciado"</span> <span class="hl-opt">|</span> <span class="hl-cmd">logger</span><br>
+                        <span class="hl-cmd">fi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Optimización de Bash</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># 1. Usar arrays en lugar de strings separados por espacio</span><br>
+                        <span class="hl-arg">archivos</span>=(<span class="hl-arg">"uno.txt"</span> <span class="hl-arg">"dos.txt"</span> <span class="hl-arg">"tres.txt"</span>)<br>
+                        <span class="hl-cmd">for</span> f <span class="hl-cmd">in</span> <span class="hl-arg">"${archivos[@]}"</span>; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$f"</span>; <span class="hl-cmd">done</span><br><br>
+
+                        <span class="hl-comment"># 2. Evitar subshells innecesarios (usa &lt;() en lugar de $(cat))</span><br>
+                        <span class="hl-cmd">while read</span> linea; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$linea"</span>; <span class="hl-cmd">done</span> <span class="hl-opt">&lt; &lt;(</span><span class="hl-cmd">ls</span><span class="hl-opt">)</span><br><br>
+
+                        <span class="hl-comment"># 3. Usar grep -q en lugar de redirigir a /dev/null</span><br>
+                        <span class="hl-cmd">if</span> <span class="hl-cmd">grep -q</span> <span class="hl-arg">"palabra"</span> <span class="hl-arg">archivo.txt</span>; <span class="hl-cmd">then</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"Encontrado"</span>; <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># 4. Usar [[ ]] en lugar de [ ] para comparaciones</span><br>
+                        <span class="hl-cmd">if</span> [[ <span class="hl-arg">"$var"</span> == <span class="hl-arg">"hola"</span> <span class="hl-opt">&amp;&amp;</span> <span class="hl-arg">"$num"</span> <span class="hl-opt">-gt</span> <span class="hl-arg">5</span> ]]; <span class="hl-cmd">then</span> ...; <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># 5. Usar read con -r para evitar interpretar backslashes</span><br>
+                        <span class="hl-cmd">while</span> <span class="hl-cmd">IFS= read -r</span> linea; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$linea"</span>; <span class="hl-cmd">done</span> <span class="hl-opt">&lt;</span> <span class="hl-arg">archivo.txt</span><br><br>
+
+                        <span class="hl-comment"># 6. Habilitar globbing recursivo</span><br>
+                        <span class="hl-cmd">shopt -s globstar</span><br>
+                        <span class="hl-cmd">for</span> f <span class="hl-cmd">in</span> <span class="hl-arg">/var/log/**/*.log</span>; <span class="hl-cmd">do</span> <span class="hl-cmd">echo</span> <span class="hl-arg">"$f"</span>; <span class="hl-cmd">done</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Snippets Reutilizables</h2>
+                <div class="cmd-box">
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Preguntar confirmación al usuario</span><br>
+                        <span class="hl-cmd">confirmar</span>() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">read -r -p</span> <span class="hl-arg">"$1 [s/N] "</span> respuesta<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;[[ <span class="hl-arg">"$respuesta"</span> =~ <span class="hl-arg">^[Ss]$</span> ]]<br>
+                        }<br>
+                        <span class="hl-cmd">confirmar</span> <span class="hl-arg">"¿Continuar?"</span> <span class="hl-opt">||</span> <span class="hl-cmd">exit</span> <span class="hl-arg">0</span><br><br>
+
+                        <span class="hl-comment"># Crear directorio temporal seguro</span><br>
+                        <span class="hl-arg">TMPDIR</span>=<span class="hl-cmd">$(mktemp -d)</span><br>
+                        <span class="hl-cmd">trap</span> <span class="hl-arg">"rm -rf $TMPDIR"</span> <span class="hl-arg">EXIT</span><br><br>
+
+                        <span class="hl-comment"># Verificar si se ejecuta como root</span><br>
+                        <span class="hl-cmd">if</span> [ <span class="hl-arg">"$EUID"</span> <span class="hl-opt">-ne</span> <span class="hl-arg">0</span> ]; <span class="hl-cmd">then</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">echo</span> <span class="hl-arg">"Ejecutar como root: sudo $0"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">exit</span> <span class="hl-arg">1</span><br>
+                        <span class="hl-cmd">fi</span><br><br>
+
+                        <span class="hl-comment"># Barra de progreso simple</span><br>
+                        <span class="hl-cmd">for</span> i <span class="hl-cmd">in</span> <span class="hl-arg">{1..100}</span>; <span class="hl-cmd">do</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">printf</span> <span class="hl-arg">"\rProgreso: [%-50s] %d%%"</span> <span class="hl-arg">"$(printf '#%.0s' $(seq 1 $((i/2))))"</span> <span class="hl-arg">"$i"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-cmd">sleep</span> <span class="hl-arg">0.05</span><br>
+                        <span class="hl-cmd">done</span><br>
+                        <span class="hl-cmd">echo</span>
+                    </div>
                 </div>
             </div>
 
