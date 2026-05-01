@@ -1595,105 +1595,133 @@
         <section id="manim" class="section">
             <span class="badge badge-core">Python</span>
             <h1>Instalar Manim (Math Animation Engine)</h1>
-            <p>Manim es una librería de Python para generar animaciones matemáticas en video. Aquí tienes el flujo
-                completo: dependencias del sistema, entorno virtual, instalación del paquete y renderizado de prueba.</p>
+            <p>Manim es una librería de Python para generar animaciones matemáticas en video. Instalación con UV,
+                entorno virtual aislado y wrapper global.</p>
 
             <div class="card">
                 <h2>1. Dependencias del Sistema</h2>
-                <p>Necesitas FFmpeg, LaTeX y otros paquetes para que los renders salgan con audio/texto.</p>
+                <p>Necesitas FFmpeg y los headers de Pango para compilar <code>manimpango</code>.</p>
                 <div class="cmd-box">
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt update</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span>
-                        <span class="hl-arg">ffmpeg</span> <span class="hl-arg">texlive-full</span>
-                        <span class="hl-arg">python3-pip</span> <span class="hl-arg">python3-venv</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt-get install -y</span>
+                        <span class="hl-arg">ffmpeg</span> <span class="hl-arg">libpango1.0-dev</span>
+                        <span class="hl-arg">libglib2.0-dev</span> <span class="hl-arg">pkg-config</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>2. Crear Entorno Virtual</h2>
-                <p>Aíslalo para que las dependencias de Manim no choquen con otros proyectos.</p>
+                <h2>2. Crear Entorno Virtual con UV</h2>
                 <div class="cmd-box">
-                    <div class="cmd-header">Carpeta del Proyecto</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">mkdir</span>
-                        <span class="hl-arg">~/manim-projects</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span>
-                        <span class="hl-arg">~/manim-projects</span>
-                    </div>
-                </div>
-                <div class="cmd-box">
-                    <div class="cmd-header">Virtualenv</div>
-                    <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">python3</span> <span class="hl-arg">-m</span>
-                        <span class="hl-arg">venv</span> <span class="hl-arg">.venv</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span>
-                        <span class="hl-arg">.venv/bin/activate</span> <span class="hl-comment"># Verás (venv) en la
-                            terminal</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv venv</span>
+                        <span class="hl-arg">~/.local/share/manim-venv</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
                 <h2>3. Instalar Manim</h2>
-                <p>Usamos pip para instalar la versión estable.</p>
                 <div class="cmd-box">
-                    <div class="cmd-header">pip</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Asegúrate de estar dentro de la venv</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
-                        <span class="hl-arg">-U</span> <span class="hl-arg">pip</span> <span class="hl-arg">wheel</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span>
+                        <span class="hl-arg">~/.local/share/manim-venv/bin/activate</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv pip install</span>
                         <span class="hl-arg">manim</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>4. Render de Prueba</h2>
-                <p>Crea un archivo Python con una escena mínima y genera un video MP4.</p>
+                <h2>4. Crear Wrapper Global</h2>
+                <p>Para usar <code>manim</code> desde cualquier carpeta sin activar manualmente la venv.</p>
                 <div class="cmd-box">
-                    <div class="cmd-header">Archivo Example.py</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">nano</span>
-                        <span class="hl-arg">example.py</span><br>
-                        <span class="hl-comment"># Contenido:</span><br>
-                        <span class="hl-prompt">></span> <span class="hl-cmd">from</span> <span
-                            class="hl-arg">manim</span> <span class="hl-cmd">import</span> <span
-                            class="hl-arg">*</span><br>
-                        <span class="hl-prompt">></span> <span class="hl-cmd">class</span> <span
-                            class="hl-arg">Hello(Scene)</span>:<br>
-                        <span class="hl-prompt">></span> <span class="hl-arg">    </span><span class="hl-cmd">def</span>
-                        <span class="hl-arg">construct(self)</span>:<br>
-                        <span class="hl-prompt">></span> <span class="hl-arg">        </span><span class="hl-cmd">self.play</span>(<span class="hl-arg">Write</span>(<span class="hl-arg">Tex</span>(<span class="hl-arg">\"Hola Manim\"</span>)))<br>
-                        <span class="hl-prompt">></span> <span class="hl-arg">        </span><span class="hl-cmd">self.wait</span>(<span class="hl-arg">2</span>)
-                    </div>
-                </div>
-                <div class="cmd-box">
-                    <div class="cmd-header">Renderizar</div>
-                    <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">manim</span> <span class="hl-arg">-pqh</span>
-                        <span class="hl-arg">example.py</span> <span class="hl-arg">Hello</span><br>
-                        <span class="hl-comment"># -p abre el video, -qH usa alta calidad (puedes cambiar a -ql para
-                            vista previa rápida).</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">> ~/.local/bin/manim</span> <span class="hl-opt"><< 'EOF'</span><br>
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-comment">source ~/.local/share/manim-venv/bin/activate</span><br>
+                        <span class="hl-comment">exec manim "$@"</span><br>
+                        <span class="hl-opt">EOF</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chmod +x</span> <span class="hl-arg">~/.local/bin/manim</span>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>5. Actualizaciones y Limpieza</h2>
+                <h2>5. Verificar y Render de Prueba</h2>
                 <div class="cmd-box">
-                    <div class="cmd-header">Actualizar Manim</div>
+                    <div class="cmd-header">Verificar versión</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">pip</span> <span class="hl-arg">install</span>
-                        <span class="hl-arg">-U</span> <span class="hl-arg">manim</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">manim</span> <span class="hl-opt">--version</span>
                     </div>
                 </div>
                 <div class="cmd-box">
-                    <div class="cmd-header">Salir del entorno virtual</div>
+                    <div class="cmd-header">Archivo de prueba (test.py)</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">deactivate</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">> test.py</span> <span class="hl-opt"><< 'EOF'</span><br>
+                        <span class="hl-comment">from manim import *</span><br>
+                        <span class="hl-comment">class Test(Scene):</span><br>
+                        <span class="hl-comment">    def construct(self):</span><br>
+                        <span class="hl-comment">        circle = Circle(color=BLUE)</span><br>
+                        <span class="hl-comment">        self.play(Create(circle))</span><br>
+                        <span class="hl-comment">        self.wait(1)</span><br>
+                        <span class="hl-opt">EOF</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Renderizar</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Calidad baja (rápido):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">manim</span> <span class="hl-arg">test.py</span> <span class="hl-arg">Test</span> <span class="hl-opt">-ql</span><br><br>
+                        <span class="hl-comment"># Calidad alta:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">manim</span> <span class="hl-arg">test.py</span> <span class="hl-arg">Test</span> <span class="hl-opt">-qh</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>6. Opciones de Calidad</h2>
+                <table style="width:100%; color:var(--color-text); margin-top:1rem;">
+                    <tr style="border-bottom:1px solid var(--color-border);">
+                        <th style="text-align:left; padding:0.5rem;">Flag</th>
+                        <th style="text-align:left; padding:0.5rem;">Resolución</th>
+                        <th style="text-align:left; padding:0.5rem;">FPS</th>
+                        <th style="text-align:left; padding:0.5rem;">Uso</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;"><code>-ql</code></td>
+                        <td style="padding:0.5rem;">854×480</td>
+                        <td style="padding:0.5rem;">15</td>
+                        <td style="padding:0.5rem;">Pruebas rápidas</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;"><code>-qm</code></td>
+                        <td style="padding:0.5rem;">1280×720</td>
+                        <td style="padding:0.5rem;">30</td>
+                        <td style="padding:0.5rem;">Presentaciones</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;"><code>-qh</code></td>
+                        <td style="padding:0.5rem;">1920×1080</td>
+                        <td style="padding:0.5rem;">60</td>
+                        <td style="padding:0.5rem;">Producción final</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>7. Actualizaciones y Limpieza</h2>
+                <div class="cmd-box">
+                    <div class="cmd-header">Actualizar Manim</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">source</span> <span class="hl-arg">~/.local/share/manim-venv/bin/activate</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">uv pip install -U</span> <span class="hl-arg">manim</span>
+                    </div>
+                </div>
+                <div class="cmd-box">
+                    <div class="cmd-header">Desinstalar por completo</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span class="hl-arg">~/.local/share/manim-venv ~/.local/bin/manim</span>
                     </div>
                 </div>
             </div>
@@ -2675,47 +2703,51 @@
 
             <!-- R LANGUAGE & COMMANDER -->
             <div class="card">
-                <h2>1. Lenguaje R & RCommander</h2>
+                <h2>1. Lenguaje R (Desde Código Fuente CRAN)</h2>
+                <p><strong>⚠️ Nota para Ubuntu 26.04:</strong> El paquete <code>r-base</code> de los repositorios CRAN tiene dependencias rotas (<code>libicu74</code> vs <code>libicu78</code>). El método oficial y funcional es compilar desde el código fuente.</p>
+
                 <div class="cmd-box">
-                    <div class="cmd-header">Paso 1: Añadir Repo Universitario (CRAN)</div>
+                    <div class="cmd-header">Paso 1: Instalar Dependencias de Compilación</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># 1. Clave de Seguridad (GPG Key):</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">wget -qO-
-                            https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a
-                            /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc</span><br><br>
-
-                        <span class="hl-comment"># 2. Añadir Repo (Univ. Michigan):</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo add-apt-repository</span> <span
-                            class="hl-arg">"deb https://mirror.its.umich.edu/cran/bin/linux/ubuntu $(lsb_release
-                            -sc)-cran40/"</span><br><br>
-
-                        <span class="hl-comment"># 3. Instalar R (Última versión 4.x):</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
-                            class="hl-arg">r-base r-base-dev</span>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt-get install -y</span> <span class="hl-arg">build-essential gfortran libreadline-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev libpcre2-dev libcurl4-openssl-dev libssl-dev libxml2-dev libbz2-dev libzstd-dev liblzma-dev libicu-dev texinfo</span>
                     </div>
                 </div>
 
                 <div class="cmd-box">
-                    <div class="cmd-header">Paso 2: Instalar R Commander</div>
+                    <div class="cmd-header">Paso 2: Descargar y Compilar R</div>
                     <div class="cmd-content">
-                        <span class="hl-comment"># Entra a la consola de R como root para instalar
-                            globalmente:</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo R</span><br><br>
+                        <span class="hl-comment"># Descargar fuentes desde CRAN:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">/tmp</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">wget</span> <span class="hl-arg">https://cloud.r-project.org/src/base/R-4/R-4.6.0.tar.gz</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar -xzf</span> <span class="hl-arg">R-4.6.0.tar.gz</span><br><br>
 
-                        <span class="hl-comment"># Dentro de R (verás el prompt >):</span><br>
-                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span
-                            class="hl-arg">"Rcmdr"</span>, dependencies=<span class="hl-opt">TRUE</span>)<br>
-                        <span class="hl-comment"># Elige un mirror (ej: 0-Cloud) si te pregunta.</span><br>
-                        <span class="hl-prompt">></span> <span class="hl-cmd">q()</span> <span class="hl-comment"># Para
-                            salir (No guardes workspace).</span>
+                        <span class="hl-comment"># Configurar e instalar en ~/.local (sin sudo):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">R-4.6.0</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">./configure</span> <span class="hl-opt">--prefix</span>=<span class="hl-arg">$HOME/.local --enable-R-shlib --with-blas --with-lapack --with-readline=yes --with-x=no</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">make -j$(nproc)</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">make install</span>
                     </div>
                 </div>
+
                 <div class="cmd-box">
-                    <div class="cmd-header">Paso 3: Ejecutar R Commander</div>
+                    <div class="cmd-header">Paso 3: Verificar Instalación</div>
                     <div class="cmd-content">
-                        <span class="hl-prompt">$</span><span class="hl-cmd">R</span><br>
-                        <span class="hl-prompt">></span> <span class="hl-cmd">library</span>(<span
-                            class="hl-arg">Rcmdr</span>)
+                        <span class="hl-prompt">$</span><span class="hl-cmd">R</span> <span class="hl-opt">--version</span><br><br>
+                        <span class="hl-comment"># Iniciar R interactivo:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">R</span><br><br>
+                        <span class="hl-comment"># Ejecutar script:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">Rscript</span> <span class="hl-arg">script.R</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 4: Instalar Paquetes de R</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Desde dentro de la consola de R:</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span class="hl-arg">"Rcmdr"</span>, dependencies=<span class="hl-opt">TRUE</span>)<br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">library</span>(<span class="hl-arg">Rcmdr</span>)<br><br>
+                        <span class="hl-comment"># Otros paquetes útiles:</span><br>
+                        <span class="hl-prompt">></span> <span class="hl-cmd">install.packages</span>(<span class="hl-arg">c("tidyverse", "ggplot2", "shiny")</span>)
                     </div>
                 </div>
 
@@ -2729,12 +2761,12 @@
                     <div class="accordion-content">
                         <div class="cmd-box">
                             <div class="cmd-content">
-                                <span class="hl-comment"># 1. Borrar paquete Rcmdr (Dentro de R console):</span><br>
-                                <span class="hl-prompt">></span> <span class="hl-cmd">remove.packages</span>(<span
-                                    class="hl-arg">"Rcmdr"</span>)<br><br>
-                                <span class="hl-comment"># 2. Borrar R del sistema (Terminal):</span><br>
-                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
-                                    class="hl-opt">--purge</span> <span class="hl-arg">r-base r-base-dev</span>
+                                <span class="hl-comment"># 1. Borrar paquetes (Dentro de R console):</span><br>
+                                <span class="hl-prompt">></span> <span class="hl-cmd">remove.packages</span>(<span class="hl-arg">"Rcmdr"</span>)<br><br>
+                                <span class="hl-comment"># 2. Borrar R compilado (Terminal):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span class="hl-arg">~/.local/lib/R ~/.local/bin/R ~/.local/bin/Rscript</span><br><br>
+                                <span class="hl-comment"># 3. Borrar fuentes (opcional):</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span class="hl-arg">/tmp/R-4.6.0 /tmp/R-4.6.0.tar.gz</span>
                             </div>
                         </div>
                     </div>
@@ -2744,20 +2776,56 @@
             <!-- RSTUDIO -->
             <div class="card">
                 <h2>2. RStudio Desktop</h2>
-                <p>El IDE profesional. Se instala manualmente vía <code>.deb</code>.</p>
-                <div class="cmd-box">
-                    <div class="cmd-content">
-                        <span class="hl-comment"># 1. Ve a la web oficial y descarga el .deb para Ubuntu
-                            22/24:</span><br>
-                        <span class="hl-prompt">#</span> <a href="https://posit.co/download/rstudio-desktop/"
-                            target="_blank"
-                            style="color:var(--color-primary); text-decoration: underline;">https://posit.co/download/rstudio-desktop/</a><br><br>
+                <p>El IDE profesional. Se instala desde el <code>.tar.gz</code> oficial (método portable sin <code>sudo</code>).</p>
 
-                        <span class="hl-comment"># 2. Instala el archivo descargado:</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span
-                            class="hl-arg">~/Descargas</span><br>
-                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt install</span> <span
-                            class="hl-arg">./rstudio-*.deb</span>
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 1: Descargar y Descomprimir</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Descarga el tarball desde la web oficial:</span><br>
+                        <span class="hl-prompt">#</span> <a href="https://posit.co/download/rstudio-desktop/" target="_blank" style="color:var(--color-primary); text-decoration: underline;">https://posit.co/download/rstudio-desktop/</a><br><br>
+
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cd</span> <span class="hl-arg">~/Descargas</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">tar -xzf</span> <span class="hl-arg">rstudio-2026.04.0-526-amd64-debian.tar.gz</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 2: Instalar en ~/.local</div>
+                    <div class="cmd-content">
+                        <span class="hl-comment"># Mover a ~/.local/lib:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">mv</span> <span class="hl-arg">rstudio-2026.04.0+526 ~/.local/lib/rstudio</span><br><br>
+
+                        <span class="hl-comment"># Crear wrapper con --no-sandbox (requerido para instalación local):</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">> ~/.local/bin/rstudio</span> <span class="hl-opt"><< 'EOF'</span><br>
+                        <span class="hl-comment">#!/bin/bash</span><br>
+                        <span class="hl-comment">exec ~/.local/lib/rstudio/rstudio --no-sandbox "$@"</span><br>
+                        <span class="hl-opt">EOF</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">chmod +x</span> <span class="hl-arg">~/.local/bin/rstudio</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 3: Acceso al Menú de Aplicaciones</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">cat</span> <span class="hl-arg">> ~/.local/share/applications/rstudio.desktop</span> <span class="hl-opt"><< 'EOF'</span><br>
+                        <span class="hl-comment">[Desktop Entry]</span><br>
+                        <span class="hl-comment">Name=RStudio</span><br>
+                        <span class="hl-comment">Exec=/home/john/.local/bin/rstudio</span><br>
+                        <span class="hl-comment">Icon=/home/john/.local/lib/rstudio/resources/app/rstudio.png</span><br>
+                        <span class="hl-comment">Type=Application</span><br>
+                        <span class="hl-comment">Categories=Development;IDE;Science;Math;</span><br>
+                        <span class="hl-opt">EOF</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Paso 4: Verificar y Usar</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rstudio</span> <span class="hl-opt">--version</span><br><br>
+                        <span class="hl-comment"># Abrir RStudio:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rstudio</span><br><br>
+                        <span class="hl-comment"># Abrir un script directamente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">rstudio</span> <span class="hl-arg">script.R</span>
                     </div>
                 </div>
 
@@ -2771,8 +2839,48 @@
                     <div class="accordion-content">
                         <div class="cmd-box">
                             <div class="cmd-content">
-                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span
-                                    class="hl-opt">--purge</span> <span class="hl-arg">rstudio</span>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">rm -rf</span> <span class="hl-arg">~/.local/lib/rstudio ~/.local/bin/rstudio ~/.local/share/applications/rstudio.desktop</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEXSTUDIO -->
+            <div class="card">
+                <h2>3. TeXstudio (Editor LaTeX)</h2>
+                <p>IDE completo para escribir documentos LaTeX con autocompletado, corrector ortográfico y vista previa PDF integrada.</p>
+                <div class="cmd-box">
+                    <div class="cmd-header">Instalación</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt-get update</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt-get install -y</span> <span class="hl-arg">texstudio</span>
+                    </div>
+                </div>
+
+                <div class="cmd-box">
+                    <div class="cmd-header">Verificar y Usar</div>
+                    <div class="cmd-content">
+                        <span class="hl-prompt">$</span><span class="hl-cmd">texstudio</span> <span class="hl-opt">--version</span><br><br>
+                        <span class="hl-comment"># Abrir TeXstudio:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">texstudio</span><br><br>
+                        <span class="hl-comment"># Abrir un archivo directamente:</span><br>
+                        <span class="hl-prompt">$</span><span class="hl-cmd">texstudio</span> <span class="hl-arg">archivo.tex</span>
+                    </div>
+                </div>
+
+                <!-- UNINSTALL TEXSTUDIO -->
+                <div class="accordion" style="margin-top: 1rem;">
+                    <div class="accordion-header"
+                        style="font-size: 0.85rem; padding: 0.5rem;">
+                        🗑️ Desinstalar TeXstudio
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="cmd-box">
+                            <div class="cmd-content">
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt remove</span> <span class="hl-opt">--purge</span> <span class="hl-arg">texstudio</span><br>
+                                <span class="hl-prompt">$</span><span class="hl-cmd">sudo apt autoremove</span>
                             </div>
                         </div>
                     </div>
@@ -2781,7 +2889,7 @@
 
             <!-- LIBREOFFICE -->
             <div class="card">
-                <h2>3. LibreOffice (Última Versión)</h2>
+                <h2>4. LibreOffice (Última Versión)</h2>
                 <p>Para tener el "Excel" de Linux siempre al día (más nuevo que el que trae Ubuntu).</p>
                 <div class="cmd-box">
                     <div class="cmd-content">
