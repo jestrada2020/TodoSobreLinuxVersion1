@@ -10,6 +10,7 @@
     'js/tabs/term-pipes.js',
     'js/tabs/term-scripting.js',
     'js/tabs/uso-bash.js',
+    'js/tabs/bash-automation.js',
     'js/tabs/admin-perms.js',
     'js/tabs/admin-sys.js',
     'js/tabs/admin-net.js',
@@ -30,6 +31,8 @@
     'js/tabs/text-files.js',
     'js/tabs/sys-mgmt.js',
     'js/tabs/config-hardware.js',
+    'js/tabs/codigo_ascii.js',
+    'js/tabs/Configuracion_Teclado.js',
   ];
 
   function loadScript(src) {
