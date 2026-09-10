@@ -23,13 +23,15 @@ python3 -m http.server 8000
 
 | | |
 |---|---|
-| **27 secciones** | agrupadas en 9 áreas temáticas |
-| **37 comandos** | con sinopsis, tabla de opciones, ejemplos y relacionados |
-| **168 entradas** | indexadas para el buscador de texto completo |
+| **29 secciones** | agrupadas en 10 áreas temáticas |
+| **38 comandos** | con sinopsis, tabla de opciones, ejemplos y relacionados |
+| **184 entradas** | indexadas para el buscador de texto completo |
+| **256 filas ASCII** | generadas desde datos, con filtro y conversor interactivo |
+| **88 símbolos** | en tarjetas, con copia a un clic y atajos de Linux y Windows |
 | **1 kit descargable** | arnés de agente con modelos locales, en `descargas/` |
 
 Áreas: fundamentos · sistema de archivos · terminal y shell · administración ·
-redes · paquetes y hardware · rescate y emergencias · IA y agentes.
+redes · paquetes y hardware · rescate y emergencias · IA y agentes · referencia.
 
 ## Mejoras respecto a la versión anterior
 
@@ -62,6 +64,17 @@ redes · paquetes y hardware · rescate y emergencias · IA y agentes.
 - Avisos de peligro en los comandos destructivos, con la alternativa segura.
 - Diagramas ASCII para la jerarquía FHS, los flujos de un proceso, las fases del
   arranque y el ciclo de los subagentes.
+- **Tabla de código ASCII completa** (0-255) generada desde datos, con filtro en
+  vivo insensible a acentos y notas de lo que significa cada símbolo en Bash, más
+  un **conversor interactivo** texto ⇄ decimal/hex/octal/binario.
+- **Símbolos de acceso rápido en tarjetas**: 88 símbolos con el glifo grande,
+  su código decimal y hexadecimal, y los atajos de **Linux** (`Ctrl+Shift+U`) y
+  **Windows** (`Alt`). Un clic copia el carácter o la combinación de teclas.
+  Se filtran por categoría (más usados, español, matemáticos, marcos y flechas)
+  y por texto.
+- **Configuración de teclado** para Linux (`setxkbmap`, `localectl`, `gsettings`,
+  `loadkeys`), Windows y macOS, incluido el caso que más confunde: por qué el
+  cambio se pierde al reiniciar y por qué Wayland ignora `setxkbmap`.
 
 **Arquitectura**
 
@@ -83,12 +96,13 @@ TODO_EN_LINUX/
 ├── js/core/
 │   ├── store.js          estado y persistencia (localStorage, con try/catch)
 │   ├── highlight.js      resaltado de sintaxis de shell
+│   ├── ascii.js          genera las tablas ASCII desde datos
 │   ├── render.js         convierte los bloques de datos en HTML
 │   ├── search.js         índice de búsqueda de texto completo
 │   └── app.js            enrutado por hash, menú, índice, tema, atajos
 ├── js/data/              EL CONTENIDO
 │   ├── 00-catalogo.js    registro de grupos y secciones
-│   ├── 01-introduccion.js … 13-agentes.js
+│   ├── 01-introduccion.js … 14-ascii-teclado.js
 │   └── 99-atajos.js
 └── descargas/            kit de agente (.zip y .tar.gz)
 ```
@@ -119,7 +133,9 @@ Si creas un archivo nuevo, añade su `<script>` en `index.html` **antes** de
 `js/core/app.js`. El menú, el índice y el buscador se generan solos.
 
 Tipos de bloque disponibles: `h2`, `h3`, `prose`, `cmd`, `command`, `callout`,
-`table`, `steps`, `accordion`, `grid`, `ascii`, `keys`, `downloads`, `tiles`.
+`table`, `steps`, `accordion`, `grid`, `ascii`, `keys`, `downloads`, `tiles`,
+`asciitable` (tabla ASCII generada y filtrable), `asciitool` (conversor) y
+`simbolos` (tarjetas de símbolos con copia a un clic).
 
 ### Convención de los bloques de terminal
 

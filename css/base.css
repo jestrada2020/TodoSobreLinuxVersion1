@@ -210,6 +210,12 @@ kbd {
   white-space: nowrap;
 }
 
+/* El atributo [hidden] del navegador es una regla de baja prioridad: cualquier
+   regla de autor que fije `display` (por ejemplo .symcard{display:flex}) la
+   anula y el elemento sigue viéndose. Con !important, ocultar por JS con
+   `el.hidden = true` funciona siempre. */
+[hidden] { display: none !important; }
+
 /* ---------- Accesibilidad ---------- */
 :focus-visible {
   outline: 2px solid var(--primary);

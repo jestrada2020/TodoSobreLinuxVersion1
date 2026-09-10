@@ -49,6 +49,11 @@
         color: 'var(--accent-ia)',
         desc: 'CLIs de IA, modelos locales con Ollama y construcción de agentes.'
       },
+      referencia: {
+        title: 'Referencia',
+        color: 'var(--accent-fs)',
+        desc: 'Tablas de consulta rápida: código ASCII y distribución de teclado.'
+      },
       meta: {
         title: 'Sobre esta guía',
         color: 'var(--text-muted)',

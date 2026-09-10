@@ -57,12 +57,13 @@
 '├── js/core/\n' +
 '│   ├── store.js          estado y persistencia (localStorage)\n' +
 '│   ├── highlight.js      resaltado de sintaxis de shell\n' +
+'│   ├── ascii.js          genera las tablas ASCII desde datos\n' +
 '│   ├── render.js         convierte los datos en HTML\n' +
 '│   ├── search.js         índice de búsqueda de texto completo\n' +
 '│   └── app.js            enrutado, menú, índice, tema, atajos\n' +
 '├── js/data/              EL CONTENIDO, un módulo por área\n' +
 '│   ├── 00-catalogo.js    registro de grupos y secciones\n' +
-'│   ├── 01-introduccion.js … 13-agentes.js\n' +
+'│   ├── 01-introduccion.js … 14-ascii-teclado.js\n' +
 '│   └── 99-atajos.js\n' +
 '└── descargas/            el kit de agente, listo para descargar' },
       { type: 'h2', id: 'anadir', text: 'Añadir una sección nueva' },
@@ -105,7 +106,10 @@
         ['<code>ascii</code>', 'Diagrama en texto monoespaciado'],
         ['<code>keys</code>', 'Lista de atajos de teclado'],
         ['<code>downloads</code>', 'Enlaces de descarga con tamaño'],
-        ['<code>tiles</code>', 'Rejilla de enlaces a otras secciones']
+        ['<code>tiles</code>', 'Rejilla de enlaces a otras secciones'],
+        ['<code>asciitable</code>', 'Tabla ASCII generada desde datos, con filtro en vivo'],
+        ['<code>asciitool</code>', 'Conversor interactivo texto ⇄ códigos'],
+        ['<code>simbolos</code>', 'Tarjetas de símbolos con copia a un clic y filtros']
       ]},
       { type: 'h2', id: 'convencion-lineas', text: 'Convención de los bloques de terminal' },
       { type: 'prose', html: '<p>El resaltador interpreta el prefijo de cada línea, así que el contenido se escribe como se leería en una terminal real:</p>' },

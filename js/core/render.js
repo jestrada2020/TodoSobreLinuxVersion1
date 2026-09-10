@@ -161,6 +161,129 @@
     return h + '</div>';
   }
 
+
+  /* -------------------------- bloque: asciitable ------------------------- */
+  /* Genera la tabla desde AsciiData en lugar de almacenar 256 filas de HTML. */
+  function bloqueAsciiTable(b) {
+    var filas = global.AsciiData.filas(b.rango);
+    var conNombre = b.rango === 'control';
+    var id = 'at-' + b.rango;
+
+    var h = '<div class="asciitbl" data-ascii="' + b.rango + '">';
+    h += '<div class="asciitbl__bar">' +
+      '<input type="search" class="asciitbl__filtro" id="' + id + '-f" ' +
+      'placeholder="Filtrar por carácter, código o descripción…" ' +
+      'aria-label="Filtrar la tabla ASCII">' +
+      '<span class="asciitbl__cuenta" id="' + id + '-n">' + filas.length + ' de ' + filas.length + '</span>' +
+      '</div>';
+
+    h += '<div class="tablewrap"><table class="asciitbl__t"><thead><tr>' +
+      '<th>Dec</th><th>Hex</th><th>Oct</th><th>Bin</th><th>Car.</th>' +
+      (conNombre ? '<th>Nombre</th><th>Teclado</th>' : '<th>HTML</th>') +
+      '<th>Notas</th></tr></thead><tbody>';
+
+    filas.forEach(function (f) {
+      var busca = (f.dec + ' ' + f.hex + ' ' + f.oct + ' ' + f.car + ' ' + f.nom + ' ' +
+                   f.tecla + ' ' + f.desc)
+                   .replace(/<[^>]+>/g, '').toLowerCase()
+                   .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      h += '<tr data-b="' + esc(busca) + '">' +
+        '<td class="col-mono">' + f.dec + '</td>' +
+        '<td class="col-mono">0x' + f.hex + '</td>' +
+        '<td class="col-mono">' + f.oct + '</td>' +
+        '<td class="col-mono asciitbl__bin">' + f.bin + '</td>' +
+        '<td class="asciitbl__car">' + esc(f.car) + '</td>' +
+        (conNombre
+          ? '<td class="col-mono">' + esc(f.nom) + '</td><td>' + (f.tecla ? '<kbd>' + esc(f.tecla) + '</kbd>' : '') + '</td>'
+          : '<td class="col-mono">' + f.ent + '</td>') +
+        '<td>' + (f.desc || '') + '</td>' +
+      '</tr>';
+    });
+
+    return h + '</tbody></table></div></div>';
+  }
+
+  /* --------------------------- bloque: asciitool ------------------------- */
+  /* Conversor bidireccional texto ⇄ códigos. La lógica se conecta en app.js. */
+  function bloqueAsciiTool() {
+    return '<div class="atool" data-atool>' +
+      '<div class="atool__fila">' +
+        '<label class="atool__lbl" for="atool-txt">Texto</label>' +
+        '<input class="atool__in" id="atool-txt" type="text" value="Hola Ñ" ' +
+               'autocomplete="off" spellcheck="false" placeholder="Escribe aquí…">' +
+      '</div>' +
+      '<div class="atool__salidas">' +
+        ['dec', 'hex', 'oct', 'bin'].map(function (k) {
+          return '<div class="atool__out"><span class="atool__lbl">' +
+            { dec: 'Decimal', hex: 'Hexadecimal', oct: 'Octal', bin: 'Binario' }[k] +
+            '</span><code class="atool__val" id="atool-' + k + '"></code>' +
+            '<button class="atool__copy" type="button" data-src="atool-' + k + '">copiar</button></div>';
+        }).join('') +
+      '</div>' +
+      '<div class="atool__fila">' +
+        '<label class="atool__lbl" for="atool-rev">Códigos decimales → texto</label>' +
+        '<input class="atool__in" id="atool-rev" type="text" value="76 105 110 117 120" ' +
+               'autocomplete="off" spellcheck="false" placeholder="72 111 108 97">' +
+      '</div>' +
+      '<div class="atool__res">Resultado: <code class="atool__val" id="atool-revout"></code></div>' +
+      '<p class="atool__nota">Los códigos por encima de 127 dependen de la codificación. ' +
+      'En Linux, con UTF-8, un carácter como <code>ñ</code> ocupa <b>dos bytes</b> ' +
+      '(0xC3 0xB1) aunque su punto Unicode sea 241.</p>' +
+    '</div>';
+  }
+
+
+  /* -------------------------- bloque: simbolos --------------------------- */
+  /* Rejilla de tarjetas ("diapositivas"): símbolo grande, nombre, atajos
+     de teclado y copia con un clic. Se filtra por categoría y por texto. */
+  function bloqueSimbolos() {
+    var lista = global.AsciiData.simbolos();
+    var cats = global.AsciiData.categorias;
+
+    var h = '<div class="symgrid" data-symgrid>';
+
+    h += '<div class="symgrid__bar">' +
+      '<input type="search" class="symgrid__filtro" ' +
+      'placeholder="Buscar un símbolo por nombre, código o carácter…" ' +
+      'aria-label="Buscar símbolo">' +
+      '<span class="symgrid__cuenta">' + lista.length + '</span></div>';
+
+    h += '<div class="symgrid__cats" role="group" aria-label="Filtrar por categoría">';
+    cats.forEach(function (c, i) {
+      h += '<button class="sympill" type="button" data-cat="' + c[0] + '"' +
+           (i === 0 ? ' aria-pressed="true"' : ' aria-pressed="false"') + '>' +
+           esc(c[1]) + '</button>';
+    });
+    h += '</div>';
+
+    h += '<div class="symgrid__items">';
+    lista.forEach(function (s) {
+      var busca = (s.car + ' ' + s.nombre + ' ' + s.dec + ' ' + s.hex + ' ' +
+                   s.alt + ' ' + s.nota).replace(/<[^>]+>/g, '').toLowerCase()
+                   .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      h += '<article class="symcard" data-cats="' + esc(s.cats) + '" data-b="' + esc(busca) + '">' +
+        '<button class="symcard__glifo" type="button" data-copy-val="' + esc(s.car) + '" ' +
+          'title="Copiar el carácter ' + esc(s.car) + '">' + esc(s.car) + '</button>' +
+        '<div class="symcard__nombre">' + esc(s.nombre) + '</div>' +
+        '<div class="symcard__codigos">' +
+          '<code title="Código decimal">' + s.dec + '</code>' +
+          '<code title="Código hexadecimal">0x' + s.hex.toUpperCase() + '</code>' +
+        '</div>' +
+        (s.nota ? '<div class="symcard__nota">' + s.nota + '</div>' : '') +
+        '<div class="symcard__teclas">' +
+          '<button class="symkey" type="button" data-copy-val="' + esc(s.linux) + '" ' +
+            'title="Linux: pulsa Ctrl+Shift+U, escribe el código y Enter">' +
+            '<span class="symkey__so">Linux</span><kbd>' + esc(s.linux) + '</kbd></button>' +
+          (s.alt ? '<button class="symkey" type="button" data-copy-val="' + esc(s.alt) + '" ' +
+            'title="Windows: mantén Alt y teclea el número en el teclado numérico">' +
+            '<span class="symkey__so">Win</span><kbd>' + esc(s.alt) + '</kbd></button>' : '') +
+        '</div>' +
+      '</article>';
+    });
+
+    return h + '</div><p class="symgrid__vacio" hidden>Ningún símbolo coincide con la búsqueda.</p></div>';
+  }
+
   /* ----------------------------- despachador ----------------------------- */
   var MANEJADORES = {
     prose:     function (b) { return b.html; },
@@ -176,6 +299,9 @@
     command:   bloqueCommand,
     downloads: bloqueDownloads,
     tiles:     bloqueTiles,
+    asciitable: bloqueAsciiTable,
+    asciitool:  bloqueAsciiTool,
+    simbolos:   bloqueSimbolos,
     ascii:     function (b) { return '<div class="ascii">' + esc(b.text) + '</div>'; },
     keys:      function (b) {
       var h = '<div class="kbdlist">';

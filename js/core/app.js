@@ -208,6 +208,9 @@
     marcarActiva(id);
     pintarToc(sec);
     conectarCopias(contenido);
+    conectarTablasAscii(contenido);
+    conectarConversorAscii(contenido);
+    conectarSimbolos(contenido);
     conectarPie(sec);
     Store.setUltima(id);
 
@@ -365,6 +368,141 @@
       doc.body.appendChild(ta); ta.select();
       try { doc.execCommand('copy'); } catch (e) { /* sin portapapeles */ }
       doc.body.removeChild(ta); res();
+    });
+  }
+
+
+  /* ======================= INTERACTIVOS DE LA TABLA ASCII ================ */
+
+  /* Filtro en vivo sobre las tablas ASCII generadas. */
+  function conectarTablasAscii(ctx) {
+    $$('.asciitbl', ctx).forEach(function (caja) {
+      var input = $('.asciitbl__filtro', caja);
+      var cuenta = $('.asciitbl__cuenta', caja);
+      var filas = $$('tbody tr', caja);
+      if (!input) return;
+
+      input.addEventListener('input', function () {
+        var q = input.value.trim().toLowerCase()
+                  .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        var n = 0;
+        filas.forEach(function (tr) {
+          var ok = !q || tr.getAttribute('data-b').indexOf(q) > -1;
+          tr.hidden = !ok;
+          if (ok) n++;
+        });
+        cuenta.textContent = n + ' de ' + filas.length;
+        cuenta.classList.toggle('is-vacio', n === 0);
+      });
+    });
+  }
+
+  /* Conversor bidireccional texto ⇄ códigos. */
+  function conectarConversorAscii(ctx) {
+    var caja = $('[data-atool]', ctx);
+    if (!caja) return;
+
+    var txt = $('#atool-txt', caja);
+    var rev = $('#atool-rev', caja);
+    var A = global.AsciiData;
+
+    function codigos(cadena, fn) {
+      var out = [];
+      for (var i = 0; i < cadena.length; i++) out.push(fn(cadena.charCodeAt(i)));
+      return out.join(' ');
+    }
+
+    function actualizar() {
+      var v = txt.value;
+      $('#atool-dec', caja).textContent = codigos(v, function (c) { return c; }) || '—';
+      $('#atool-hex', caja).textContent = codigos(v, function (c) {
+        return '0x' + (c > 255 ? c.toString(16).toUpperCase().padStart(4, '0') : A.hex(c));
+      }) || '—';
+      $('#atool-oct', caja).textContent = codigos(v, function (c) { return A.oct(c); }) || '—';
+      $('#atool-bin', caja).textContent = codigos(v, function (c) {
+        return c > 255 ? c.toString(2).padStart(16, '0') : A.bin(c);
+      }) || '—';
+    }
+
+    function actualizarInverso() {
+      var partes = rev.value.trim().split(/[\s,;]+/).filter(Boolean);
+      var salida = '', valido = true;
+      partes.forEach(function (p) {
+        var n = /^0x/i.test(p) ? parseInt(p, 16) : parseInt(p, 10);
+        if (isNaN(n) || n < 0 || n > 0x10FFFF) { valido = false; return; }
+        salida += String.fromCharCode(n);
+      });
+      var out = $('#atool-revout', caja);
+      out.textContent = salida || (valido ? '—' : 'códigos no válidos');
+      out.classList.toggle('is-error', !valido && partes.length > 0);
+    }
+
+    txt.addEventListener('input', actualizar);
+    rev.addEventListener('input', actualizarInverso);
+    actualizar();
+    actualizarInverso();
+
+    $$('.atool__copy', caja).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var el = doc.getElementById(b.getAttribute('data-src'));
+        if (!el) return;
+        copiar(el.textContent).then(function () {
+          var antes = b.textContent;
+          b.textContent = '¡copiado!';
+          setTimeout(function () { b.textContent = antes; }, 1400);
+        });
+      });
+    });
+  }
+
+
+  /* Rejilla de símbolos: filtro por texto, filtro por categoría y copia. */
+  function conectarSimbolos(ctx) {
+    var caja = $('[data-symgrid]', ctx);
+    if (!caja) return;
+
+    var input = $('.symgrid__filtro', caja);
+    var cuenta = $('.symgrid__cuenta', caja);
+    var vacio = $('.symgrid__vacio', caja);
+    var tarjetas = $$('.symcard', caja);
+    var pills = $$('.sympill', caja);
+    var cat = 'todos';
+
+    function aplicar() {
+      var q = input.value.trim().toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      var n = 0;
+      tarjetas.forEach(function (t) {
+        var okCat = cat === 'todos' ||
+                    (' ' + t.getAttribute('data-cats') + ' ').indexOf(' ' + cat + ' ') > -1;
+        var okTxt = !q || t.getAttribute('data-b').indexOf(q) > -1;
+        var ok = okCat && okTxt;
+        t.hidden = !ok;
+        if (ok) n++;
+      });
+      cuenta.textContent = n;
+      vacio.hidden = n > 0;
+    }
+
+    input.addEventListener('input', aplicar);
+
+    pills.forEach(function (p) {
+      p.addEventListener('click', function () {
+        cat = p.getAttribute('data-cat');
+        pills.forEach(function (o) { o.setAttribute('aria-pressed', o === p); });
+        aplicar();
+      });
+    });
+
+    /* Copiar al pulsar el símbolo o cualquiera de sus atajos. */
+    $$('[data-copy-val]', caja).forEach(function (b) {
+      b.addEventListener('click', function () {
+        copiar(b.getAttribute('data-copy-val')).then(function () {
+          b.classList.add('is-copiado');
+          setTimeout(function () { b.classList.remove('is-copiado'); }, 900);
+          toast('Copiado: ' + b.getAttribute('data-copy-val'));
+        });
+      });
     });
   }
 

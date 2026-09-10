@@ -39,6 +39,24 @@
           (b.rows || []).forEach(function (f) { partes.push(limpiar(f.join(' '))); });
         } else if (b.type === 'steps' || b.type === 'accordion') {
           (b.items || []).forEach(function (i) { partes.push((i.t || '') + ' ' + limpiar(i.html || '')); });
+        } else if (b.type === 'asciitable') {
+          // Indexa las filas generadas: hace buscable cada carácter y su nota
+          (global.AsciiData ? global.AsciiData.filas(b.rango) : []).forEach(function (f) {
+            partes.push(f.dec + ' ' + f.hex + ' ' + f.car + ' ' + f.nom + ' ' +
+                        f.tecla + ' ' + limpiar(f.desc));
+          });
+          partes.push('tabla ascii ' + b.rango + ' decimal hexadecimal octal binario');
+        } else if (b.type === 'simbolos') {
+          (global.AsciiData ? global.AsciiData.simbolos() : []).forEach(function (x) {
+            partes.push(x.car + ' ' + x.nombre + ' ' + x.dec + ' ' + x.hex + ' ' +
+                        x.alt + ' ' + limpiar(x.nota));
+          });
+          partes.push('simbolos acceso rapido copiar caracter atajos teclado');
+        } else if (b.type === 'asciitool') {
+          partes.push('conversor ascii texto codigos decimal hexadecimal octal binario ' +
+                      'convertir caracteres interactivo');
+        } else if (b.type === 'keys') {
+          (b.items || []).forEach(function (i) { partes.push((i.k || []).join(' ') + ' ' + i.d); });
         } else if (b.type === 'grid') {
           (b.items || []).forEach(function (i) { partes.push((i.t || i.label || '') + ' ' + limpiar(i.html || i.d || i.note || '')); });
         }
