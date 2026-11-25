@@ -11,6 +11,14 @@
   var secciones = Catalogo.secciones;
   var grupos = Catalogo.grupos;
   var porId = {};
+  // Orden de lectura = orden del menú (grupo y, dentro, orden de registro).
+  // Así «Anterior / Siguiente» y las teclas j/k no saltan entre grupos.
+  var ordenGrupo = {};
+  Object.keys(grupos).forEach(function (g, i) { ordenGrupo[g] = i; });
+  secciones.forEach(function (s, i) { s._reg = i; });
+  secciones.sort(function (x, y) {
+    return (ordenGrupo[x.group] - ordenGrupo[y.group]) || (x._reg - y._reg);
+  });
   secciones.forEach(function (s, i) { porId[s.id] = s; s._i = i; });
 
   /* Recorta un texto en el límite de palabra y añade puntos suspensivos. */
@@ -126,13 +134,18 @@
   }
 
   /* ---------------------- filtro rápido del menú ------------------------- */
+  function sinAcentos(t) {
+    return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   function filtrarMenu(q) {
-    var norm = q.trim().toLowerCase();
+    var norm = sinAcentos(q.trim());
     var visiblesPorGrupo = {};
 
     $$('.navlink').forEach(function (a) {
       var s = porId[a.getAttribute('data-id')];
-      var heno = (s.title + ' ' + (s.tags || []).join(' ') + ' ' + (s.lead || '')).toLowerCase();
+      var heno = sinAcentos(s.title + ' ' + (s.tags || []).join(' ') + ' ' +
+                            String(s.lead || '').replace(/<[^>]+>/g, ''));
       var ok = !norm || heno.indexOf(norm) > -1;
       a.parentNode.hidden = !ok;
       if (ok) visiblesPorGrupo[s.group] = (visiblesPorGrupo[s.group] || 0) + 1;
@@ -211,6 +224,9 @@
     conectarTablasAscii(contenido);
     conectarConversorAscii(contenido);
     conectarSimbolos(contenido);
+    conectarTabs(contenido);
+    conectarChmod(contenido);
+    conectarBuilders(contenido);
     conectarPie(sec);
     Store.setUltima(id);
 
@@ -221,12 +237,18 @@
       }
     }
 
+    cerrarMenu();
     if (anc) {
       var el = doc.getElementById(anc);
-      if (el) { el.scrollIntoView(); return; }
+      if (el) {
+        activarTabDe(el);
+        // Un panel de pestaña se muestra con su barra de pestañas visible
+        var destino = el.classList.contains('tabs__panel') ? el.closest('.tabs') : el;
+        destino.scrollIntoView();
+        return;
+      }
     }
     global.scrollTo({ top: 0, behavior: 'auto' });
-    cerrarMenu();
   }
 
   function pieDeSeccion(sec) {
@@ -288,13 +310,24 @@
 
     var h = '<div class="hero"><h1>Todo en Linux</h1>' +
       '<p>Curso de referencia sobre Linux y Ubuntu: sistema de archivos, terminal, ' +
-      'permisos, procesos, redes, paquetes, rescate del sistema y construcción de ' +
-      'agentes de IA con modelos locales. Todo en español, todo ejecutable.</p>' +
+      'permisos, procesos, redes, paquetes para datos y Python, rescate del sistema ' +
+      'y CLI agénticas de IA. Todo en español, todo ejecutable.</p>' +
       '<div class="pagehead__meta" style="margin-top:1.5rem">' +
         '<span class="chip chip--primary">' + secciones.length + ' secciones</span>' +
         '<span class="chip chip--primary">' + total + ' comandos documentados</span>' +
         '<span class="chip">Pulsa <kbd>Ctrl</kbd>+<kbd>K</kbd> para buscar</span>' +
       '</div></div>';
+
+    // Acceso inmediato a la solución de los fallos graves
+    h += Render.bloques([{ type: 'sos', title: '¿El sistema ha fallado?',
+      desc: 'Ve directo al escenario. Todas las soluciones están en pestañas, paso a paso.',
+      items: [
+        { t: 'No arranca: ¿por dónde empiezo?', d: 'Plan de emergencia', href: 'resc-triage' },
+        { t: 'grub rescue> / sin menú de GRUB', d: 'Reparar GRUB', href: 'resc-grub' },
+        { t: 'emergency mode · initramfs · pantalla negra', d: 'Fallos tras GRUB', href: 'resc-sistema' },
+        { t: 'apt / dpkg roto', d: 'Paquetes rotos', href: 'resc-paquetes' }
+      ]
+    }]);
 
     if (favs.length) {
       h += '<h2 class="block__title">Tus favoritos</h2>' + Render.bloques([{
@@ -340,8 +373,13 @@
 
   /* ============================ COPIAR CÓDIGO =========================== */
   function conectarCopias(ctx) {
-    $$('.cmd__copy', ctx).forEach(function (btn) {
-      btn.addEventListener('click', function () {
+    // Dentro del <summary> de un visor de script, los botones no deben plegarlo
+    $$('.script__acts a, .script__acts button', ctx).forEach(function (el) {
+      el.addEventListener('click', function (e) { e.stopPropagation(); });
+    });
+    $$('button.cmd__copy', ctx).forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
         var txt = btn.getAttribute('data-copy');
         copiar(txt).then(function () {
           btn.classList.add('is-done');
@@ -503,6 +541,262 @@
           toast('Copiado: ' + b.getAttribute('data-copy-val'));
         });
       });
+    });
+  }
+
+  /* ======================== CALCULADORA DE PERMISOS ===================== */
+  function conectarChmod(ctx) {
+    $$('[data-chmodcalc]', ctx).forEach(function (caja) {
+      var casillas = $$('input[data-w]', caja), especiales = $$('input[data-esp]', caja);
+      var oct = $('.chcalc__oct', caja), tipo = $('.chcalc__tipo', caja), nom = $('.chcalc__nom', caja);
+
+      function digitos() {
+        var d = { u: 0, g: 0, o: 0 }, e = 0;
+        casillas.forEach(function (c) { if (c.checked) d[c.dataset.w] += +c.dataset.v; });
+        especiales.forEach(function (c) { if (c.checked) e += +c.dataset.esp; });
+        return { e: e, u: d.u, g: d.g, o: d.o };
+      }
+      function simbolico(v) {
+        function tri(n, esp, letra) {
+          var x = n & 1;
+          var ult = esp ? (x ? letra : letra.toUpperCase()) : (x ? 'x' : '-');
+          return (n & 4 ? 'r' : '-') + (n & 2 ? 'w' : '-') + ult;
+        }
+        return (tipo.value === 'd' ? 'd' : '-') + tri(v.u, v.e & 4, 's') + tri(v.g, v.e & 2, 's') + tri(v.o, v.e & 1, 't');
+      }
+      function letras(n) { return (n & 4 ? 'r' : '') + (n & 2 ? 'w' : '') + (n & 1 ? 'x' : ''); }
+      function explicar(v) {
+        var d = tipo.value === 'd', out = [];
+        var quien = { u: 'El propietario', g: 'El grupo', o: 'El resto' };
+        ['u', 'g', 'o'].forEach(function (k) {
+          var n = v[k], acc = [];
+          if (d) {
+            if (n & 4) acc.push('listar su contenido');
+            if (n & 2) acc.push((n & 1) ? 'crear, renombrar y borrar archivos dentro' : 'nada más con w (sin x no sirve)');
+            if (n & 1) acc.push('entrar (cd) y abrir lo que contiene');
+          } else {
+            if (n & 4) acc.push('leer');
+            if (n & 2) acc.push('modificar');
+            if (n & 1) acc.push('ejecutar');
+          }
+          out.push('<b>' + quien[k] + '</b> puede ' + (acc.length ? acc.join(', ') : '<b>nada</b>') + '.');
+        });
+        if (v.e & 4) out.push('<b>SUID</b>: ' + (d ? 'sin efecto en directorios.' : 'se ejecuta con los permisos del propietario. Peligroso si el dueño es root.'));
+        if (v.e & 2) out.push('<b>SGID</b>: ' + (d ? 'lo creado dentro hereda el grupo del directorio (carpetas compartidas).' : 'se ejecuta con el grupo del archivo.'));
+        if (v.e & 1) out.push('<b>Sticky</b>: ' + (d ? 'cada usuario solo puede borrar sus propios archivos (como /tmp).' : 'sin efecto en archivos en Linux.'));
+        if (d && !(v.e & 6)) out.push('<i>En carpetas, <code>chmod</code> con 3 cifras no quita un SUID/SGID que ya tuvieran: usa <code>chmod g-s</code> o 5 cifras (<code>00' + v.u + v.g + v.o + '</code>).</i>');
+        if (v.o & 2) out.push('<span class="chcalc__aviso">Cualquier usuario del sistema puede modificarlo.</span>');
+        if (v.u === 0) out.push('<span class="chcalc__aviso">Ni siquiera el propietario tiene acceso.</span>');
+        return out.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+      }
+      function pintar(desdeOctal) {
+        var v = digitos();
+        var o = (v.e ? String(v.e) : '') + v.u + v.g + v.o;
+        if (!desdeOctal) oct.value = o;
+        oct.classList.remove('is-error');
+        var n = nom.value.trim() || 'archivo';
+        if (/[\s'"$`\\]/.test(n)) n = "'" + n.replace(/'/g, "'\\''") + "'";
+        $('.chcalc__sim', caja).textContent = simbolico(v);
+        $('.chcalc__cmd1', caja).textContent = 'chmod ' + o + ' ' + n;
+        var simb = 'u=' + letras(v.u) + ',g=' + letras(v.g) + ',o=' + letras(v.o);
+        var esp = [];
+        if (v.e & 4) esp.push('u+s'); if (v.e & 2) esp.push('g+s'); if (v.e & 1) esp.push('+t');
+        $('.chcalc__cmd2', caja).textContent = 'chmod ' + simb + (esp.length ? ',' + esp.join(',') : '') + ' ' + n;
+        $('.chcalc__exp', caja).innerHTML = explicar(v);
+      }
+      function desdeOctal() {
+        var t = oct.value.trim();
+        if (!/^[0-7]{3,4}$/.test(t)) { oct.classList.add('is-error'); return; }
+        if (t.length === 3) t = '0' + t;
+        var e = +t[0], d = { u: +t[1], g: +t[2], o: +t[3] };
+        casillas.forEach(function (c) { c.checked = !!(d[c.dataset.w] & +c.dataset.v); });
+        especiales.forEach(function (c) { c.checked = !!(e & +c.dataset.esp); });
+        pintar(true);
+      }
+      casillas.concat(especiales).forEach(function (c) { c.addEventListener('change', function () { pintar(false); }); });
+      oct.addEventListener('input', desdeOctal);
+      tipo.addEventListener('change', function () { pintar(true); });
+      nom.addEventListener('input', function () { pintar(true); });
+      $$('[data-preset]', caja).forEach(function (b) {
+        b.addEventListener('click', function () {
+          oct.value = b.dataset.preset;
+          var t = b.dataset.preset;
+          tipo.value = /^(755|700|775|2775|1777)$/.test(t) ? 'd' : 'f';
+          // Nombre de ejemplo coherente con el tipo (sin pisar uno escrito por el usuario)
+          if (nom.value === 'archivo.txt' || nom.value === 'carpeta') nom.value = tipo.value === 'd' ? 'carpeta' : 'archivo.txt';
+          desdeOctal();
+        });
+      });
+      $$('[data-copiar]', caja).forEach(function (b) {
+        b.addEventListener('click', function () {
+          copiar($('.' + b.dataset.copiar, caja).textContent).then(function () {
+            var antes = b.textContent; b.textContent = '¡copiado!';
+            setTimeout(function () { b.textContent = antes; }, 1400);
+          });
+        });
+      });
+      desdeOctal();
+    });
+  }
+
+  /* ======================== CONSTRUCTOR DE COMANDOS ===================== */
+  /* Comillas de shell solo cuando hacen falta. ~/ se deja fuera para que
+     la shell lo siga expandiendo. */
+  function citar(v) {
+    v = String(v);
+    if (v === '') return "''";
+    if (v === '~' || /^[A-Za-z0-9_\/.,:=@%+^-]+$/.test(v)) return v;
+    if (v.indexOf('~/') === 0) return '~/' + citar(v.slice(2));
+    // Con $VAR o $(…) se usan comillas dobles para que la shell los expanda
+    if (/\$[A-Za-z_{(]/.test(v) && !/["`\\]/.test(v)) return '"' + v + '"';
+    return "'" + v.replace(/'/g, "'\\''") + "'";
+  }
+
+  function construirGenerico(b, v) {
+    var grupos = { pre: [], start: [], mid: [], end: [] };
+    (b.fields || []).forEach(function (f) {
+      var val = v[f.k], parte = null;
+      var ayuda = function (h) { return String(h || '').replace(/\{v\}/g, global.Highlight.esc(String(val))); };
+      if (f.type === 'check') {
+        if (val) parte = { t: f.flag, d: ayuda(f.help), w: f.warn, corto: /^-[A-Za-z0-9]$/.test(f.flag) };
+      } else if (f.type === 'select') {
+        var op = (f.options || []).filter(function (o) { return o[0] === val; })[0];
+        if (op && op[0] !== '') {
+          var tok = f.flag ? f.flag + (f.join || ' ') + citar(op[0]) : op[0];
+          parte = { t: tok, d: ayuda(op[2] || f.help), w: op[3], corto: !f.flag && /^-[A-Za-z0-9]$/.test(op[0]) };
+        }
+      } else {
+        val = String(val || '').trim();
+        if (val !== '') {
+          var q = f.raw ? val : citar(val);
+          parte = { t: f.pos ? q : f.flag + (f.join === undefined ? ' ' : f.join) + q, d: ayuda(f.help), w: f.warn };
+        } else if (f.req) {
+          parte = { t: '<' + f.label.toUpperCase() + '>', d: 'Falta: ' + f.label, w: 'Completa «' + f.label + '»' };
+        }
+      }
+      if (parte) grupos[f.at || 'mid'].push(parte);
+    });
+    var partes = grupos.pre.concat(b.prefix ? [{ t: b.prefix, d: b.prefixDesc || '' }] : [], grupos.start, grupos.mid, grupos.end);
+
+    // Línea del comando: con combine, las opciones cortas sin valor se agrupan (-czvf)
+    var tokens = [];
+    if (b.combine) {
+      var letras = '', pos = -1;
+      partes.forEach(function (p) {
+        if (p.corto) { if (pos < 0) { pos = tokens.length; tokens.push(''); } letras += p.t.slice(1); }
+        else tokens.push(p.t);
+      });
+      if (pos >= 0) tokens[pos] = '-' + letras;
+    } else {
+      tokens = partes.map(function (p) { return p.t; });
+    }
+    return { lines: [tokens.join(' ')], parts: partes };
+  }
+
+  function conectarBuilders(ctx) {
+    $$('[data-builder]', ctx).forEach(function (caja) {
+      var b = Render.builders[caja.getAttribute('data-builder')];
+      if (!b) return;
+      var controles = $$('[data-k]', caja);
+      var salida = $('.bld__cmd', caja), lista = $('.bld__exp', caja), avisos = $('.bld__warns', caja);
+
+      function valores() {
+        var v = {};
+        controles.forEach(function (c) { v[c.dataset.k] = c.type === 'checkbox' ? c.checked : c.value; });
+        return v;
+      }
+      function pintar() {
+        var v = valores();
+        var r = typeof b.build === 'function' ? b.build(v, citar) : construirGenerico(b, v);
+        salida.textContent = r.lines.join('\n');
+        lista.innerHTML = (r.parts || []).filter(function (p) { return p.d; }).map(function (p) {
+          return '<li' + (p.w ? ' class="is-warn"' : '') + '><code>' + global.Highlight.esc(p.t) + '</code><span>' + p.d + '</span></li>';
+        }).join('');
+        var ws = (r.parts || []).filter(function (p) { return p.w && typeof p.w === 'string'; }).map(function (p) { return p.w; })
+                  .concat(r.warns || [], typeof b.avisos === 'function' ? (b.avisos(v) || []) : []);
+        avisos.innerHTML = ws.map(function (w) { return '<div class="bld__warn">' + Render.ICO.warn + '<span>' + w + '</span></div>'; }).join('');
+      }
+      controles.forEach(function (c) { c.addEventListener(c.type === 'checkbox' || c.tagName === 'SELECT' ? 'change' : 'input', pintar); });
+      $$('[data-preset]', caja).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var p = b.presets[+btn.dataset.preset];
+          // Un caso típico parte de los valores por defecto y aplica los suyos
+          controles.forEach(function (c) {
+            var f = (b.fields || []).filter(function (x) { return x.k === c.dataset.k; })[0] || {};
+            var nuevo = p.v.hasOwnProperty(c.dataset.k) ? p.v[c.dataset.k] : f.value;
+            if (c.type === 'checkbox') c.checked = !!nuevo;
+            else if (c.tagName === 'SELECT') c.value = nuevo !== undefined ? nuevo : c.options[0].value;
+            else c.value = nuevo || '';
+          });
+          $$('[data-preset]', caja).forEach(function (o) { o.setAttribute('aria-pressed', o === btn); });
+          pintar();
+        });
+      });
+      $('.bld__copy', caja).addEventListener('click', function () {
+        var btn = this;
+        copiar(salida.textContent).then(function () {
+          var e = $('span', btn), antes = e.textContent;
+          btn.classList.add('is-done'); e.textContent = '¡Copiado!';
+          setTimeout(function () { btn.classList.remove('is-done'); e.textContent = antes; }, 1600);
+        });
+      });
+      pintar();
+    });
+  }
+
+  /* =============================== PESTAÑAS ============================= */
+  function seleccionarTab(caja, boton, enfocar) {
+    $$('.tabs__tab', caja).forEach(function (b) {
+      if (b.closest('[data-tabs]') !== caja) return;   // pestañas anidadas
+      var on = b === boton;
+      b.setAttribute('aria-selected', on);
+      b.setAttribute('tabindex', on ? '0' : '-1');
+      var panel = doc.getElementById(b.getAttribute('aria-controls'));
+      if (panel) panel.hidden = !on;
+    });
+    if (enfocar) boton.focus();
+    boton.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
+  function conectarTabs(ctx) {
+    $$('[data-tabs]', ctx).forEach(function (caja) {
+      var lista = $('.tabs__list', caja);
+      var botones = $$('.tabs__tab', lista);
+      botones.forEach(function (b, i) {
+        b.addEventListener('click', function () {
+          seleccionarTab(caja, b, false);
+          // Actualiza la URL para que la pestaña se pueda compartir o recargar
+          var p = partesHash();
+          if (p.id) global.history.replaceState(null, '', '#' + p.id + '/' + b.getAttribute('aria-controls'));
+        });
+        b.addEventListener('keydown', function (e) {
+          var j = null;
+          if (e.key === 'ArrowRight') j = (i + 1) % botones.length;
+          else if (e.key === 'ArrowLeft') j = (i - 1 + botones.length) % botones.length;
+          else if (e.key === 'Home') j = 0;
+          else if (e.key === 'End') j = botones.length - 1;
+          if (j === null) return;
+          e.preventDefault();
+          botones[j].click();
+          botones[j].focus();
+        });
+      });
+    });
+  }
+
+  /* Si el destino de un enlace está dentro de una pestaña oculta, ábrela
+     (y también las pestañas que la contengan, si están anidadas). */
+  function activarTabDe(el) {
+    var cadena = [];
+    var nodo = el;
+    while (nodo && nodo !== doc.body) {
+      if (nodo.classList && nodo.classList.contains('tabs__panel')) cadena.unshift(nodo);
+      nodo = nodo.parentNode;
+    }
+    cadena.forEach(function (panel) {
+      var boton = doc.getElementById('tab-' + panel.id);
+      var caja = panel.closest('[data-tabs]');
+      if (boton && caja) seleccionarTab(caja, boton, false);
     });
   }
 

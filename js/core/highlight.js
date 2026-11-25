@@ -95,6 +95,23 @@
     return salida;
   }
 
+  /* Prefijos de prompt especiales. Se muestran con su prompt y al copiar
+     se quita el prompt (sin añadir sudo: ahí ya eres root). */
+  var ESPECIALES = [
+    ['chroot> ', '(chroot)# '],
+    ['grub rescue> ', 'grub rescue> '],
+    ['grub> ', 'grub> '],
+    ['(initramfs) ', '(initramfs) ']
+  ];
+  function prefijoEspecial(l) {
+    for (var i = 0; i < ESPECIALES.length; i++) {
+      if (l.indexOf(ESPECIALES[i][0]) === 0) {
+        return { prompt: ESPECIALES[i][1], resto: l.slice(ESPECIALES[i][0].length) };
+      }
+    }
+    return null;
+  }
+
   /* Convierte un array de líneas en HTML resaltado. */
   function resaltar(lineas) {
     var salida = [];
@@ -111,6 +128,12 @@
       // Prompt de root
       if (l.indexOf('!root ') === 0) {
         salida.push(tk('prompt', '# ') + resaltarComando(l.slice(6)));
+        continue;
+      }
+      // Prompts especiales: dentro de chroot (ya eres root) y consola de GRUB
+      var esp = prefijoEspecial(l);
+      if (esp) {
+        salida.push(tk('prompt', esp.prompt) + resaltarComando(esp.resto));
         continue;
       }
       // PowerShell
@@ -144,6 +167,8 @@
       if (l.indexOf('$ ') === 0) { out.push(l.slice(2)); continue; }
       if (l.indexOf('!root ') === 0) { out.push('sudo ' + l.slice(6)); continue; }
       if (l.indexOf('PS> ') === 0) { out.push(l.slice(4)); continue; }
+      var esp = prefijoEspecial(l);
+      if (esp) { out.push(esp.resto); continue; }
       out.push(l);
     }
     return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();

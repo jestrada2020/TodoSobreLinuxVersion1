@@ -23,15 +23,29 @@ python3 -m http.server 8000
 
 | | |
 |---|---|
-| **29 secciones** | agrupadas en 10 áreas temáticas |
-| **38 comandos** | con sinopsis, tabla de opciones, ejemplos y relacionados |
-| **184 entradas** | indexadas para el buscador de texto completo |
+| **43 secciones** | agrupadas en 11 áreas temáticas |
+| **Pestañas por escenario** | rescate, datos y CLI de IA: cada caso en su pestaña, enlazable |
+| **273 entradas** | indexadas para el buscador de texto completo (incluye cada pestaña) |
 | **256 filas ASCII** | generadas desde datos, con filtro y conversor interactivo |
-| **88 símbolos** | en tarjetas, con copia a un clic y atajos de Linux y Windows |
 | **1 kit descargable** | arnés de agente con modelos locales, en `descargas/` |
 
 Áreas: fundamentos · sistema de archivos · terminal y shell · administración ·
-redes · paquetes y hardware · rescate y emergencias · IA y agentes · referencia.
+redes · paquetes y hardware · **datos y Python** · **rescate y emergencias** ·
+**IA y agentes** · referencia.
+
+### Novedades (noviembre de 2026)
+
+- **Plan de emergencia** en 6 secciones con pestañas: diagnóstico por síntoma,
+  GRUB (menú, `grub rescue>`, UEFI, BIOS, Boot-Repair, efibootmgr, dual boot,
+  LUKS/LVM/Btrfs), fallos tras GRUB (fstab, initramfs, solo lectura, NVIDIA,
+  kernel, bucle de login, disco lleno, fsck, contraseña), paquetes rotos
+  (dpkg interrumpido, bloqueos, dependencias, repositorios, postinst, downgrade),
+  Timeshift y rescate de datos.
+- **Datos y Python**: paquetes del sistema, venv/pip/uv/pipx, conda
+  (Miniforge/Anaconda/mamba), Jupyter y GPU, y 12 errores de instalación resueltos.
+- **CLI agénticas**: Claude Code, Codex, Gemini CLI, Google Antigravity y
+  Kimi Code, cada una con Instalar · Autenticar · Uso agéntico · Mantener · Problemas.
+- Panel «¿El sistema ha fallado?» en la portada.
 
 ## Mejoras respecto a la versión anterior
 
@@ -87,7 +101,7 @@ redes · paquetes y hardware · rescate y emergencias · IA y agentes · referen
 ## Estructura
 
 ```
-TODO_EN_LINUX/
+TodoSobreLinux/
 ├── index.html            estructura de la aplicación
 ├── css/
 │   ├── base.css          tokens de diseño, temas y reset
@@ -102,7 +116,8 @@ TODO_EN_LINUX/
 │   └── app.js            enrutado por hash, menú, índice, tema, atajos
 ├── js/data/              EL CONTENIDO
 │   ├── 00-catalogo.js    registro de grupos y secciones
-│   ├── 01-introduccion.js … 14-ascii-teclado.js
+│   ├── 01-introduccion.js … 09b-datos.js, 10-rescate.js,
+│   │   12-ia-clis.js, 12b-ia-local.js … 14-ascii-teclado.js
 │   └── 99-atajos.js
 └── descargas/            kit de agente (.zip y .tar.gz)
 ```
@@ -132,7 +147,7 @@ TODO_EN_LINUX/
 Si creas un archivo nuevo, añade su `<script>` en `index.html` **antes** de
 `js/core/app.js`. El menú, el índice y el buscador se generan solos.
 
-Tipos de bloque disponibles: `h2`, `h3`, `prose`, `cmd`, `command`, `callout`,
+Tipos de bloque disponibles: `tabs` (pestañas con bloques anidados), `sos`, `h2`, `h3`, `prose`, `cmd`, `command`, `callout`,
 `table`, `steps`, `accordion`, `grid`, `ascii`, `keys`, `downloads`, `tiles`,
 `asciitable` (tabla ASCII generada y filtrable), `asciitool` (conversor) y
 `simbolos` (tarjetas de símbolos con copia a un clic).

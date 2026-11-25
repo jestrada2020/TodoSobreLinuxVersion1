@@ -17,6 +17,7 @@
     warn:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
     danger: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
     info:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+    abrir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>',
     descargar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>'
   };
 
@@ -140,8 +141,10 @@
   function bloqueDownloads(b) {
     var h = '';
     (b.items || []).forEach(function (it) {
-      h += '<a class="dl" href="' + esc(it.href) + '" download>' +
-        '<span class="dl__ico">' + ICO.descargar + '</span>' +
+      // open:true → se abre en una pestaña nueva (páginas HTML, PDF) en vez de descargarse
+      var modo = it.open ? ' target="_blank" rel="noopener"' : ' download';
+      h += '<a class="dl" href="' + esc(it.href) + '"' + modo + '>' +
+        '<span class="dl__ico">' + (it.open ? ICO.abrir : ICO.descargar) + '</span>' +
         '<span class="dl__main"><span class="dl__t">' + esc(it.title) + '</span>' +
         '<span class="dl__d">' + esc(it.desc || '') + '</span></span>' +
         '<span class="dl__size">' + esc(it.size || '') + '</span></a>';
@@ -284,6 +287,175 @@
     return h + '</div><p class="symgrid__vacio" hidden>Ningún símbolo coincide con la búsqueda.</p></div>';
   }
 
+  /* ----------------------------- bloque: tabs ---------------------------- */
+  /* Pestañas con bloques anidados. Cada pestaña tiene un id propio, así que
+     se puede enlazar directamente: #seccion/id-de-la-pestaña.
+     { type:'tabs', id:'grub', items:[{ id, t, badge?, blocks:[...] }] }   */
+  var contadorTabs = 0;
+  function bloqueTabs(b) {
+    var base = b.id || ('tabs-' + (++contadorTabs));
+    var items = b.items || [];
+    var h = '<div class="tabs" data-tabs id="' + esc(base) + '">' +
+      (b.title ? '<div class="tabs__title">' + esc(b.title) + '</div>' : '') +
+      '<div class="tabs__list" role="tablist" aria-label="' + esc(b.title || 'Pestañas') + '">';
+    items.forEach(function (it, i) {
+      var pid = it.id || (base + '-' + i);
+      h += '<button class="tabs__tab" type="button" role="tab" id="tab-' + esc(pid) + '" ' +
+        'aria-controls="' + esc(pid) + '" aria-selected="' + (i === 0) + '" ' +
+        'tabindex="' + (i === 0 ? '0' : '-1') + '">' +
+        (it.n ? '<span class="tabs__n">' + esc(it.n) + '</span>' : '') +
+        '<span>' + esc(it.t) + '</span>' +
+        (it.badge ? '<span class="tabs__badge tabs__badge--' + esc(it.badgeVariant || 'info') + '">' + esc(it.badge) + '</span>' : '') +
+        '</button>';
+    });
+    h += '</div>';
+    items.forEach(function (it, i) {
+      var pid = it.id || (base + '-' + i);
+      h += '<div class="tabs__panel" role="tabpanel" id="' + esc(pid) + '" ' +
+        'aria-labelledby="tab-' + esc(pid) + '"' + (i === 0 ? '' : ' hidden') + '>' +
+        (it.lead ? '<p class="tabs__lead">' + it.lead + '</p>' : '') +
+        bloques(it.blocks) + '</div>';
+    });
+    return h + '</div>';
+  }
+
+  /* ------------------------------ bloque: sos ---------------------------- */
+  /* Accesos directos de emergencia: síntoma → solución. */
+  function bloqueSos(b) {
+    var h = '<div class="sos">' +
+      '<div class="sos__head"><span class="sos__ico">' + ICO.danger + '</span>' +
+      '<div><div class="sos__t">' + esc(b.title || '¿Emergencia?') + '</div>' +
+      (b.desc ? '<div class="sos__d">' + b.desc + '</div>' : '') + '</div></div>' +
+      '<div class="sos__items">';
+    (b.items || []).forEach(function (it) {
+      h += '<a class="sos__item" href="#' + esc(it.href) + '">' +
+        '<span class="sos__sym">' + esc(it.t) + '</span>' +
+        '<span class="sos__fix">' + esc(it.d) + ' →</span></a>';
+    });
+    return h + '</div></div>';
+  }
+
+  /* ---------------------------- bloque: script --------------------------- */
+  /* Visor de un archivo de script completo (texto en window.ScriptsEmbebidos):
+     cabecera con nombre y líneas, Copiar, Descargar y cuerpo plegable.
+     { type:'script', file:'limpieza.sh', href:'descargas/…', desc, open } */
+  var PALABRAS_SH = /\b(if|then|else|elif|fi|for|while|until|do|done|case|esac|in|function|local|return|exit|continue|break|declare|readonly|export|set|trap|shift|read|echo|printf|mapfile)\b/g;
+  function resaltarScript(texto) {
+    return texto.split('\n').map(function (l) {
+      var e = esc(l);
+      if (/^\s*#/.test(l)) return '<span class="tk-comment">' + e + '</span>';
+      return e.replace(PALABRAS_SH, '<span class="tk-cmd">$1</span>')
+              .replace(/(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)/g, '<span class="tk-opt">$1</span>');
+    }).join('\n');
+  }
+  function bloqueScript(b) {
+    var texto = (global.ScriptsEmbebidos || {})[b.file];
+    if (texto === undefined) {
+      return '<div class="callout callout--warn"><span class="callout__icon">' + ICO.warn + '</span>' +
+        '<div class="callout__body">No se encontró el script <code>' + esc(b.file) + '</code>. ' +
+        'Ejecuta <code>python3 herramientas/embeber_scripts.py</code>.</div></div>';
+    }
+    var lineas = texto.replace(/\n$/, '').split('\n').length;
+    return '<details class="script"' + (b.open ? ' open' : '') + '>' +
+      '<summary class="script__head">' +
+        '<span class="script__chev" aria-hidden="true">▸</span>' +
+        '<code class="script__name">' + esc(b.file) + '</code>' +
+        '<span class="script__meta">' + lineas + ' líneas' + (b.desc ? ' · ' + esc(b.desc) : '') + '</span>' +
+        '<span class="script__acts">' +
+          '<button class="cmd__copy" type="button" data-copy="' + esc(texto) + '">' + ICO.copiar + '<span>Copiar</span></button>' +
+          (b.href ? '<a class="cmd__copy" href="' + esc(b.href) + '" download>' + ICO.descargar + '<span>Descargar</span></a>' : '') +
+        '</span>' +
+      '</summary>' +
+      '<pre class="cmd__body script__body"><code>' + resaltarScript(texto.replace(/\n$/, '')) + '</code></pre>' +
+    '</details>';
+  }
+
+  /* --------------------------- bloque: chmodcalc ------------------------- */
+  /* Calculadora de permisos. La lógica se conecta en app.js (conectarChmod). */
+  function bloqueChmodCalc() {
+    var quien = [['u', 'Propietario'], ['g', 'Grupo'], ['o', 'Otros']];
+    var que = [['r', 'Leer', 4], ['w', 'Escribir', 2], ['x', 'Ejecutar', 1]];
+    var h = '<div class="chcalc" data-chmodcalc>' +
+      '<div class="chcalc__grid" role="group" aria-label="Permisos">' +
+      '<span></span>' + que.map(function (q) { return '<span class="chcalc__col">' + q[1] + ' <small>(' + q[0] + '=' + q[2] + ')</small></span>'; }).join('');
+    quien.forEach(function (w) {
+      h += '<span class="chcalc__row">' + w[1] + ' <small>(' + w[0] + ')</small></span>';
+      que.forEach(function (q) {
+        h += '<label class="chcalc__cell"><input type="checkbox" data-w="' + w[0] + '" data-p="' + q[0] + '" data-v="' + q[2] + '">' +
+             '<span class="visually-hidden">' + w[1] + ' ' + q[1] + '</span></label>';
+      });
+    });
+    h += '</div>' +
+      '<div class="chcalc__esp" role="group" aria-label="Permisos especiales">' +
+        '<label><input type="checkbox" data-esp="4"> SUID <small>(4)</small></label>' +
+        '<label><input type="checkbox" data-esp="2"> SGID <small>(2)</small></label>' +
+        '<label><input type="checkbox" data-esp="1"> Sticky <small>(1)</small></label>' +
+      '</div>' +
+      '<div class="chcalc__campos">' +
+        '<label>Octal <input class="chcalc__oct" type="text" inputmode="numeric" maxlength="4" value="644" spellcheck="false"></label>' +
+        '<label>Tipo <select class="chcalc__tipo"><option value="f">archivo</option><option value="d">directorio</option></select></label>' +
+        '<label>Nombre <input class="chcalc__nom" type="text" value="archivo.txt" spellcheck="false"></label>' +
+      '</div>' +
+      '<div class="chcalc__out">' +
+        '<div><span class="chcalc__lbl">ls -l</span><code class="chcalc__sim"></code></div>' +
+        '<div><span class="chcalc__lbl">Octal</span><code class="chcalc__cmd1"></code><button type="button" class="atool__copy" data-copiar="chcalc__cmd1">copiar</button></div>' +
+        '<div><span class="chcalc__lbl">Simbólico</span><code class="chcalc__cmd2"></code><button type="button" class="atool__copy" data-copiar="chcalc__cmd2">copiar</button></div>' +
+      '</div>' +
+      '<ul class="chcalc__exp"></ul>' +
+      '<div class="chcalc__presets">' +
+        ['644', '600', '755', '700', '664', '775', '2775', '1777', '400'].map(function (o) {
+          return '<button type="button" class="sympill" data-preset="' + o + '">' + o + '</button>';
+        }).join('') +
+      '</div></div>';
+    return h;
+  }
+
+  /* ---------------------------- bloque: builder -------------------------- */
+  /* Constructor de comandos: el usuario elige opciones y ve el comando y la
+     explicación de cada parte. La lógica está en app.js (conectarBuilders);
+     aquí solo se pinta el formulario. Definición:
+       { type:'builder', id, title, desc, prefix, prefixDesc, combine,
+         fields:[{k, type:'text|number|check|select', label, value, flag,
+                  join, pos, at:'pre|start|end', help, warn, options, hint}],
+         presets:[{t, v:{k:valor}}], build?: function (v) → {lines, parts} } */
+  var BUILDERS = {};
+  function bloqueBuilder(b) {
+    BUILDERS[b.id] = b;
+    var campos = '', casillas = '';
+    (b.fields || []).forEach(function (f) {
+      var id = 'bld-' + b.id + '-' + f.k;
+      if (f.type === 'check') {
+        casillas += '<label class="bld__chk" for="' + id + '"><input type="checkbox" id="' + id + '" data-k="' + esc(f.k) + '"' +
+          (f.value ? ' checked' : '') + '><span>' + (f.flag ? '<code>' + esc(f.flag) + '</code> ' : '') + esc(f.label) + '</span></label>';
+      } else if (f.type === 'select') {
+        campos += '<label class="bld__fld" for="' + id + '"><span class="bld__lbl">' + esc(f.label) + '</span>' +
+          '<select id="' + id + '" data-k="' + esc(f.k) + '">' +
+          f.options.map(function (o, i) {
+            var sel = (f.value !== undefined ? o[0] === f.value : i === 0) ? ' selected' : '';
+            return '<option value="' + esc(o[0]) + '"' + sel + '>' + esc(o[1]) + '</option>';
+          }).join('') + '</select>' + (f.hint ? '<small>' + f.hint + '</small>' : '') + '</label>';
+      } else {
+        campos += '<label class="bld__fld" for="' + id + '"><span class="bld__lbl">' + esc(f.label) + '</span>' +
+          '<input id="' + id + '" data-k="' + esc(f.k) + '" type="text" spellcheck="false" autocomplete="off"' +
+          ' value="' + esc(f.value || '') + '" placeholder="' + esc(f.placeholder || '') + '">' +
+          (f.hint ? '<small>' + f.hint + '</small>' : '') + '</label>';
+      }
+    });
+    return '<div class="bld" data-builder="' + esc(b.id) + '">' +
+      '<div class="bld__head"><span class="bld__badge">Constructor</span>' +
+        '<span class="bld__t">' + esc(b.title) + '</span></div>' +
+      (b.desc ? '<p class="bld__d">' + b.desc + '</p>' : '') +
+      '<div class="bld__out"><pre class="bld__cmd"></pre>' +
+        '<button class="cmd__copy bld__copy" type="button">' + ICO.copiar + '<span>Copiar</span></button></div>' +
+      '<div class="bld__warns"></div>' +
+      (b.presets && b.presets.length ? '<div class="bld__presets"><span class="bld__lbl">Casos típicos</span>' +
+        b.presets.map(function (p, i) { return '<button type="button" class="sympill" data-preset="' + i + '">' + esc(p.t) + '</button>'; }).join('') + '</div>' : '') +
+      (campos ? '<div class="bld__fields">' + campos + '</div>' : '') +
+      (casillas ? '<div class="bld__checks">' + casillas + '</div>' : '') +
+      '<details class="bld__expwrap" open><summary>Cómo se lee este comando</summary><ul class="bld__exp"></ul></details>' +
+    '</div>';
+  }
+
   /* ----------------------------- despachador ----------------------------- */
   var MANEJADORES = {
     prose:     function (b) { return b.html; },
@@ -302,6 +474,11 @@
     asciitable: bloqueAsciiTable,
     asciitool:  bloqueAsciiTool,
     simbolos:   bloqueSimbolos,
+    tabs:      bloqueTabs,
+    sos:       bloqueSos,
+    script:    bloqueScript,
+    chmodcalc: bloqueChmodCalc,
+    builder:   bloqueBuilder,
     ascii:     function (b) { return '<div class="ascii">' + esc(b.text) + '</div>'; },
     keys:      function (b) {
       var h = '<div class="kbdlist">';
@@ -333,6 +510,12 @@
       else if (b.type === 'command') {
         items.push({ id: 'cmd-' + b.name.replace(/\W+/g, '-'), text: b.name, lvl: 3 });
       }
+      else if (b.type === 'tabs' && b.toc !== false) {
+        // Cada pestaña aparece en el índice: un clic la abre directamente
+        (b.items || []).forEach(function (it, i) {
+          if (it.id) items.push({ id: it.id, text: it.t, lvl: 3 });
+        });
+      }
     });
     return items;
   }
@@ -363,6 +546,7 @@
     seccion: seccion,
     bloques: bloques,
     toc: toc,
+    builders: BUILDERS,
     ICO: ICO
   };
 })(window);

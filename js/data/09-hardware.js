@@ -183,6 +183,8 @@
     tags: ['mount', 'fstab', 'uuid', 'mkfs', 'usb', 'exfat'],
     lead: 'Montar un disco es conectarlo al árbol de directorios. Hacerlo <b>permanente</b> requiere editar <code>/etc/fstab</code>, y un error ahí puede impedir que el sistema arranque — por eso existen las opciones <code>nofail</code> y la comprobación previa.',
     blocks: [
+      { type: 'callout', variant: 'tip', title: 'Guía completa de discos y USB',
+        html: '<p>Identificar sin equivocarse, montar con <code>udisksctl</code>, borrar, particionar, formatear, reparar, recuperar y dejar una USB como nueva: <a href="#discos-usb">Discos y USB</a>.</p>' },
       { type: 'h2', id: 'montar', text: 'Montar a mano' },
       { type: 'steps', items: [
         { t: 'Identificar el dispositivo',

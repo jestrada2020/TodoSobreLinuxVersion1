@@ -24,6 +24,11 @@
         color: 'var(--accent-shell)',
         desc: 'Bash, redirecciones, tuberías, expansiones y procesamiento de texto.'
       },
+      automatizacion: {
+        title: 'Automatización',
+        color: 'var(--accent-shell)',
+        desc: 'Scripts listos: comprimir y mover a otro disco, verificar y borrar el origen, limpiar temporales y programarlos.'
+      },
       admin: {
         title: 'Administración',
         color: 'var(--accent-sys)',
@@ -39,15 +44,30 @@
         color: 'var(--accent-warn)',
         desc: 'APT, snap, flatpak, limpieza del sistema e inventario de hardware.'
       },
+      instalar: {
+        title: 'Instalar software',
+        color: 'var(--accent-warn)',
+        desc: 'Instalar y desinstalar Python (cualquier versión), Manim, LaTeX, R y RStudio, Chrome, ofimática y conda.'
+      },
+      datos: {
+        title: 'Datos y Python',
+        color: 'var(--accent-data)',
+        desc: 'Paquetes clave para procesar datos: compiladores, bibliotecas, Python, uv, conda, Jupyter y GPU.'
+      },
       rescate: {
         title: 'Rescate y emergencias',
         color: 'var(--accent-danger)',
-        desc: 'GRUB, modo de recuperación, discos y recuperación de datos.'
+        desc: 'Plan de emergencia: GRUB, arranque, paquetes rotos, instantáneas y rescate de datos.'
       },
       ia: {
         title: 'IA y agentes',
         color: 'var(--accent-ia)',
-        desc: 'CLIs de IA, modelos locales con Ollama y construcción de agentes.'
+        desc: 'CLI agénticas (Claude Code, Codex, Gemini, Antigravity, Kimi), modelos locales y agentes.'
+      },
+      capacitacion: {
+        title: 'Capacitación EAFIT 2026',
+        color: 'var(--accent-shell)',
+        desc: 'Casos de capacitación de junio de 2026 (16, 17 y 18): guías de OpenCode y Jupyter con sus materiales.'
       },
       referencia: {
         title: 'Referencia',

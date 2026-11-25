@@ -1,222 +1,116 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guía para Claude Code (claude.ai/code) al trabajar en este repositorio.
 
-## Project Overview
+## Qué es
 
-This is a **Spanish-language Linux learning platform** - an interactive educational web application titled "Curso Maestría Linux: Deep Dive". It's a standalone, static web application designed to teach Linux concepts, commands, and system administration to Ubuntu/Linux users.
-
-The application is entirely client-side (HTML/CSS/JavaScript) with no build process or backend required.
-
-## Running the Application
-
-**To run:** Simply open `index.html` in a web browser.
+**Todo en Linux**: curso de referencia en español sobre Linux/Ubuntu como
+aplicación web **estática** (HTML + CSS + JS, sin build ni dependencias).
+Todo el contenido está en español.
 
 ```bash
-# Option 1: Direct open
-xdg-open index.html
-
-# Option 2: Simple HTTP server (if needed)
-python3 -m http.server 8000
-# Then navigate to http://localhost:8000
+xdg-open index.html              # o:
+python3 -m http.server 8000      # http://localhost:8000
 ```
 
-**No build, compilation, or package installation is required.** This is a pure static website.
+## Arquitectura (contenido como datos)
 
-## Architecture
+- `index.html` — solo el armazón (sidebar, barra superior, paleta de búsqueda)
+  y la lista de `<script>`. **No contiene contenido.**
+- `js/core/`
+  - `store.js` — estado en localStorage (tema, leídas, favoritos), con try/catch.
+  - `highlight.js` — resaltado de shell y texto para el botón Copiar.
+  - `render.js` — convierte bloques de datos en HTML (un manejador por `type`).
+  - `search.js` — índice de texto completo (recursivo: entra en pestañas).
+  - `app.js` — enrutado por hash `#seccion/ancla`, menú, TOC, pestañas, atajos.
+  - `ascii.js` — datos de las tablas ASCII y símbolos.
+- `js/data/NN-*.js` — **el contenido**. Cada archivo llama a
+  `Contenido.registrar({...})`. `00-catalogo.js` define los grupos; el orden de
+  las claves de `grupos` es el orden del menú y de «Anterior/Siguiente».
+- `css/base.css` (tokens y temas claro/oscuro/auto), `layout.css`, `components.css`.
+- `_legado/` — versión anterior (js/tabs, main.js, navigation.js, styles.css,
+  anti.html). No se carga; se conserva solo como referencia.
 
-### Core Navigation System
+## Grupos y secciones
 
-The application uses a **tab-based registration pattern** with centralized navigation:
+| Grupo | Archivo | Secciones |
+|---|---|---|
+| automatizacion | `11b-automatizacion.js` (+ `11a-scripts-embebidos.js`, generado) | auto-scripts (pestañas: comprimir y mover, comprimir-verificar-borrar, limpieza, programar) |
+| datos (Datos y Python) | `09b-datos.js` | datos-base, datos-python, datos-conda, datos-jupyter, datos-problemas |
+| rescate | `10-rescate.js` | resc-triage, resc-grub, resc-sistema, resc-paquetes, resc-timeshift, resc-datos |
+| ia | `12-ia-clis.js` | ia-clis (requisitos), ia-claude, ia-codex, ia-gemini, ia-antigravity, ia-kimi |
+| ia | `12b-ia-local.js`, `13-agentes.js` | ia-ollama, ia-dsh, ag-harness, ag-kit |
+| instalar (Instalar software) | `09d-instalar.js` | inst-python, inst-manim, inst-latex, inst-r, inst-r-datos, inst-apps, inst-conda (constructores pyver y rpaq, también en la pestaña «Instalar» del hub) |
+| capacitacion | `13b-capacitacion.js` | cap-eafit (pestañas OpenCode, Jupyter y Materiales; archivos en `descargas/capacitacion-eafit-2026/`) |
 
-- **`js/core/navigation.js`** - Central navigation engine that manages:
-  - Tab registration system (registerTab)
-  - Section switching and visibility
-  - Search/filtering functionality
-  - Accordion interactions
-  - Copy-to-clipboard for code snippets
-  - Mobile menu responsiveness
+## Añadir contenido
 
-- **`js/main.js`** - Bootstrap loader that:
-  - Dynamically loads all tab modules in parallel
-  - Calls `LinuxApp.bootNavigation()` after all tabs are loaded
+1. Registra la sección en un archivo de `js/data/` (`id`, `group`, `title`,
+   `level`, `tags`, `lead`, `blocks`).
+2. Si el archivo es nuevo, añade su `<script>` en `index.html` antes de
+   `js/core/app.js`.
+3. Menú, índice lateral y buscador se generan solos.
 
-- **Global API** - `window.LinuxApp` exposes:
-  - `registerTab(sectionId)` - Register a new section
-  - `bootNavigation()` - Initialize navigation system
-  - `showSection(sectionId)` - Switch to a specific section
+Tipos de bloque: `h2`, `h3`, `prose`, `cmd`, `command`, `callout`
+(`info|tip|warn|danger`), `table`, `steps`, `accordion`, `grid`, `tiles`,
+`ascii`, `keys`, `downloads` (con `open: true` se abre en pestaña nueva), `script` (visor de un .sh embebido), `chmodcalc` (calculadora de permisos), `builder` (constructor de comandos), `tabs`, `sos`, `asciitable`, `asciitool`, `simbolos`.
 
-### Content Structure
+### Pestañas (`tabs`)
 
-**HTML-based content:**
-- `index.html` - Main application (2700+ lines) containing:
-  - Navigation sidebar with hierarchical menu
-  - All educational content sections embedded in `<section id="...">` elements
-  - Each section contains formatted command examples, explanations, and code boxes
+```js
+{ type: 'tabs', id: 'grub-tabs', title: 'Escenarios', items: [
+  { id: 'grub-uefi', n: '3', t: 'Reinstalar (UEFI)', badge: 'USB en vivo',
+    badgeVariant: 'warn', lead: 'HTML opcional', blocks: [ /* bloques */ ] }
+]}
+```
 
-**Tab modules** (`js/tabs/*.js`):
-- Each file is minimal (typically 5 lines) and only registers its corresponding section
-- Pattern: `window.LinuxApp.registerTab('section-id')`
-- Examples: `intro-linux.js`, `fs-nav.js`, `admin-sys.js`, etc.
+Cada pestaña con `id` aparece en el índice lateral, en el buscador y se puede
+enlazar: `#resc-grub/grub-uefi` abre la sección con esa pestaña activa. Los
+`id` deben ser únicos dentro de la sección.
 
-**Sections are organized by topic:**
-1. Introducción (intro-linux, intro-distros)
-2. Sistema de Archivos (fs-hierarchy, fs-nav, fs-manip, fs-advanced)
-3. Power User (term-shell, term-pipes, term-scripting)
-4. Admin Avanzada (admin-perms, admin-sys, admin-net)
-5. Emergencia (rescue-grub, rescue-disk)
-6. Personalización (custom-icons)
-7. Mantenimiento (sys-debug, pkg-uninstall)
-8. Software y Tools (devtools, manim, uv-python, complementos-instalacion, configuracion-ia-cli)
-9. Ciencia de Datos (datascience, anaconda)
-10. Expansión de Comandos (essentials, text-files, sys-mgmt)
-11. Hardware (config-hardware)
+### Líneas de los bloques `cmd`
 
-### Styling
+| Prefijo | Se muestra | Al copiar |
+|---|---|---|
+| `$ cmd` | prompt de usuario | `cmd` |
+| `!root cmd` | prompt `#` | `sudo cmd` |
+| `chroot> cmd` | `(chroot)#` | `cmd` |
+| `grub> ` / `grub rescue> ` / `(initramfs) ` | ese prompt | `cmd` |
+| `PS> cmd` | PowerShell | `cmd` |
+| `# texto` | comentario | se copia |
+| `\| salida` | salida | **se excluye** |
 
-- **`css/styles.css`** - Single stylesheet with:
-  - CSS custom properties for theming (dark slate palette)
-  - Responsive sidebar (280px on desktop, collapsible on mobile)
-  - Semantic color coding for different command types (file operations, terminal, system, network, warnings)
-  - Command box styling with syntax highlighting classes
+No escribas prompts como `(.venv) $`: se tratarían como salida.
 
-## Adding New Content Sections
+## Convenciones
 
-To add a new educational section:
+- Comandos realistas para Ubuntu 22.04/24.04, comentados en español.
+- En operaciones destructivas: aviso `danger` con la alternativa segura.
+- Comandos de instalación de herramientas externas (CLIs de IA, uv, conda):
+  verificar contra la documentación oficial antes de cambiarlos; cambian a menudo.
+- Enlaces internos con `href="#seccion/ancla"`.
 
-1. **Add navigation link** in `index.html` sidebar:
-   ```html
-   <a class="nav-link nav-item" data-section="new-section-id"
-      data-tags="searchable keywords here">
-       Display Name
-   </a>
-   ```
+## Constructores de comandos (`builder`)
 
-2. **Create section content** in `index.html` main area:
-   ```html
-   <section id="new-section-id" class="section">
-       <h1>Section Title</h1>
-       <!-- Content here -->
-   </section>
-   ```
+Definidos todos en `js/data/95-constructores.js` (se carga después del
+contenido): cada uno se inserta junto a la explicación de su comando con
+`insertar({sec|tab, antes|despues|inicio}, bloque)` y se reúnen en la sección
+`constructores`. Campos: `text`, `select`, `check` con `flag`, `pos`, `at`
+(`pre|start|end`), `help` (`{v}` = valor), `warn`; `combine:true` agrupa
+opciones cortas (`-czv`); `build(v, citar)` para comandos de varias líneas y
+`avisos(v)` para advertencias que dependen de la combinación. Prueba: pulsar
+todos los casos típicos y pasar cada comando por `bash -n`.
 
-3. **Register the tab** - Create `js/tabs/new-section-id.js`:
-   ```javascript
-   (function() {
-     if (window.LinuxApp && window.LinuxApp.registerTab) {
-       window.LinuxApp.registerTab('new-section-id');
-     }
-   })();
-   ```
+## Scripts de automatización
 
-4. **Load the tab script** - Add to `js/main.js` in the `tabScripts` array:
-   ```javascript
-   'js/tabs/new-section-id.js',
-   ```
+Los `.sh` viven en `descargas/automatizacion/`. El bloque `script` los muestra
+desde `window.ScriptsEmbebidos` (Chrome no permite `fetch` con `file://`).
+**Tras modificar cualquier `.sh` ejecuta:** `python3 herramientas/embeber_scripts.py`.
 
-## Code Conventions
+## Comprobaciones tras editar
 
-- **Command box structure** - Use this HTML pattern for displaying Linux commands:
-  ```html
-  <div class="cmd-box">
-      <div class="cmd-header">Command Category</div>
-      <div class="cmd-content">
-          <span class="hl-prompt">$</span>
-          <span class="hl-cmd">command</span>
-          <span class="hl-opt">--option</span>
-          <span class="hl-arg">argument</span><br>
-          <span class="hl-comment"># Explanation in Spanish</span>
-      </div>
-  </div>
-  ```
+```bash
+for f in js/core/*.js js/data/*.js; do node --check "$f"; done
+```
 
-- **CSS classes for syntax highlighting:**
-  - `.hl-prompt` - Shell prompt ($, #)
-  - `.hl-cmd` - Command name
-  - `.hl-opt` - Options/flags
-  - `.hl-arg` - Arguments
-  - `.hl-comment` - Comments
-
-- **All content is in Spanish** - Maintain consistent Spanish language throughout
-
-## Special Files
-
-- **`anti.html`** - Appears to be an unrelated "Google Antigravity" demo page (not part of main app)
-- **`anti-main.js`** - Large JavaScript file (1.6MB) associated with anti.html
-- **`uv.html`** - Empty placeholder file
-
-## Search Functionality
-
-The sidebar search box filters navigation items by:
-- Text content of the navigation link
-- `data-tags` attribute values (keywords for discoverability)
-
-When adding sections, include relevant `data-tags` for better searchability.
-
-## Mobile Responsiveness
-
-- Sidebar collapses on screens ≤ 768px
-- Mobile menu toggle button (☰) controls sidebar visibility
-- Sidebar automatically closes when selecting a section on mobile
-- Smooth scroll-to-top behavior on section changes
-
-## Command Coverage
-
-The application covers 40+ essential Linux commands organized by functionality. Based on industry-standard guides (Hostinger, etc.), key command categories include:
-
-### Text Processing & Files (section: text-files)
-- **Reading**: `cat`, `head`, `tail`, `less`
-- **Searching**: `grep` (with -i, -r, -n, -c, -v options)
-- **Processing**: `wc`, `sort`, `diff`
-- **Advanced**: `awk` (column processing), `sed` (stream editing)
-- **Archiving**: `tar`, `zip`, `unzip`
-
-### File Search (section: fs-advanced)
-- **Real-time search**: `find` (by name, size, type, modification time, with -exec)
-- **Indexed search**: `locate` (with `updatedb`)
-
-### System Administration (section: admin-sys)
-- **Process monitoring**: `ps`, `top`, `htop`
-- **Process management**: `kill`, `pkill`, `killall`, `pgrep`
-- **Services**: `systemctl` (start, stop, enable, restart, status)
-- **Logs**: `journalctl`
-- **Hardware info**: `lsblk`, `lscpu`, `free`, `uname`
-
-### System Utilities (section: sys-mgmt)
-- **Output**: `echo`
-- **Documentation**: `man`, `--help`
-- **Monitoring**: `watch`
-- **File identification**: `file`
-- **Command location**: `which`, `whereis`
-
-### Permissions & Ownership (section: admin-perms)
-- `chmod` (octal notation)
-- `chown`
-- `sudo`
-- SUID, SGID, Sticky Bit
-
-### Network & Connectivity (section: admin-net)
-- **Diagnostics**: `ip`, `ping`, `traceroute`
-- **Transfer**: `curl`, `wget`, `scp`
-- **Remote access**: `ssh`
-- **Ports**: `ss`, `netstat`
-
-### Package Management & Cleanup (section: pkg-uninstall)
-- **Basic uninstall**: `apt remove`, `apt purge`
-- **Dependency cleanup**: `apt autoremove`, `apt autoremove --purge`
-- **Cache management**: `apt clean`, `apt autoclean`
-- **Low-level management**: `dpkg -r`, `dpkg -P`, `dpkg -l`
-- **Configuration cleanup**: Finding and purging residual configs
-- **Alternative formats**: `snap remove`, `flatpak uninstall`
-- **Repository management**: PPA removal
-- **Advanced**: Kernel cleanup, force removal
-- **Complete cleanup workflow**: Monthly maintenance routine
-
-## Content Enhancement Notes
-
-When improving command examples:
-- Include practical use cases relevant to Ubuntu users
-- Show both basic and advanced options
-- Use realistic file/directory names
-- Add inline comments in Spanish explaining each option
-- Group related commands logically (e.g., all grep options together)
+Y abrir la app: sin errores en consola, sin scroll horizontal a 360 px.

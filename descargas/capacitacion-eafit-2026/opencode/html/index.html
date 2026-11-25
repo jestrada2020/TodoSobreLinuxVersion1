@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Elaboración práctica para usuarios de Linux" />
+  <meta name="dcterms.date" content="2026-06-19" />
+  <title>GUIA OPENCODE</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="container">
+<header id="title-block-header">
+<h1 class="title">GUIA OPENCODE</h1>
+<p class="author">Elaboración práctica para usuarios de Linux</p>
+<p class="date">2026-06-19</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introducción-a-opencode"
+id="toc-introducción-a-opencode">Introducción a OpenCode</a>
+<ul>
+<li><a href="#qué-es-opencode" id="toc-qué-es-opencode">¿Qué es
+OpenCode?</a></li>
+<li><a href="#requisitos-previos" id="toc-requisitos-previos">Requisitos
+previos</a></li>
+</ul></li>
+<li><a href="#instalación-y-actualización"
+id="toc-instalación-y-actualización">Instalación y actualización</a>
+<ul>
+<li><a href="#instalación-en-linux-y-macos"
+id="toc-instalación-en-linux-y-macos">Instalación en Linux y
+macOS</a></li>
+<li><a href="#instalación-en-windows"
+id="toc-instalación-en-windows">Instalación en Windows</a></li>
+<li><a href="#verificar-la-instalación"
+id="toc-verificar-la-instalación">Verificar la instalación</a></li>
+<li><a href="#actualizar-opencode"
+id="toc-actualizar-opencode">Actualizar OpenCode</a></li>
+<li><a href="#desinstalación"
+id="toc-desinstalación">Desinstalación</a></li>
+</ul></li>
+<li><a href="#primeros-pasos" id="toc-primeros-pasos">Primeros pasos</a>
+<ul>
+<li><a href="#iniciar-la-interfaz-interactiva"
+id="toc-iniciar-la-interfaz-interactiva">Iniciar la interfaz
+interactiva</a></li>
+<li><a href="#ejecutar-un-mensaje-directo"
+id="toc-ejecutar-un-mensaje-directo">Ejecutar un mensaje
+directo</a></li>
+<li><a href="#estructura-de-comandos"
+id="toc-estructura-de-comandos">Estructura de comandos</a></li>
+</ul></li>
+<li><a href="#comandos-principales"
+id="toc-comandos-principales">Comandos principales</a>
+<ul>
+<li><a href="#tabla-resumen-de-comandos"
+id="toc-tabla-resumen-de-comandos">Tabla resumen de comandos</a></li>
+<li><a href="#autocompletado"
+id="toc-autocompletado">Autocompletado</a></li>
+</ul></li>
+<li><a href="#configuración-de-proveedores"
+id="toc-configuración-de-proveedores">Configuración de proveedores</a>
+<ul>
+<li><a href="#listar-proveedores" id="toc-listar-proveedores">Listar
+proveedores</a></li>
+<li><a href="#añadir-una-api-key" id="toc-añadir-una-api-key">Añadir una
+API key</a></li>
+<li><a href="#listar-modelos-disponibles"
+id="toc-listar-modelos-disponibles">Listar modelos disponibles</a></li>
+</ul></li>
+<li><a href="#uso-práctico-con-ejemplos"
+id="toc-uso-práctico-con-ejemplos">Uso práctico con ejemplos</a>
+<ul>
+<li><a href="#explicar-código" id="toc-explicar-código">Explicar
+código</a></li>
+<li><a href="#generar-código" id="toc-generar-código">Generar
+código</a></li>
+<li><a href="#refactorizar" id="toc-refactorizar">Refactorizar</a></li>
+<li><a href="#resumir-archivos" id="toc-resumir-archivos">Resumir
+archivos</a></li>
+<li><a href="#análisis-de-diferencias"
+id="toc-análisis-de-diferencias">Análisis de diferencias</a></li>
+<li><a href="#generar-tests" id="toc-generar-tests">Generar
+tests</a></li>
+</ul></li>
+<li><a href="#gestión-de-sesiones-y-proyectos"
+id="toc-gestión-de-sesiones-y-proyectos">Gestión de sesiones y
+proyectos</a>
+<ul>
+<li><a href="#sesiones" id="toc-sesiones">Sesiones</a></li>
+<li><a href="#proyectos" id="toc-proyectos">Proyectos</a></li>
+</ul></li>
+<li><a href="#servidores-e-integraciones"
+id="toc-servidores-e-integraciones">Servidores e integraciones</a>
+<ul>
+<li><a href="#servidor-acp" id="toc-servidor-acp">Servidor ACP</a></li>
+<li><a href="#servidores-mcp" id="toc-servidores-mcp">Servidores
+MCP</a></li>
+<li><a href="#modo-web" id="toc-modo-web">Modo web</a></li>
+</ul></li>
+<li><a href="#agentes" id="toc-agentes">Agentes</a>
+<ul>
+<li><a href="#qué-son-los-agentes" id="toc-qué-son-los-agentes">¿Qué son
+los agentes?</a></li>
+<li><a href="#gestión-de-agentes" id="toc-gestión-de-agentes">Gestión de
+agentes</a></li>
+<li><a href="#buenas-prácticas-con-agentes"
+id="toc-buenas-prácticas-con-agentes">Buenas prácticas con
+agentes</a></li>
+</ul></li>
+<li><a href="#skills" id="toc-skills">Skills</a>
+<ul>
+<li><a href="#qué-son-los-skills" id="toc-qué-son-los-skills">¿Qué son
+los skills?</a></li>
+<li><a href="#instalación-de-skillsplugins"
+id="toc-instalación-de-skillsplugins">Instalación de
+skills/plugins</a></li>
+<li><a href="#skills-personalizados"
+id="toc-skills-personalizados">Skills personalizados</a></li>
+<li><a href="#gestión-de-skills" id="toc-gestión-de-skills">Gestión de
+skills</a></li>
+</ul></li>
+<li><a href="#artefactos" id="toc-artefactos">Artefactos</a>
+<ul>
+<li><a href="#qué-son-los-artefactos"
+id="toc-qué-son-los-artefactos">¿Qué son los artefactos?</a></li>
+<li><a href="#generar-artefactos" id="toc-generar-artefactos">Generar
+artefactos</a></li>
+<li><a href="#aplicar-artefactos-al-proyecto"
+id="toc-aplicar-artefactos-al-proyecto">Aplicar artefactos al
+proyecto</a></li>
+<li><a href="#exportar-e-importar-artefactos"
+id="toc-exportar-e-importar-artefactos">Exportar e importar
+artefactos</a></li>
+</ul></li>
+<li><a href="#consejos-avanzados" id="toc-consejos-avanzados">Consejos
+avanzados</a>
+<ul>
+<li><a href="#uso-en-pipelines" id="toc-uso-en-pipelines">Uso en
+pipelines</a></li>
+<li><a href="#automatización-con-alias"
+id="toc-automatización-con-alias">Automatización con alias</a></li>
+<li><a href="#depuración" id="toc-depuración">Depuración</a></li>
+<li><a href="#estadísticas-de-uso"
+id="toc-estadísticas-de-uso">Estadísticas de uso</a></li>
+</ul></li>
+<li><a href="#solución-de-problemas"
+id="toc-solución-de-problemas">Solución de problemas</a>
+<ul>
+<li><a href="#opencode-no-se-encuentra"
+id="toc-opencode-no-se-encuentra">OpenCode no se encuentra</a></li>
+<li><a href="#error-de-autenticación"
+id="toc-error-de-autenticación">Error de autenticación</a></li>
+<li><a href="#la-tui-no-responde" id="toc-la-tui-no-responde">La TUI no
+responde</a></li>
+<li><a href="#problemas-de-red" id="toc-problemas-de-red">Problemas de
+red</a></li>
+</ul></li>
+<li><a href="#ejercicios-prácticos"
+id="toc-ejercicios-prácticos">Ejercicios prácticos</a>
+<ul>
+<li><a href="#ejercicio-1-primer-contacto"
+id="toc-ejercicio-1-primer-contacto">Ejercicio 1: Primer
+contacto</a></li>
+<li><a href="#ejercicio-2-explicar-código"
+id="toc-ejercicio-2-explicar-código">Ejercicio 2: Explicar
+código</a></li>
+<li><a href="#ejercicio-3-refactorización"
+id="toc-ejercicio-3-refactorización">Ejercicio 3:
+Refactorización</a></li>
+<li><a href="#ejercicio-4-generar-documentación"
+id="toc-ejercicio-4-generar-documentación">Ejercicio 4: Generar
+documentación</a></li>
+<li><a href="#ejercicio-5-crear-un-agente-personalizado"
+id="toc-ejercicio-5-crear-un-agente-personalizado">Ejercicio 5: Crear un
+agente personalizado</a></li>
+<li><a href="#ejercicio-6-pipeline-con-git"
+id="toc-ejercicio-6-pipeline-con-git">Ejercicio 6: Pipeline con
+git</a></li>
+<li><a href="#ejercicio-7-instalar-un-skillplugin"
+id="toc-ejercicio-7-instalar-un-skillplugin">Ejercicio 7: Instalar un
+skill/plugin</a></li>
+</ul></li>
+<li><a href="#plantillas-de-agentes"
+id="toc-plantillas-de-agentes">Plantillas de agentes</a>
+<ul>
+<li><a href="#code-reviewer" id="toc-code-reviewer">Code
+Reviewer</a></li>
+<li><a href="#technical-writer" id="toc-technical-writer">Technical
+Writer</a></li>
+<li><a href="#devops-assistant" id="toc-devops-assistant">DevOps
+Assistant</a></li>
+<li><a href="#python-expert" id="toc-python-expert">Python
+Expert</a></li>
+<li><a href="#frontend-developer" id="toc-frontend-developer">Frontend
+Developer</a></li>
+<li><a href="#como-importar-una-plantilla"
+id="toc-como-importar-una-plantilla">Como importar una
+plantilla</a></li>
+</ul></li>
+<li><a href="#glosario-de-términos"
+id="toc-glosario-de-términos">Glosario de términos</a></li>
+<li><a href="#recursos-adicionales"
+id="toc-recursos-adicionales">Recursos adicionales</a>
+<ul>
+<li><a href="#documentación-oficial"
+id="toc-documentación-oficial">Documentación oficial</a></li>
+<li><a href="#comunidad-y-soporte"
+id="toc-comunidad-y-soporte">Comunidad y soporte</a></li>
+<li><a href="#herramientas-complementarias"
+id="toc-herramientas-complementarias">Herramientas
+complementarias</a></li>
+<li><a href="#tutoriales-recomendados"
+id="toc-tutoriales-recomendados">Tutoriales recomendados</a></li>
+<li><a href="#lecturas-adicionales"
+id="toc-lecturas-adicionales">Lecturas adicionales</a></li>
+</ul></li>
+<li><a href="#referencia-rápida" id="toc-referencia-rápida">Referencia
+rápida</a>
+<ul>
+<li><a href="#comandos-imprescindibles"
+id="toc-comandos-imprescindibles">Comandos imprescindibles</a></li>
+</ul></li>
+</ul>
+</nav>
+<p><strong>GUIA OPENCODE</strong><br />
+Manual práctico, completo y robusto<br />
+Desde la instalación hasta flujos de trabajo avanzados<br />
+</p>
+<hr />
+<p>Versión del documento: 1.0<br />
+Fecha: 2026-06-19<br />
+Sistema: Linux (Ubuntu/Debian y derivadas)</p>
+<h1 id="introducción-a-opencode">Introducción a OpenCode</h1>
+<h2 id="qué-es-opencode">¿Qué es OpenCode?</h2>
+<p>OpenCode es una herramienta de interfaz de línea de comandos (CLI)
+diseñada para interactuar con modelos de inteligencia artificial
+directamente desde la terminal. Permite:</p>
+<ul>
+<li><p>Conversar con modelos de lenguaje en una interfaz de terminal
+(TUI).</p></li>
+<li><p>Ejecutar tareas mediante comandos directos (modo no
+interactivo).</p></li>
+<li><p>Gestionar múltiples proveedores de IA y credenciales.</p></li>
+<li><p>Trabajar con sesiones, proyectos, plugins y servidores
+MCP.</p></li>
+<li><p>Exportar e importar conversaciones.</p></li>
+</ul>
+<blockquote>
+<p><strong>💡 Nota:</strong> OpenCode integra la potencia de los LLM en
+el flujo de trabajo del desarrollador sin salir de la terminal ni
+depender de un navegador.</p>
+</blockquote>
+<h2 id="requisitos-previos">Requisitos previos</h2>
+<p>Antes de instalar OpenCode se recomienda contar con:</p>
+<ol type="1">
+<li><p>Un sistema Linux actualizado.</p></li>
+<li><p>Conexión a Internet.</p></li>
+<li><p>Permisos para ejecutar scripts en el directorio del
+usuario.</p></li>
+<li><p>Una clave API de algún proveedor compatible (OpenAI, Anthropic,
+Google, etc.).</p></li>
+</ol>
+<h1 id="instalación-y-actualización">Instalación y actualización</h1>
+<h2 id="instalación-en-linux-y-macos">Instalación en Linux y macOS</h2>
+<p>El método más rápido en sistemas Unix es ejecutar el script
+oficial:</p>
+<pre><code># Instalación con curl
+curl -fsSL https://opencode.ai/install.sh | sh</code></pre>
+<p>El instalador descarga el binario y lo coloca en
+<code>~/.opencode/bin</code>, añadiéndolo automáticamente al
+<code>PATH</code> en los archivos de inicio del shell.</p>
+<h3 id="distribuciones-linux">Distribuciones Linux</h3>
+<h4 id="ubuntu-debian">Ubuntu / Debian</h4>
+<pre><code># Instalación en Ubuntu/Debian
+sudo apt update &amp;&amp; sudo apt install -y curl
+
+curl -fsSL https://opencode.ai/install.sh | sh
+
+# Recarga el PATH o abre una nueva terminal
+source ~/.bashrc
+opencode --version</code></pre>
+<h4 id="fedora-rhel-centos-almalinux">Fedora / RHEL / CentOS /
+AlmaLinux</h4>
+<pre><code># Instalación en Fedora/RHEL
+sudo dnf install -y curl
+
+curl -fsSL https://opencode.ai/install.sh | sh
+
+source ~/.bashrc
+opencode --version</code></pre>
+<h4 id="arch-linux-manjaro">Arch Linux / Manjaro</h4>
+<pre><code># Instalación en Arch Linux
+sudo pacman -S curl
+
+curl -fsSL https://opencode.ai/install.sh | sh
+
+source ~/.bashrc
+opencode --version</code></pre>
+<h4 id="opensuse">openSUSE</h4>
+<pre><code># Instalación en openSUSE
+sudo zypper install -y curl
+
+curl -fsSL https://opencode.ai/install.sh | sh
+
+source ~/.bashrc
+opencode --version</code></pre>
+<h3 id="macos">macOS</h3>
+<p>En macOS solo necesitas <code>curl</code>. El instalador detecta
+tanto Intel como Apple Silicon:</p>
+<pre><code># Instalación en macOS
+curl -fsSL https://opencode.ai/install.sh | sh</code></pre>
+<pre><code># Verificar PATH en macOS
+echo $PATH | grep opencode
+opencode --version</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Si prefieres, puedes gestionar el binario
+manualmente descargándolo desde la web oficial y colocándolo en
+<code>~/.opencode/bin</code> o en cualquier directorio de tu
+<code>PATH</code>.</p>
+</blockquote>
+<h2 id="instalación-en-windows">Instalación en Windows</h2>
+<p>OpenCode se puede instalar en Windows de dos formas principales.</p>
+<h3 id="powershell">PowerShell</h3>
+<pre><code># Instalación con PowerShell
+irm https://opencode.ai/install.ps1 | iex</code></pre>
+<p>Tras la instalación, cierra y vuelve a abrir PowerShell para que el
+<code>PATH</code> actualizado esté disponible.</p>
+<pre><code># Verificar instalación en PowerShell
+$env:PATH -split &quot;;&quot; | Select-String opencode
+opencode --version</code></pre>
+<h3 id="windows-subsystem-for-linux-wsl">Windows Subsystem for Linux
+(WSL)</h3>
+<p>Si usas WSL, sigue las instrucciones de Linux:</p>
+<pre><code># Instalación en WSL
+curl -fsSL https://opencode.ai/install.sh | sh</code></pre>
+<blockquote>
+<p><strong>💡 Nota:</strong> WSL ofrece la mejor experiencia si ya
+trabajas con herramientas de desarrollo en entornos Unix y quieres
+aprovechar scripts, pipes y alias de shell.</p>
+</blockquote>
+<h2 id="verificar-la-instalación">Verificar la instalación</h2>
+<pre><code># Comprobación de la instalación
+which opencode
+opencode --version
+opencode --help</code></pre>
+<h2 id="actualizar-opencode">Actualizar OpenCode</h2>
+<pre><code># Actualizar a la última versión
+opencode upgrade</code></pre>
+<p>Para una versión específica:</p>
+<pre><code># Actualizar a una versión concreta
+opencode upgrade 1.17.8</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> La actualización sobrescribe el
+binario actual. Si tienes una configuración personalizada, ésta se
+conserva porque reside en <code>~/.opencode</code>.</p>
+</blockquote>
+<h2 id="desinstalación">Desinstalación</h2>
+<pre><code># Eliminar OpenCode del sistema
+opencode uninstall</code></pre>
+<h1 id="primeros-pasos">Primeros pasos</h1>
+<h2 id="iniciar-la-interfaz-interactiva">Iniciar la interfaz
+interactiva</h2>
+<p>El comando por defecto abre la interfaz TUI:</p>
+<pre><code># Modo interactivo
+opencode</code></pre>
+<p>Desde allí puedes escribir mensajes, revisar respuestas y ejecutar
+acciones con atajos de teclado.</p>
+<h2 id="ejecutar-un-mensaje-directo">Ejecutar un mensaje directo</h2>
+<pre><code># Modo no interactivo
+opencode run &quot;Explica la diferencia entre bash y zsh&quot;</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> El modo <code>run</code> permite encadenar
+OpenCode en <code>scripts</code>, <code>makefiles</code> y
+<code>CI/CD</code>.</p>
+</blockquote>
+<h2 id="estructura-de-comandos">Estructura de comandos</h2>
+<p>La sintaxis general es:</p>
+<pre><code># Sintaxis general
+opencode [comando] [subcomando] [opciones] [argumentos]</code></pre>
+<p>Ejemplos:</p>
+<pre><code># Ejemplos de sintaxis
+opencode providers list
+opencode models openai
+opencode session list</code></pre>
+<figure id="fig:flujo">
+<figcaption>
+Flujo basico de interaccion con OpenCode
+</figcaption>
+</figure>
+<h1 id="comandos-principales">Comandos principales</h1>
+<h2 id="tabla-resumen-de-comandos">Tabla resumen de comandos</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Comando</strong></th>
+<th style="text-align: left;"><strong>Alias</strong></th>
+<th style="text-align: left;"><strong>Descripción</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>completion</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Genera script de autocompletado.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>acp</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Inicia servidor ACP.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>mcp</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Gestiona servidores MCP.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[project]</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Inicia la TUI en una ruta.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>attach</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Se conecta a un servidor en
+ejecución.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>run</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Ejecuta un mensaje sin interacción.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>debug</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Herramientas de depuración.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>providers</code></td>
+<td style="text-align: left;"><code>auth</code></td>
+<td style="text-align: left;">Gestiona proveedores y credenciales.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>agent</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Gestiona agentes.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>upgrade</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Actualiza OpenCode.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>uninstall</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Desinstala OpenCode.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>serve</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Inicia servidor sin cabeza.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>web</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Inicia servidor y abre interfaz web.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>models</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Lista modelos disponibles.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>stats</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Muestra uso y costes.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>export</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Exporta sesión a JSON.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>import</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Importa sesión desde JSON.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>github</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Gestiona agente GitHub.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pr</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Descarga y revisa un PR.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>session</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Gestiona sesiones.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>plugin</code></td>
+<td style="text-align: left;"><code>plug</code></td>
+<td style="text-align: left;">Instala plugins.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>db</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Herramientas de base de datos.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="autocompletado">Autocompletado</h2>
+<p>Genera el script de autocompletado para tu shell:</p>
+<pre><code># Autocompletado para bash
+opencode completion bash &gt;&gt; ~/.bashrc
+source ~/.bashrc</code></pre>
+<pre><code># Autocompletado para zsh
+opencode completion zsh &gt;&gt; ~/.zshrc
+source ~/.zshrc</code></pre>
+<pre><code># Autocompletado para fish
+opencode completion fish &gt; ~/.config/fish/completions/opencode.fish</code></pre>
+<h1 id="configuración-de-proveedores">Configuración de proveedores</h1>
+<h2 id="listar-proveedores">Listar proveedores</h2>
+<pre><code># Proveedores configurados
+opencode providers list</code></pre>
+<h2 id="añadir-una-api-key">Añadir una API key</h2>
+<pre><code># Configurar OpenAI
+opencode providers set openai --key TU_API_KEY</code></pre>
+<pre><code># Configurar Anthropic
+opencode providers set anthropic --key TU_API_KEY</code></pre>
+<pre><code># Configurar Google
+opencode providers set google --key TU_API_KEY</code></pre>
+<h2 id="listar-modelos-disponibles">Listar modelos disponibles</h2>
+<pre><code># Modelos de un proveedor
+opencode models openai
+opencode models anthropic
+opencode models google</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Usa <code>opencode models</code> para
+conocer los modelos disponibles con tu plan y seleccionar el más
+adecuado según coste y capacidad.</p>
+</blockquote>
+<h1 id="uso-práctico-con-ejemplos">Uso práctico con ejemplos</h1>
+<h2 id="explicar-código">Explicar código</h2>
+<pre><code># Pedir explicación de un script
+opencode run &quot;Explica este script de Python&quot; &lt; script.py</code></pre>
+<h2 id="generar-código">Generar código</h2>
+<pre><code># Generar una función en Python
+opencode run &quot;Crea una funcion en Python que calcule el factorial de un numero usando recursividad&quot;</code></pre>
+<h2 id="refactorizar">Refactorizar</h2>
+<pre><code># Refactorizar código
+opencode run &quot;Refactoriza este codigo para que sea mas legible&quot; &lt; main.py</code></pre>
+<h2 id="resumir-archivos">Resumir archivos</h2>
+<pre><code># Resumen de un documento
+opencode run &quot;Resume los puntos principales de este archivo&quot; &lt; informe.txt</code></pre>
+<h2 id="análisis-de-diferencias">Análisis de diferencias</h2>
+<pre><code># Comparar dos archivos
+diff -u archivo1.txt archivo2.txt | opencode run &quot;Explica las diferencias entre estos archivos&quot;</code></pre>
+<h2 id="generar-tests">Generar tests</h2>
+<pre><code># Crear pruebas unitarias
+opencode run &quot;Genera pruebas unitarias con pytest para este modulo&quot; &lt; utils.py</code></pre>
+<h1 id="gestión-de-sesiones-y-proyectos">Gestión de sesiones y
+proyectos</h1>
+<h2 id="sesiones">Sesiones</h2>
+<p>Las sesiones guardan el historial de conversación.</p>
+<pre><code># Listar sesiones
+opencode session list</code></pre>
+<pre><code># Exportar una sesion
+opencode export ID_DE_SESION &gt; sesion.json</code></pre>
+<pre><code># Importar una sesion
+opencode import sesion.json</code></pre>
+<h2 id="proyectos">Proyectos</h2>
+<p>Puedes iniciar OpenCode apuntando a una carpeta específica:</p>
+<pre><code># Iniciar en un proyecto
+opencode /ruta/al/proyecto</code></pre>
+<p>Esto permite que OpenCode tenga contexto sobre los archivos del
+proyecto.</p>
+<h1 id="servidores-e-integraciones">Servidores e integraciones</h1>
+<h2 id="servidor-acp">Servidor ACP</h2>
+<pre><code># Iniciar servidor ACP
+opencode acp</code></pre>
+<h2 id="servidores-mcp">Servidores MCP</h2>
+<pre><code># Gestionar servidores MCP
+opencode mcp list
+opencode mcp add nombre-del-servidor comando
+opencode mcp remove nombre-del-servidor</code></pre>
+<h2 id="modo-web">Modo web</h2>
+<pre><code># Abrir interfaz web
+opencode web</code></pre>
+<pre><code># Servidor headless
+opencode serve --port 8080 --hostname 127.0.0.1</code></pre>
+<h1 id="agentes">Agentes</h1>
+<h2 id="qué-son-los-agentes">¿Qué son los agentes?</h2>
+<p>En OpenCode, un agente es una configuración especializada que define
+el comportamiento, el modelo, las herramientas y el contexto del
+asistente. Los agentes permiten adaptar OpenCode a tareas específicas
+como programación, revisión de código, escritura técnica o análisis de
+datos.</p>
+<p>Cada agente puede tener:</p>
+<ul>
+<li><p><strong>Nombre</strong>: identificador único del agente.</p></li>
+<li><p><strong>Modelo</strong>: proveedor y modelo de IA a
+utilizar.</p></li>
+<li><p><strong>Instrucciones</strong>: comportamiento esperado y
+personalidad.</p></li>
+<li><p><strong>Herramientas</strong>: servidores MCP, plugins y skills
+habilitados.</p></li>
+<li><p><strong>Contexto</strong>: proyectos o archivos
+asociados.</p></li>
+</ul>
+<h2 id="gestión-de-agentes">Gestión de agentes</h2>
+<figure id="fig:agente">
+<figcaption>
+Componentes de un agente en OpenCode
+</figcaption>
+</figure>
+<pre><code># Listar agentes disponibles
+opencode agent list</code></pre>
+<pre><code># Crear un nuevo agente
+opencode agent create</code></pre>
+<p>El comando interactivo te pedirá el nombre, el modelo y las
+instrucciones del sistema.</p>
+<pre><code># Iniciar OpenCode con un agente
+opencode --agent nombre-del-agente</code></pre>
+<pre><code># Ejecutar un mensaje con un agente
+opencode run --agent nombre-del-agente &quot;Refactoriza este modulo&quot;</code></pre>
+<h2 id="buenas-prácticas-con-agentes">Buenas prácticas con agentes</h2>
+<ul>
+<li><p>Crea un agente por rol: <code>reviewer</code>,
+<code>tester</code>, <code>writer</code>, <code>devops</code>.</p></li>
+<li><p>Mantén las instrucciones del sistema concisas y
+específicas.</p></li>
+<li><p>Asocia cada agente al modelo más rentable para su tarea.</p></li>
+<li><p>Revisa y actualiza los agentes periódicamente.</p></li>
+</ul>
+<blockquote>
+<p><strong>✅ Tip:</strong> Si trabajas en equipo, versiona tus agentes
+exportando la configuración de <code>~/.opencode</code> en un
+repositorio compartido.</p>
+</blockquote>
+<h1 id="skills">Skills</h1>
+<h2 id="qué-son-los-skills">¿Qué son los skills?</h2>
+<p>Los <em>skills</em> son capacidades modulares que extienden lo que
+OpenCode puede hacer. Un skill puede ser un conjunto de instrucciones,
+una integración con una herramienta externa o un flujo de trabajo
+reutilizable.</p>
+<p>OpenCode permite ampliar sus capacidades mediante plugins, que actúan
+como skills instalables.</p>
+<h2 id="instalación-de-skillsplugins">Instalación de skills/plugins</h2>
+<figure id="fig:skills">
+<figcaption>
+Ecosistema de extensiones de OpenCode
+</figcaption>
+</figure>
+<pre><code># Instalar un plugin globalmente
+opencode plugin nombre-del-modulo</code></pre>
+<pre><code># Instalar un plugin forzando la reinstalación
+opencode plugin nombre-del-modulo -f</code></pre>
+<pre><code># Instalar un plugin solo para el proyecto actual
+opencode plugin nombre-del-modulo -g</code></pre>
+<pre><code># Listar plugins instalados
+opencode plugin list</code></pre>
+<h2 id="skills-personalizados">Skills personalizados</h2>
+<p>Puedes crear tus propios skills como plugins locales o como archivos
+de configuración en el directorio de OpenCode:</p>
+<pre><code># Estructura de un skill personalizado
+~/.opencode/
+  skills/
+    mi-skill/
+      SKILL.md
+      scripts/
+      templates/</code></pre>
+<pre><code># Ejemplo de SKILL.md
+# mi-skill
+
+Descripcion de lo que hace el skill.
+
+## Uso
+
+opencode run &quot;Usa el skill mi-skill para analizar este archivo&quot; &lt; main.py</code></pre>
+<h2 id="gestión-de-skills">Gestión de skills</h2>
+<ul>
+<li><p>Mantén los skills en repositorios de Git para
+versionarlos.</p></li>
+<li><p>Documenta cada skill con ejemplos de uso.</p></li>
+<li><p>Evita instalar plugins de fuentes no confiables.</p></li>
+<li><p>Prueba los skills en un proyecto de prueba antes de usarlos en
+producción.</p></li>
+</ul>
+<blockquote>
+<p><strong>💡 Nota:</strong> Un <strong>plugin</strong> es un módulo de
+software instalado (frecuentemente vía npm). Un <strong>skill</strong>
+es una capacidad o flujo de trabajo que puede venir de un plugin o de
+una configuración personalizada.</p>
+</blockquote>
+<h1 id="artefactos">Artefactos</h1>
+<h2 id="qué-son-los-artefactos">¿Qué son los artefactos?</h2>
+<p>Los artefactos son archivos o bloques de contenido generados durante
+una conversación con OpenCode. Pueden ser fragmentos de código,
+documentación, configuraciones, diagramas o cualquier salida
+estructurada que quieras conservar.</p>
+<p>Ejemplos comunes de artefactos:</p>
+<ul>
+<li><p>Archivos de código fuente.</p></li>
+<li><p>Archivos de configuración (Dockerfile, CI/CD, dotfiles).</p></li>
+<li><p>Documentación técnica o README.</p></li>
+<li><p>Scripts de automatización.</p></li>
+<li><p>Diagramas y representaciones en texto.</p></li>
+</ul>
+<h2 id="generar-artefactos">Generar artefactos</h2>
+<p>En el modo interactivo, solicita directamente la creación del
+archivo:</p>
+<pre><code># Solicitar un artefacto en TUI
+Crea un archivo README.md profesional para este proyecto.</code></pre>
+<p>En el modo <code>run</code>, redirige la salida estándar al archivo
+deseado:</p>
+<pre><code># Guardar salida en un archivo
+opencode run &quot;Genera un Dockerfile para una app Python con Flask&quot; &gt; Dockerfile</code></pre>
+<pre><code># Generar multiples archivos
+opencode run &quot;Crea un .gitignore para Python y un Makefile con targets basicos&quot;</code></pre>
+<h2 id="aplicar-artefactos-al-proyecto">Aplicar artefactos al
+proyecto</h2>
+<p>Antes de aplicar cualquier artefacto:</p>
+<ol type="1">
+<li><p>Revisa el contenido generado.</p></li>
+<li><p>Comprueba que no sobrescriba archivos importantes.</p></li>
+<li><p>Guarda una copia de seguridad si es necesario.</p></li>
+<li><p>Realiza un commit con <code>git</code> antes de integrar
+cambios.</p></li>
+</ol>
+<pre><code># Flujo seguro de aplicación
+git add .
+git commit -m &quot;backup antes de aplicar artefactos de OpenCode&quot;
+opencode run &quot;Genera tests para utils.py&quot; &gt; test_utils.py
+# revisa test_utils.py antes de ejecutarlo
+pytest test_utils.py</code></pre>
+<h2 id="exportar-e-importar-artefactos">Exportar e importar
+artefactos</h2>
+<p>Las sesiones completas (incluyendo artefactos generados) se pueden
+exportar:</p>
+<pre><code># Exportar una sesion con artefactos
+opencode export ID_DE_SESION &gt; sesion_completa.json</code></pre>
+<pre><code># Importar una sesion
+opencode import sesion_completa.json</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> Los artefactos generados por IA
+pueden contener errores. No los ejecutes directamente en producción sin
+revisarlos y probarlos.</p>
+</blockquote>
+<h1 id="consejos-avanzados">Consejos avanzados</h1>
+<h2 id="uso-en-pipelines">Uso en pipelines</h2>
+<pre><code># Pipeline con git
+git diff HEAD~1 | opencode run &quot;Resume los cambios de este commit&quot;</code></pre>
+<h2 id="automatización-con-alias">Automatización con alias</h2>
+<p>Añade alias útiles a tu <code>.bashrc</code> o
+<code>.zshrc</code>:</p>
+<pre><code># Alias recomendados
+alias oc=&#39;opencode&#39;
+alias ocr=&#39;opencode run&#39;
+alias ocw=&#39;opencode web&#39;
+alias ocm=&#39;opencode models&#39;</code></pre>
+<h2 id="depuración">Depuración</h2>
+<pre><code># Ver logs de depuracion
+opencode debug</code></pre>
+<h2 id="estadísticas-de-uso">Estadísticas de uso</h2>
+<pre><code># Consultar consumo
+opencode stats</code></pre>
+<h1 id="solución-de-problemas">Solución de problemas</h1>
+<h2 id="opencode-no-se-encuentra">OpenCode no se encuentra</h2>
+<pre><code># Verificar PATH
+echo $PATH | grep opencode
+export PATH=&quot;$HOME/.opencode/bin:$PATH&quot;</code></pre>
+<h2 id="error-de-autenticación">Error de autenticación</h2>
+<ol type="1">
+<li><p>Verifica que la API key sea correcta.</p></li>
+<li><p>Confirma que el proveedor esté activo en
+<code>opencode providers list</code>.</p></li>
+<li><p>Revisa que el modelo seleccionado esté disponible en tu
+cuenta.</p></li>
+</ol>
+<h2 id="la-tui-no-responde">La TUI no responde</h2>
+<pre><code># Forzar cierre y reinicio
+killall opencode
+opencode</code></pre>
+<pre><code># Iniciar sin plugins externos
+opencode --pure</code></pre>
+<h2 id="problemas-de-red">Problemas de red</h2>
+<p>Si usas un proxy, exporta las variables antes de ejecutar
+OpenCode:</p>
+<pre><code># Configurar proxy
+export HTTP_PROXY=http://proxy.empresa:8080
+export HTTPS_PROXY=http://proxy.empresa:8080
+opencode run &quot;hola&quot;</code></pre>
+<h1 id="ejercicios-prácticos">Ejercicios prácticos</h1>
+<h2 id="ejercicio-1-primer-contacto">Ejercicio 1: Primer contacto</h2>
+<p>Objetivo: familiarizarte con la interfaz interactiva.</p>
+<ol type="1">
+<li><p>Abre una terminal y ejecuta <code>opencode</code>.</p></li>
+<li><p>Escribe: <code>Hola, ¿que puedes hacer?</code></p></li>
+<li><p>Explora los atajos de teclado disponibles.</p></li>
+<li><p>Cierra la sesión con <code>Ctrl+C</code>.</p></li>
+</ol>
+<h2 id="ejercicio-2-explicar-código">Ejercicio 2: Explicar código</h2>
+<p>Objetivo: usar OpenCode para entender código ajeno.</p>
+<ol type="1">
+<li><p>Crea un archivo <code>ejemplo.py</code> con una función
+compleja.</p></li>
+<li><p>Ejecuta:
+<code>opencode run "Explica este codigo paso a paso" &lt; ejemplo.py</code></p></li>
+<li><p>Lee la explicación y solicita un diagrama o
+pseudocodigo.</p></li>
+</ol>
+<h2 id="ejercicio-3-refactorización">Ejercicio 3: Refactorización</h2>
+<p>Objetivo: mejorar la calidad del código.</p>
+<ol type="1">
+<li><p>Encuentra un script con funciones largas o repetidas.</p></li>
+<li><p>Ejecuta:
+<code>opencode run "Refactoriza este codigo para que sea mas limpio" &lt; script.py</code></p></li>
+<li><p>Compara el original con el resultado y aplica los cambios que
+consideres validos.</p></li>
+</ol>
+<h2 id="ejercicio-4-generar-documentación">Ejercicio 4: Generar
+documentación</h2>
+<p>Objetivo: crear documentación técnica automáticamente.</p>
+<pre><code># Generar README
+opencode run &quot;Genera un README.md profesional para este proyecto&quot; &gt; README.md</code></pre>
+<pre><code># Generar docstring
+opencode run &quot;Agrega docstrings y comentarios a este modulo&quot; &lt; utils.py &gt; utils_documentado.py</code></pre>
+<h2 id="ejercicio-5-crear-un-agente-personalizado">Ejercicio 5: Crear un
+agente personalizado</h2>
+<p>Objetivo: configurar un agente especializado.</p>
+<ol type="1">
+<li><p>Ejecuta <code>opencode agent create</code>.</p></li>
+<li><p>Nómbralo <code>python-expert</code>.</p></li>
+<li><p>Define instrucciones del sistema: <em>Eres un experto en Python,
+enfocado en codigo limpio, type hints y pruebas con
+pytest.</em></p></li>
+<li><p>Usa el agente:
+<code>opencode run --agent python-expert "Revisa este codigo" &lt; main.py</code></p></li>
+</ol>
+<h2 id="ejercicio-6-pipeline-con-git">Ejercicio 6: Pipeline con git</h2>
+<p>Objetivo: integrar OpenCode en tu flujo de git.</p>
+<pre><code># Resumen de cambios
+git diff HEAD~1 | opencode run &quot;Escribe un mensaje de commit claro y conciso para estos cambios&quot;</code></pre>
+<h2 id="ejercicio-7-instalar-un-skillplugin">Ejercicio 7: Instalar un
+skill/plugin</h2>
+<p>Objetivo: ampliar OpenCode con capacidades adicionales.</p>
+<ol type="1">
+<li><p>Busca un plugin compatible (puede ser un modulo npm).</p></li>
+<li><p>Instálalo:
+<code>opencode plugin nombre-del-modulo</code>.</p></li>
+<li><p>Verifica que aparece en la configuración.</p></li>
+<li><p>Prueba su funcionalidad con un mensaje de prueba.</p></li>
+</ol>
+<blockquote>
+<p><strong>✅ Tip:</strong> Realiza los ejercicios en orden. Cada uno
+construye sobre el anterior y te ayudara a dominar OpenCode de forma
+practica.</p>
+</blockquote>
+<h1 id="plantillas-de-agentes">Plantillas de agentes</h1>
+<h2 id="code-reviewer">Code Reviewer</h2>
+<p>Agente especializado en revisar código y detectar problemas.</p>
+<pre><code># Instrucciones para agente reviewer
+Eres un revisor de codigo senior. Tu trabajo es:
+- Detectar bugs, errores de logica y problemas de seguridad.
+- Sugerir mejoras de rendimiento y legibilidad.
+- Verificar que el codigo siga buenas practicas del lenguaje.
+- Responder de forma clara, estructurada y constructiva.</code></pre>
+<pre><code># Uso del agente reviewer
+opencode run --agent reviewer &quot;Revisa este PR&quot; &lt; cambios.diff</code></pre>
+<h2 id="technical-writer">Technical Writer</h2>
+<p>Agente enfocado en documentación técnica.</p>
+<pre><code># Instrucciones para agente writer
+Eres un redactor tecnico especializado en documentacion de software.
+Tu tarea es crear documentacion clara, concisa y bien estructurada.
+Usa Markdown cuando sea posible y adapta el tono al publico objetivo.</code></pre>
+<pre><code># Uso del agente writer
+opencode run --agent writer &quot;Documenta la API de este modulo&quot; &lt; api.py</code></pre>
+<h2 id="devops-assistant">DevOps Assistant</h2>
+<p>Agente para tareas de infraestructura y despliegue.</p>
+<pre><code># Instrucciones para agente devops
+Eres un ingeniero DevOps. Ayudas a crear y revisar:
+- Dockerfiles y docker-compose.yml
+- Pipelines CI/CD (GitHub Actions, GitLab CI)
+- Scripts de despliegue y automatizacion
+- Configuraciones de infraestructura como codigo</code></pre>
+<pre><code># Uso del agente devops
+opencode run --agent devops &quot;Genera un Dockerfile para Node.js 20&quot;</code></pre>
+<h2 id="python-expert">Python Expert</h2>
+<p>Agente para desarrollo Python avanzado.</p>
+<pre><code># Instrucciones para agente python
+Eres un experto en Python. Proporcionas codigo:
+- Con type hints y docstrings
+- Orientado a pruebas con pytest
+- Siguiendo PEP 8
+- Eficiente, legible y mantenible</code></pre>
+<pre><code># Uso del agente python
+opencode run --agent python &quot;Crea una clase para manejar configuracion con Pydantic&quot;</code></pre>
+<h2 id="frontend-developer">Frontend Developer</h2>
+<p>Agente para desarrollo web frontend.</p>
+<pre><code># Instrucciones para agente frontend
+Eres un desarrollador frontend experto en React, TypeScript y CSS moderno.
+Creas componentes accesibles, responsivos y bien estructurados.</code></pre>
+<pre><code># Uso del agente frontend
+opencode run --agent frontend &quot;Crea un componente de formulario de login en React&quot;</code></pre>
+<h2 id="como-importar-una-plantilla">Como importar una plantilla</h2>
+<p>Puedes crear un agente a partir de estas plantillas:</p>
+<pre><code># Crear agente desde plantilla
+opencode agent create
+# Nombre: reviewer
+# Instrucciones: (pega el texto de la plantilla)</code></pre>
+<blockquote>
+<p><strong>💡 Nota:</strong> Guarda tus plantillas en archivos de texto
+dentro de un repositorio para poder reutilizarlas y compartirlas con tu
+equipo.</p>
+</blockquote>
+<h1 id="glosario-de-términos">Glosario de términos</h1>
+<p>Configuracion especializada que define el comportamiento, modelo y
+herramientas de OpenCode para una tarea concreta.</p>
+<p>Clave secreta que permite a OpenCode autenticarse con un proveedor de
+IA.</p>
+<p>Archivo o bloque de contenido generado por OpenCode durante una
+conversacion.</p>
+<p>Continuous Integration / Continuous Deployment, practicas de
+automatizacion de software.</p>
+<p>Informacion adicional (archivos, proyectos, historial) que OpenCode
+utiliza para responder mejor.</p>
+<p>Plataforma para crear, desplegar y ejecutar aplicaciones en
+contenedores.</p>
+<p>Copia de un repositorio que permite hacer cambios independientes.</p>
+<p>Sistema de control de versiones distribuido.</p>
+<p>Large Language Model, modelo de lenguaje grande como GPT-4, Claude o
+Gemini.</p>
+<p>Model Context Protocol, protocolo para conectar OpenCode con
+servidores de herramientas.</p>
+<p>Algoritmo de IA utilizado por OpenCode para generar respuestas.</p>
+<p>Serie de pasos automatizados en un flujo de trabajo.</p>
+<p>Modulo de software que extiende las capacidades de OpenCode.</p>
+<p>Empresa o servicio que ofrece acceso a modelos de IA (OpenAI,
+Anthropic, Google, etc.).</p>
+<p>Instruccion o mensaje enviado a OpenCode.</p>
+<p>Pull Request, solicitud de integracion de cambios en un
+repositorio.</p>
+<p>Reescribir codigo para mejorar su estructura sin cambiar su
+comportamiento externo.</p>
+<p>Capacidad o flujo de trabajo reutilizable que puede provenir de un
+plugin o configuracion personalizada.</p>
+<p>Conversacion guardada con su historial y contexto.</p>
+<p>Unidad minima de texto procesada por un LLM; tambien se usa como
+unidad de facturacion.</p>
+<p>Terminal User Interface, interfaz de usuario en modo texto.</p>
+<p>Windows Subsystem for Linux, subsistema de Linux para Windows.</p>
+<h1 id="recursos-adicionales">Recursos adicionales</h1>
+<h2 id="documentación-oficial">Documentación oficial</h2>
+<ul>
+<li><p><strong>Sitio web oficial:</strong> <a href="https://opencode.ai"
+class="uri">https://opencode.ai</a></p></li>
+<li><p><strong>Documentación:</strong> consulta la web oficial para
+guías actualizadas.</p></li>
+<li><p><strong>Repositorio:</strong> busca <code>opencode-ai</code> en
+GitHub para el codigo fuente y ejemplos.</p></li>
+</ul>
+<h2 id="comunidad-y-soporte">Comunidad y soporte</h2>
+<ul>
+<li><p><strong>Discord:</strong> muchos proyectos de IA cuentan con
+servidor oficial para preguntas y anuncios.</p></li>
+<li><p><strong>GitHub Discussions:</strong> foro para compartir casos de
+uso y resolver dudas.</p></li>
+<li><p><strong>Stack Overflow:</strong> etiqueta <code>opencode</code>
+para preguntas técnicas específicas.</p></li>
+</ul>
+<h2 id="herramientas-complementarias">Herramientas complementarias</h2>
+<p>Control de versiones indispensable para gestionar artefactos
+generados.</p>
+<p>Para probar contenedores y despliegues creados con OpenCode.</p>
+<p>Framework de pruebas recomendado para validar codigo Python
+generado.</p>
+<p>Entorno necesario para instalar plugins basados en npm.</p>
+<p>Util para mantener sesiones de terminal con OpenCode activas.</p>
+<h2 id="tutoriales-recomendados">Tutoriales recomendados</h2>
+<ol type="1">
+<li><p>Configura tu primer proveedor de IA y envía tu primer
+mensaje.</p></li>
+<li><p>Crea tres agentes especializados: uno para codigo, uno para
+documentacion y uno para DevOps.</p></li>
+<li><p>Instala un plugin y documenta como cambia tu flujo de
+trabajo.</p></li>
+<li><p>Automatiza la generacion de mensajes de commit con
+<code>git diff</code>.</p></li>
+<li><p>Exporta e importa una sesion para entender como funciona el
+historial.</p></li>
+</ol>
+<h2 id="lecturas-adicionales">Lecturas adicionales</h2>
+<ul>
+<li><p><em>Prompt Engineering Guide</em> — técnicas para escribir
+mejores instrucciones a modelos de lenguaje.</p></li>
+<li><p><em>Clean Code</em> (Robert C. Martin) — buenas practicas para
+revisar codigo generado.</p></li>
+<li><p><em>The Phoenix Project</em> (Gene Kim) — cultura DevOps
+aplicable a la automatizacion con agentes.</p></li>
+</ul>
+<blockquote>
+<p><strong>✅ Tip:</strong> OpenCode evoluciona rapidamente. Revisa
+periodicamente la documentacion oficial y las notas de version para
+conocer nuevos comandos, proveedores y capacidades.</p>
+</blockquote>
+<h1 id="referencia-rápida">Referencia rápida</h1>
+<h2 id="comandos-imprescindibles">Comandos imprescindibles</h2>
+<pre><code># Hoja de ruta
+opencode --version          # version instalada
+opencode --help             # ayuda general
+opencode                    # TUI interactiva
+opencode run &quot;mensaje&quot;      # ejecucion directa
+opencode web                # interfaz web
+opencode providers list     # proveedores
+opencode models             # modelos
+opencode session list       # sesiones
+opencode stats              # uso y costes
+opencode agent list         # agentes
+opencode agent create       # crear agente
+opencode plugin &lt;modulo&gt;    # instalar skill/plugin
+opencode mcp list           # servidores MCP
+opencode export ID          # exportar sesion</code></pre>
+<hr />
+<p>Documento generado con LaTeX el 2026-06-19.<br />
+OpenCode es un proyecto en evolucion; consulta <a
+href="https://opencode.ai" class="uri">https://opencode.ai</a> para la
+documentacion oficial.</p>
+
+<footer>
+<p>Documento generado con LaTeX y Pandoc.</p>
+<p>OpenCode es un proyecto en evolucion; consulta <a href="https://opencode.ai">https://opencode.ai</a> para la documentacion oficial.</p>
+</footer>
+</div>
+</body>
+</html>

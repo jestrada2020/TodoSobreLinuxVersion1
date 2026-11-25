@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cuestionario Jupyter - Versión Imprimible</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.5;
+            color: #222;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #f37626;
+            border-bottom: 3px solid #f37626;
+            padding-bottom: 10px;
+        }
+        .meta {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .question {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+        .question h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .option {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .option .box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #333;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .option code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+        }
+        .name-line {
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            width: 60%;
+            padding-top: 5px;
+            font-size: 0.95em;
+        }
+        @media print {
+            body { padding: 0; }
+            .no-print { display: none; }
+        }
+        .btn {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: #f37626;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .btn:hover { background: #d65f16; }
+    </style>
+</head>
+<body>
+    <h1>Cuestionario de Evaluación: Jupyter</h1>
+    <p class="meta">Marca con una X la opción correcta. No se permite el uso de internet.</p>
+    
+    <button class="btn no-print" onclick="window.print()">🖨️ Imprimir cuestionario</button>
+
+    <div class="question">
+        <h3>1. ¿Cuál es el comando para iniciar JupyterLab?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) <code>jupyter notebook</code></div>
+            <div class="option"><span class="box"></span>b) <code>jupyter lab</code></div>
+            <div class="option"><span class="box"></span>c) <code>jupyter start</code></div>
+            <div class="option"><span class="box"></span>d) <code>jupyter run</code></div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>2. ¿Qué atajo de teclado ejecuta una celda y avanza a la siguiente?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) <code>Ctrl + Enter</code></div>
+            <div class="option"><span class="box"></span>b) <code>Shift + Enter</code></div>
+            <div class="option"><span class="box"></span>c) <code>Alt + Enter</code></div>
+            <div class="option"><span class="box"></span>d) <code>Esc</code></div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>3. ¿Cuál de los siguientes es un tipo de celda válido en Jupyter?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) Código</div>
+            <div class="option"><span class="box"></span>b) Markdown</div>
+            <div class="option"><span class="box"></span>c) Raw</div>
+            <div class="option"><span class="box"></span>d) Todas las anteriores</div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>4. ¿Qué magic command mide el tiempo de ejecución de una línea?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) <code>%matplotlib</code></div>
+            <div class="option"><span class="box"></span>b) <code>%timeit</code></div>
+            <div class="option"><span class="box"></span>c) <code>%pwd</code></div>
+            <div class="option"><span class="box"></span>d) <code>%load</code></div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>5. ¿Para qué se usa <code>ipykernel</code>?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) Para crear extensiones de JupyterLab</div>
+            <div class="option"><span class="box"></span>b) Para registrar kernels de Python</div>
+            <div class="option"><span class="box"></span>c) Para convertir notebooks a PDF</div>
+            <div class="option"><span class="box"></span>d) Para gestionar contenedores Docker</div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>6. ¿Qué herramienta convierte un notebook en una aplicación web interactiva?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) JupyterHub</div>
+            <div class="option"><span class="box"></span>b) Voilà</div>
+            <div class="option"><span class="box"></span>c) Binder</div>
+            <div class="option"><span class="box"></span>d) nbconvert</div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>7. ¿Cuál es la extensión de archivo de un notebook de Jupyter?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) <code>.py</code></div>
+            <div class="option"><span class="box"></span>b) <code>.ipynb</code></div>
+            <div class="option"><span class="box"></span>c) <code>.jl</code></div>
+            <div class="option"><span class="box"></span>d) <code>.md</code></div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>8. ¿Qué biblioteca se menciona para computación paralela y Big Data?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) Pandas</div>
+            <div class="option"><span class="box"></span>b) Dask</div>
+            <div class="option"><span class="box"></span>c) NumPy</div>
+            <div class="option"><span class="box"></span>d) Matplotlib</div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>9. ¿Qué comando exporta un cuaderno a PDF?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) <code>jupyter nbconvert file.ipynb --to html</code></div>
+            <div class="option"><span class="box"></span>b) <code>jupyter nbconvert file.ipynb --to pdf</code></div>
+            <div class="option"><span class="box"></span>c) <code>jupyter export file.ipynb pdf</code></div>
+            <div class="option"><span class="box"></span>d) <code>jupyter convert file.ipynb --pdf</code></div>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>10. ¿Para qué se usa MLflow en un proyecto de machine learning?</h3>
+        <div class="options">
+            <div class="option"><span class="box"></span>a) Para crear visualizaciones interactivas</div>
+            <div class="option"><span class="box"></span>b) Para gestionar experimentos, métricas y modelos</div>
+            <div class="option"><span class="box"></span>c) Para instalar kernels remotos</div>
+            <div class="option"><span class="box"></span>d) Para compilar documentos LaTeX</div>
+        </div>
+    </div>
+
+    <p class="name-line">Nombre: _______________________________________</p>
+    <p class="name-line">Fecha: ________________________________________</p>
+
+    <button class="btn no-print" onclick="window.print()">🖨️ Imprimir cuestionario</button>
+</body>
+</html>

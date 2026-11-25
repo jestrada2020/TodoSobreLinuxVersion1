@@ -386,6 +386,8 @@
     tags: ['find', 'locate', 'which', 'whereis', 'file', 'stat'],
     lead: '<code>find</code> recorre el disco en tiempo real y filtra por cualquier criterio; <code>locate</code> consulta una base de datos y es instantáneo pero puede estar desactualizada. Saber cuál usar ahorra minutos cada día.',
     blocks: [
+      { type: 'callout', variant: 'tip', title: 'Script listo: buscar en todo el sistema y abrir una terminal ahí',
+        html: '<p><code>buscarEnSistema.sh informe</code> recorre todos los discos y memorias USB, muestra la ruta completa de cada resultado y abre una terminal en su carpeta. Ver <a href="#auto-scripts/auto-buscar">Automatización → Buscar en el sistema</a>.</p>' },
       { type: 'h2', id: 'find', text: 'find: el buscador universal' },
       { type: 'command', name: 'find', tagline: 'buscar por nombre, tamaño, fecha, tipo o permisos', level: 'intermedio',
         synopsis: 'find [RUTA] [CRITERIOS] [ACCIÓN]',

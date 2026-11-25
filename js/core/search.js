@@ -21,6 +21,64 @@
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '');  // quita acentos
   }
 
+  /* Vuelca a `partes` el texto buscable de una lista de bloques, recursivo. */
+  function extraer(lista, partes) {
+    (lista || []).forEach(function (b) {
+      if (b.type === 'prose') partes.push(limpiar(b.html));
+      else if (b.type === 'h2' || b.type === 'h3') partes.push(b.text);
+      else if (b.type === 'cmd') partes.push((b.label || '') + ' ' + (b.lines || []).join(' '));
+      else if (b.type === 'callout') partes.push((b.title || '') + ' ' + limpiar(b.html));
+      else if (b.type === 'table') {
+        partes.push((b.head || []).join(' '));
+        (b.rows || []).forEach(function (f) { partes.push(limpiar(f.join(' '))); });
+      } else if (b.type === 'steps' || b.type === 'accordion') {
+        (b.items || []).forEach(function (i) {
+          partes.push((i.t || '') + ' ' + limpiar(i.html || ''));
+          if (i.cmd) partes.push((i.cmd.lines || []).join(' '));
+        });
+      } else if (b.type === 'tabs') {
+        (b.items || []).forEach(function (i) {
+          partes.push((i.t || '') + ' ' + limpiar(i.lead || ''));
+          extraer(i.blocks, partes);
+        });
+      } else if (b.type === 'builder') {
+        partes.push('constructor de comandos interactivo ' + (b.title || '') + ' ' + (b.prefix || '') + ' ' +
+          (b.fields || []).map(function (f) { return (f.flag || '') + ' ' + f.label; }).join(' '));
+      } else if (b.type === 'chmodcalc') {
+        partes.push('calculadora de permisos chmod octal simbolico rwx interactiva suid sgid sticky');
+      } else if (b.type === 'script') {
+        partes.push((b.file || '') + ' ' + (b.desc || '') + ' script bash shell');
+      } else if (b.type === 'downloads') {
+        (b.items || []).forEach(function (i) { partes.push((i.title || '') + ' ' + (i.desc || '')); });
+      } else if (b.type === 'sos') {
+        (b.items || []).forEach(function (i) { partes.push(i.t + ' ' + i.d); });
+      } else if (b.type === 'command') {
+        partes.push(b.name + ' ' + (b.tagline || ''));
+      } else if (b.type === 'asciitable') {
+        // Indexa las filas generadas: hace buscable cada carácter y su nota
+        (global.AsciiData ? global.AsciiData.filas(b.rango) : []).forEach(function (f) {
+          partes.push(f.dec + ' ' + f.hex + ' ' + f.car + ' ' + f.nom + ' ' +
+                      f.tecla + ' ' + limpiar(f.desc));
+        });
+        partes.push('tabla ascii ' + b.rango + ' decimal hexadecimal octal binario');
+      } else if (b.type === 'simbolos') {
+        (global.AsciiData ? global.AsciiData.simbolos() : []).forEach(function (x) {
+          partes.push(x.car + ' ' + x.nombre + ' ' + x.dec + ' ' + x.hex + ' ' +
+                      x.alt + ' ' + limpiar(x.nota));
+        });
+        partes.push('simbolos acceso rapido copiar caracter atajos teclado');
+      } else if (b.type === 'asciitool') {
+        partes.push('conversor ascii texto codigos decimal hexadecimal octal binario ' +
+                    'convertir caracteres interactivo');
+      } else if (b.type === 'keys') {
+        (b.items || []).forEach(function (i) { partes.push((i.k || []).join(' ') + ' ' + i.d); });
+      } else if (b.type === 'grid') {
+        (b.items || []).forEach(function (i) { partes.push((i.t || i.label || '') + ' ' + limpiar(i.html || i.d || i.note || '')); });
+      }
+    });
+    return partes;
+  }
+
   /* Construye el índice a partir del catálogo de secciones. */
   function construir(secciones, grupos) {
     indice = [];
@@ -28,39 +86,9 @@
       var grupo = grupos[sec.group] || { title: '' };
       var partes = [sec.title, sec.lead || '', (sec.tags || []).join(' ')];
 
-      // 1. La sección como entrada principal
-      (sec.blocks || []).forEach(function (b) {
-        if (b.type === 'prose') partes.push(limpiar(b.html));
-        else if (b.type === 'h2' || b.type === 'h3') partes.push(b.text);
-        else if (b.type === 'cmd') partes.push((b.lines || []).join(' '));
-        else if (b.type === 'callout') partes.push((b.title || '') + ' ' + limpiar(b.html));
-        else if (b.type === 'table') {
-          partes.push((b.head || []).join(' '));
-          (b.rows || []).forEach(function (f) { partes.push(limpiar(f.join(' '))); });
-        } else if (b.type === 'steps' || b.type === 'accordion') {
-          (b.items || []).forEach(function (i) { partes.push((i.t || '') + ' ' + limpiar(i.html || '')); });
-        } else if (b.type === 'asciitable') {
-          // Indexa las filas generadas: hace buscable cada carácter y su nota
-          (global.AsciiData ? global.AsciiData.filas(b.rango) : []).forEach(function (f) {
-            partes.push(f.dec + ' ' + f.hex + ' ' + f.car + ' ' + f.nom + ' ' +
-                        f.tecla + ' ' + limpiar(f.desc));
-          });
-          partes.push('tabla ascii ' + b.rango + ' decimal hexadecimal octal binario');
-        } else if (b.type === 'simbolos') {
-          (global.AsciiData ? global.AsciiData.simbolos() : []).forEach(function (x) {
-            partes.push(x.car + ' ' + x.nombre + ' ' + x.dec + ' ' + x.hex + ' ' +
-                        x.alt + ' ' + limpiar(x.nota));
-          });
-          partes.push('simbolos acceso rapido copiar caracter atajos teclado');
-        } else if (b.type === 'asciitool') {
-          partes.push('conversor ascii texto codigos decimal hexadecimal octal binario ' +
-                      'convertir caracteres interactivo');
-        } else if (b.type === 'keys') {
-          (b.items || []).forEach(function (i) { partes.push((i.k || []).join(' ') + ' ' + i.d); });
-        } else if (b.type === 'grid') {
-          (b.items || []).forEach(function (i) { partes.push((i.t || i.label || '') + ' ' + limpiar(i.html || i.d || i.note || '')); });
-        }
-      });
+      // 1. La sección como entrada principal (recorre también los bloques
+      //    anidados dentro de pestañas, pasos y acordeones)
+      extraer(sec.blocks, partes);
 
       indice.push({
         id: sec.id, hash: sec.id, tipo: 'seccion',
@@ -91,6 +119,21 @@
           id: b.id, hash: sec.id + '/' + b.id, tipo: 'apartado',
           titulo: b.text, sub: sec.title,
           texto: normalizar(b.text + ' ' + sec.title), peso: 2
+        });
+      });
+
+      // 4. Cada pestaña con id es un destino propio: buscar «grub rescue»
+      //    lleva directamente a esa pestaña, ya abierta.
+      (sec.blocks || []).forEach(function (b) {
+        if (b.type !== 'tabs') return;
+        (b.items || []).forEach(function (it) {
+          if (!it.id) return;
+          var txt = extraer(it.blocks, [it.t, limpiar(it.lead || ''), sec.title]).join(' ');
+          indice.push({
+            id: it.id, hash: sec.id + '/' + it.id, tipo: 'apartado',
+            titulo: it.t, sub: sec.title + (b.title ? ' · ' + b.title : ''),
+            texto: normalizar(txt), peso: 4
+          });
         });
       });
     });

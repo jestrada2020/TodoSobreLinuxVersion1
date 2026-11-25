@@ -1,0 +1,2891 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Elaboracion practica para usuarios de Linux" />
+  <meta name="dcterms.date" content="2026-06-19" />
+  <title>GUIA JUPYTER - Interactiva</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style>
+:root {
+    --bg-color: #ffffff;
+    --text-color: #2c3e50;
+    --accent-color: #0066cc;
+    --code-bg: #f4f4f4;
+    --border-color: #dee2e6;
+    --header-bg: linear-gradient(135deg, #0066cc, #00a8e8);
+    --tab-bg: #f8f9fa;
+    --tab-active: #0066cc;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a2e;
+    --text-color: #e0e0e0;
+    --accent-color: #4da6ff;
+    --code-bg: #16213e;
+    --border-color: #0f3460;
+    --header-bg: linear-gradient(135deg, #0f3460, #16213e);
+    --tab-bg: #16213e;
+    --tab-active: #4da6ff;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: var(--bg-color);
+}
+
+#title-block-header {
+    text-align: center;
+    padding: 2rem;
+    background: var(--header-bg);
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+#title-block-header h1 {
+    color: white;
+    margin: 0;
+}
+
+h1, h2, h3, h4 {
+    color: var(--accent-color);
+}
+
+h2 {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.3rem;
+}
+
+pre {
+    background-color: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    position: relative;
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: var(--code-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.copy-btn:hover {
+    opacity: 0.8;
+}
+
+#TOC {
+    background-color: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+#TOC ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.controls button {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-box {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.search-box input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    width: 200px;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+    background: var(--tab-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.tab-btn.active {
+    background: var(--tab-active);
+    color: white;
+    border-color: var(--tab-active);
+}
+
+.section-hidden {
+    display: none !important;
+}
+
+.highlight {
+    background-color: yellow;
+    color: black;
+}
+
+.quiz-question {
+    background: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.quiz-option {
+    display: block;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.quiz-option:hover {
+    background: var(--tab-bg);
+}
+
+#score-board {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    border: 2px solid var(--accent-color);
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-weight: bold;
+    z-index: 1001;
+}
+
+#score-board button {
+    margin-left: 10px;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 4px;
+    background: var(--accent-color);
+    color: white;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+@media print {
+    .tabs, .search-box, #score-board, .theme-toggle, .toc-toggle, .copy-button {
+        display: none !important;
+    }
+    body { margin: 0; padding: 0; }
+    .section { display: block !important; margin: 0 !important; padding: 10px 0 !important; box-shadow: none !important; }
+    .quiz-option { pointer-events: none !important; }
+    .quiz-option.correct, .quiz-option.wrong { 
+        background: white !important; 
+        border-left: 4px solid #333 !important;
+    }
+    a { text-decoration: none; color: black; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+}
+
+.quiz-option.correct {
+    background: #d4edda;
+    border-color: #28a745;
+}
+
+.quiz-option.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+}
+
+.quiz-result {
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem;
+    border-top: 2px solid var(--border-color);
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    .search-box input {
+        width: 150px;
+    }
+    .tabs {
+        justify-content: center;
+    }
+}
+</style>
+
+<div class="controls">
+    <button onclick="toggleTheme()">🌓 Tema</button>
+    <button onclick="toggleTOC()">📑 Indice</button>
+    <button onclick="expandAll()">⬇ Expandir</button>
+    <button onclick="collapseAll()">⬆ Contraer</button>
+    <button onclick="window.open('cuestionario_imprimible.html','_blank')">📝 Cuestionario imprimible</button>
+</div>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Buscar contenido..." onkeyup="searchContent()">
+</div>
+
+<div id="score-board">
+    Score: <span id="correct-count">0</span>/10 correctas
+    <button onclick="resetQuiz()">Reiniciar</button>
+</div>
+
+<div class="tabs" id="categoryTabs">
+    <button class="tab-btn active" onclick="filterCategory('all')">Todos</button>
+    <button class="tab-btn" onclick="filterCategory('fundamentos')">Fundamentos</button>
+    <button class="tab-btn" onclick="filterCategory('kernels')">Kernels</button>
+    <button class="tab-btn" onclick="filterCategory('widgets')">Widgets</button>
+    <button class="tab-btn" onclick="filterCategory('aplicaciones')">Aplicaciones</button>
+    <button class="tab-btn" onclick="filterCategory('avanzado')">Avanzado</button>
+    <button class="tab-btn" onclick="filterCategory('referencias')">Referencias</button>
+</div>
+
+<script>
+const categories = {
+    'fundamentos': ['introduccion', 'instalacion', 'inicio rapido', 'atajos', 'tipos de celdas', 'magic commands', 'markdown en jupyter'],
+    'kernels': ['kernels y entornos', 'gestion de kernels'],
+    'widgets': ['widgets interactivos', 'widgets avanzados'],
+    'aplicaciones': ['aplicaciones practicas', 'bases de datos', 'pruebas unitarias', 'visualizacion interactiva', 'big data', 'mlops'],
+    'avanzado': ['extensiones', 'buenas practicas', 'exportacion', 'jupyterhub', 'voila', 'jupyter avanzado', 'jupyter ai', 'kernels remotos', 'despliegue en la nube', 'seguridad', 'personalizacion', 'latex', 'docker', 'kubernetes'],
+    'referencias': ['solucion de problemas', 'recursos', 'cuestionario', 'respuestas']
+};
+
+function getCategory(title) {
+    const t = title.toLowerCase();
+    for (const [cat, keywords] of Object.entries(categories)) {
+        for (const kw of keywords) {
+            if (t.includes(kw)) return cat;
+        }
+    }
+    return 'fundamentos';
+}
+
+function assignCategories() {
+    const h2s = document.querySelectorAll('h2');
+    h2s.forEach(h2 => {
+        const section = document.createElement('div');
+        section.className = 'content-section';
+        section.dataset.category = getCategory(h2.textContent);
+        
+        let next = h2.nextElementSibling;
+        h2.parentNode.insertBefore(section, h2);
+        section.appendChild(h2);
+        
+        while (next && next.tagName !== 'H2' && next.tagName !== 'H1') {
+            const current = next;
+            next = next.nextElementSibling;
+            section.appendChild(current);
+        }
+    });
+}
+
+function filterCategory(cat) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(sec => {
+        if (cat === 'all' || sec.dataset.category === cat) {
+            sec.classList.remove('section-hidden');
+        } else {
+            sec.classList.add('section-hidden');
+        }
+    });
+}
+
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+function toggleTOC() {
+    const toc = document.getElementById('TOC');
+    if (toc) {
+        toc.style.display = toc.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+function expandAll() {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('section-hidden'));
+}
+
+function collapseAll() {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.add('section-hidden'));
+}
+
+function addCopyButtons() {
+    const pres = document.querySelectorAll('pre');
+    pres.forEach(pre => {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copiar';
+        btn.onclick = function() {
+            const code = pre.querySelector('code') || pre;
+            navigator.clipboard.writeText(code.textContent).then(() => {
+                btn.textContent = 'Copiado!';
+                setTimeout(() => btn.textContent = 'Copiar', 2000);
+            });
+        };
+        pre.appendChild(btn);
+    });
+}
+
+function searchContent() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    
+    document.querySelectorAll('.highlight').forEach(el => {
+        const parent = el.parentNode;
+        parent.replaceChild(document.createTextNode(el.textContent), el);
+        parent.normalize();
+    });
+    
+    if (filter.length < 3) {
+        expandAll();
+        return;
+    }
+    
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(sec => {
+        const text = sec.textContent.toLowerCase();
+        if (text.includes(filter)) {
+            sec.classList.remove('section-hidden');
+            const regex = new RegExp('(' + filter.replace(/[.*+?^${}()|[\]\]/g, '\$&') + ')', 'gi');
+            sec.innerHTML = sec.innerHTML.replace(regex, '<span class="highlight">$1</span>');
+        } else {
+            sec.classList.add('section-hidden');
+        }
+    });
+}
+
+function setupQuiz() {
+    const quizDivs = document.querySelectorAll('.quiz-question');
+    if (quizDivs.length === 0) {
+        // Crear quiz interactivo si no existe
+        const quizSection = document.querySelector('h2#cuestionario-de-evaluacion');
+        if (quizSection) {
+            // El cuestionario ya esta en markdown, no necesitamos recrearlo
+        }
+        return;
+    }
+    
+    quizDivs.forEach(q => {
+        const options = q.querySelectorAll('.quiz-option');
+        options.forEach(opt => {
+            opt.onclick = function() {
+                options.forEach(o => o.classList.remove('correct', 'wrong'));
+                if (opt.dataset.correct === 'true') {
+                    opt.classList.add('correct');
+                } else {
+                    opt.classList.add('wrong');
+                    q.querySelector('[data-correct="true"]').classList.add('correct');
+                }
+            };
+        });
+    });
+}
+
+let quizState = {};
+let totalQuestions = 0;
+
+function updateScore() {
+    let correct = 0;
+    for (const q in quizState) {
+        if (quizState[q] === true) correct++;
+    }
+    document.getElementById('correct-count').textContent = correct;
+}
+
+function resetQuiz() {
+    quizState = {};
+    updateScore();
+    document.querySelectorAll('.quiz-option').forEach(o => {
+        o.classList.remove('correct', 'wrong');
+    });
+}
+
+function enhanceQuiz() {
+    const h2 = document.getElementById('cuestionario-de-evaluacion');
+    if (!h2) return;
+    
+    let current = h2.nextElementSibling;
+    let qNum = 0;
+    
+    while (current && current.tagName !== 'H1' && !(current.tagName === 'H2' && current.id === 'respuestas-correctas')) {
+        if (current.tagName === 'H3') {
+            qNum++;
+            totalQuestions++;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'quiz-question';
+            wrapper.dataset.question = qNum;
+            
+            current.parentNode.insertBefore(wrapper, current);
+            wrapper.appendChild(current);
+            
+            let next = current.nextElementSibling;
+            while (next && next.tagName !== 'H3' && next.tagName !== 'H2' && next.tagName !== 'H1') {
+                const cur = next;
+                next = next.nextElementSibling;
+                if (cur.tagName === 'P' && cur.textContent.match(/^[a-d]\)/)) {
+                    const isCorrect = cur.textContent.match(/^b\)/);
+                    cur.className = 'quiz-option';
+                    cur.dataset.correct = isCorrect ? 'true' : 'false';
+                    cur.onclick = function() {
+                        if (quizState[qNum] !== undefined) return; // ya respondida
+                        
+                        wrapper.querySelectorAll('.quiz-option').forEach(o => {
+                            o.classList.remove('correct', 'wrong');
+                        });
+                        
+                        if (cur.dataset.correct === 'true') {
+                            cur.classList.add('correct');
+                            quizState[qNum] = true;
+                        } else {
+                            cur.classList.add('wrong');
+                            wrapper.querySelector('[data-correct="true"]').classList.add('correct');
+                            quizState[qNum] = false;
+                        }
+                        updateScore();
+                    };
+                }
+                wrapper.appendChild(cur);
+            }
+            current = next || current.nextElementSibling;
+        } else {
+            current = current.nextElementSibling;
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    assignCategories();
+    addCopyButtons();
+    enhanceQuiz();
+    updateScore();
+});
+</script>
+
+</head>
+<body>
+<div class="container">
+<header id="title-block-header">
+<h1 class="title">GUIA JUPYTER - Interactiva</h1>
+<p class="author">Elaboracion practica para usuarios de Linux</p>
+<p class="date">2026-06-19</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introduccion-a-jupyter"
+id="toc-introduccion-a-jupyter">Introduccion a Jupyter</a>
+<ul>
+<li><a href="#que-es-jupyter" id="toc-que-es-jupyter">Que es
+Jupyter?</a></li>
+<li><a href="#jupyter-notebook-vs-jupyterlab"
+id="toc-jupyter-notebook-vs-jupyterlab">Jupyter Notebook vs
+JupyterLab</a></li>
+<li><a href="#requisitos-previos" id="toc-requisitos-previos">Requisitos
+previos</a></li>
+</ul></li>
+<li><a href="#instalacion-y-actualizacion"
+id="toc-instalacion-y-actualizacion">Instalacion y actualizacion</a>
+<ul>
+<li><a href="#instalacion-con-pip"
+id="toc-instalacion-con-pip">Instalacion con pip</a></li>
+<li><a href="#instalacion-con-conda"
+id="toc-instalacion-con-conda">Instalacion con conda</a></li>
+<li><a href="#instalacion-en-linux"
+id="toc-instalacion-en-linux">Instalacion en Linux</a></li>
+<li><a href="#instalacion-en-macos"
+id="toc-instalacion-en-macos">Instalacion en macOS</a></li>
+<li><a href="#instalacion-en-windows"
+id="toc-instalacion-en-windows">Instalacion en Windows</a></li>
+<li><a href="#verificar-la-instalacion"
+id="toc-verificar-la-instalacion">Verificar la instalacion</a></li>
+<li><a href="#actualizar-jupyter" id="toc-actualizar-jupyter">Actualizar
+Jupyter</a></li>
+</ul></li>
+<li><a href="#primeros-pasos" id="toc-primeros-pasos">Primeros pasos</a>
+<ul>
+<li><a href="#iniciar-jupyter-notebook"
+id="toc-iniciar-jupyter-notebook">Iniciar Jupyter Notebook</a></li>
+<li><a href="#iniciar-jupyterlab" id="toc-iniciar-jupyterlab">Iniciar
+JupyterLab</a></li>
+<li><a href="#opciones-utiles-de-inicio"
+id="toc-opciones-utiles-de-inicio">Opciones utiles de inicio</a></li>
+</ul></li>
+<li><a href="#la-interfaz-de-jupyter-notebook"
+id="toc-la-interfaz-de-jupyter-notebook">La interfaz de Jupyter
+Notebook</a>
+<ul>
+<li><a href="#componentes-principales"
+id="toc-componentes-principales">Componentes principales</a></li>
+<li><a href="#modos-de-edicion" id="toc-modos-de-edicion">Modos de
+edicion</a></li>
+<li><a href="#atajos-de-teclado-esenciales"
+id="toc-atajos-de-teclado-esenciales">Atajos de teclado
+esenciales</a></li>
+</ul></li>
+<li><a href="#la-interfaz-de-jupyterlab"
+id="toc-la-interfaz-de-jupyterlab">La interfaz de JupyterLab</a>
+<ul>
+<li><a href="#areas-de-trabajo" id="toc-areas-de-trabajo">Areas de
+trabajo</a></li>
+<li><a href="#ventajas-de-jupyterlab"
+id="toc-ventajas-de-jupyterlab">Ventajas de JupyterLab</a></li>
+</ul></li>
+<li><a href="#celdas-y-kernels" id="toc-celdas-y-kernels">Celdas y
+kernels</a>
+<ul>
+<li><a href="#tipos-de-celdas" id="toc-tipos-de-celdas">Tipos de
+celdas</a></li>
+<li><a href="#markdown-en-jupyter" id="toc-markdown-en-jupyter">Markdown
+en Jupyter</a></li>
+<li><a href="#kernels" id="toc-kernels">Kernels</a></li>
+</ul></li>
+<li><a href="#magic-commands" id="toc-magic-commands">Magic commands</a>
+<ul>
+<li><a href="#que-son-los-magic-commands"
+id="toc-que-son-los-magic-commands">Que son los magic commands?</a></li>
+<li><a href="#magic-commands-mas-utiles"
+id="toc-magic-commands-mas-utiles">Magic commands mas utiles</a></li>
+</ul></li>
+<li><a href="#aplicaciones-practicas"
+id="toc-aplicaciones-practicas">Aplicaciones practicas</a>
+<ul>
+<li><a href="#integracion-con-bases-de-datos"
+id="toc-integracion-con-bases-de-datos">Integracion con bases de
+datos</a></li>
+<li><a href="#pruebas-unitarias-dentro-de-jupyter"
+id="toc-pruebas-unitarias-dentro-de-jupyter">Pruebas unitarias dentro de
+Jupyter</a></li>
+</ul></li>
+<li><a href="#visualizacion-interactiva"
+id="toc-visualizacion-interactiva">Visualizacion interactiva</a>
+<ul>
+<li><a href="#plotly" id="toc-plotly">Plotly</a></li>
+<li><a href="#bokeh" id="toc-bokeh">Bokeh</a></li>
+</ul></li>
+<li><a href="#big-data-y-mlops" id="toc-big-data-y-mlops">Big Data y
+MLOps</a>
+<ul>
+<li><a href="#manejo-de-grandes-datasets-con-dask"
+id="toc-manejo-de-grandes-datasets-con-dask">Manejo de grandes datasets
+con Dask</a></li>
+<li><a href="#integracion-con-mlflow"
+id="toc-integracion-con-mlflow">Integracion con MLflow</a></li>
+</ul></li>
+<li><a href="#gestion-de-kernels-y-entornos"
+id="toc-gestion-de-kernels-y-entornos">Gestion de kernels y entornos</a>
+<ul>
+<li><a href="#crear-un-entorno-virtual"
+id="toc-crear-un-entorno-virtual">Crear un entorno virtual</a></li>
+<li><a href="#seleccionar-kernel-en-jupyter"
+id="toc-seleccionar-kernel-en-jupyter">Seleccionar kernel en
+Jupyter</a></li>
+<li><a href="#detener-y-reiniciar-kernels"
+id="toc-detener-y-reiniciar-kernels">Detener y reiniciar
+kernels</a></li>
+</ul></li>
+<li><a href="#extensiones" id="toc-extensiones">Extensiones</a>
+<ul>
+<li><a href="#extensiones-de-jupyter-notebook"
+id="toc-extensiones-de-jupyter-notebook">Extensiones de Jupyter
+Notebook</a></li>
+<li><a href="#extensiones-de-jupyterlab"
+id="toc-extensiones-de-jupyterlab">Extensiones de JupyterLab</a></li>
+</ul></li>
+<li><a href="#widgets-interactivos"
+id="toc-widgets-interactivos">Widgets interactivos</a>
+<ul>
+<li><a href="#instalacion-4" id="toc-instalacion-4">Instalacion</a></li>
+<li><a href="#ejemplo-basico" id="toc-ejemplo-basico">Ejemplo
+basico</a></li>
+<li><a href="#widgets-avanzados" id="toc-widgets-avanzados">Widgets
+avanzados</a></li>
+</ul></li>
+<li><a href="#buenas-practicas" id="toc-buenas-practicas">Buenas
+practicas</a>
+<ul>
+<li><a href="#organizacion-del-cuaderno"
+id="toc-organizacion-del-cuaderno">Organizacion del cuaderno</a></li>
+<li><a href="#optimizacion" id="toc-optimizacion">Optimizacion</a></li>
+<li><a href="#compartir-cuadernos"
+id="toc-compartir-cuadernos">Compartir cuadernos</a></li>
+<li><a href="#integracion-con-git"
+id="toc-integracion-con-git">Integracion con Git</a></li>
+</ul></li>
+<li><a href="#exportacion-y-publicacion"
+id="toc-exportacion-y-publicacion">Exportacion y publicacion</a>
+<ul>
+<li><a href="#exportar-con-nbconvert"
+id="toc-exportar-con-nbconvert">Exportar con nbconvert</a></li>
+<li><a href="#publicar-con-binder" id="toc-publicar-con-binder">Publicar
+con Binder</a></li>
+</ul></li>
+<li><a href="#jupyterhub" id="toc-jupyterhub">JupyterHub</a>
+<ul>
+<li><a href="#que-es-jupyterhub" id="toc-que-es-jupyterhub">Que es
+JupyterHub?</a></li>
+<li><a href="#instalacion-basica"
+id="toc-instalacion-basica">Instalacion basica</a></li>
+<li><a href="#iniciar-jupyterhub" id="toc-iniciar-jupyterhub">Iniciar
+JupyterHub</a></li>
+<li><a href="#autenticacion"
+id="toc-autenticacion">Autenticacion</a></li>
+<li><a href="#spawners" id="toc-spawners">Spawners</a></li>
+</ul></li>
+<li><a href="#voila" id="toc-voila">Voila</a>
+<ul>
+<li><a href="#que-es-voila" id="toc-que-es-voila">Que es Voila?</a></li>
+<li><a href="#instalacion-5" id="toc-instalacion-5">Instalacion</a></li>
+<li><a href="#usar-voila" id="toc-usar-voila">Usar Voila</a></li>
+<li><a href="#opciones-utiles" id="toc-opciones-utiles">Opciones
+utiles</a></li>
+<li><a href="#crear-un-dashboard" id="toc-crear-un-dashboard">Crear un
+dashboard</a></li>
+</ul></li>
+<li><a href="#jupyter-avanzado" id="toc-jupyter-avanzado">Jupyter
+avanzado</a>
+<ul>
+<li><a href="#jupyter-ai" id="toc-jupyter-ai">Jupyter AI</a></li>
+<li><a href="#kernels-remotos" id="toc-kernels-remotos">Kernels
+remotos</a></li>
+<li><a href="#despliegue-en-la-nube"
+id="toc-despliegue-en-la-nube">Despliegue en la nube</a></li>
+</ul></li>
+<li><a href="#seguridad-en-jupyter"
+id="toc-seguridad-en-jupyter">Seguridad en Jupyter</a>
+<ul>
+<li><a href="#autenticacion-y-contrasenas"
+id="toc-autenticacion-y-contrasenas">Autenticacion y
+contrasenas</a></li>
+<li><a href="#certificados-ssl" id="toc-certificados-ssl">Certificados
+SSL</a></li>
+<li><a href="#restriccion-de-acceso"
+id="toc-restriccion-de-acceso">Restriccion de acceso</a></li>
+<li><a href="#buenas-practicas-de-seguridad"
+id="toc-buenas-practicas-de-seguridad">Buenas practicas de
+seguridad</a></li>
+<li><a href="#entornos-aislados" id="toc-entornos-aislados">Entornos
+aislados</a></li>
+</ul></li>
+<li><a href="#personalizacion-y-extensiones-propias"
+id="toc-personalizacion-y-extensiones-propias">Personalizacion y
+extensiones propias</a>
+<ul>
+<li><a href="#personalizacion-de-temas"
+id="toc-personalizacion-de-temas">Personalizacion de temas</a></li>
+<li><a href="#creacion-de-extensiones-propias"
+id="toc-creacion-de-extensiones-propias">Creacion de extensiones
+propias</a></li>
+<li><a href="#extensiones-de-jupyter-notebook-classic"
+id="toc-extensiones-de-jupyter-notebook-classic">Extensiones de Jupyter
+Notebook classic</a></li>
+</ul></li>
+<li><a href="#integracion-con-latex"
+id="toc-integracion-con-latex">Integracion con LaTeX</a>
+<ul>
+<li><a href="#ecuaciones-en-celdas-markdown"
+id="toc-ecuaciones-en-celdas-markdown">Ecuaciones en celdas
+Markdown</a></li>
+<li><a href="#exportar-cuadernos-a-latex"
+id="toc-exportar-cuadernos-a-latex">Exportar cuadernos a LaTeX</a></li>
+<li><a href="#plantillas-latex-personalizadas"
+id="toc-plantillas-latex-personalizadas">Plantillas LaTeX
+personalizadas</a></li>
+<li><a href="#macros-y-simbolos-frecuentes"
+id="toc-macros-y-simbolos-frecuentes">Macros y simbolos
+frecuentes</a></li>
+</ul></li>
+<li><a href="#despliegue-con-docker-y-kubernetes"
+id="toc-despliegue-con-docker-y-kubernetes">Despliegue con Docker y
+Kubernetes</a>
+<ul>
+<li><a href="#despliegue-con-docker"
+id="toc-despliegue-con-docker">Despliegue con Docker</a></li>
+<li><a href="#despliegue-con-kubernetes"
+id="toc-despliegue-con-kubernetes">Despliegue con Kubernetes</a></li>
+</ul></li>
+<li><a href="#solucion-de-problemas"
+id="toc-solucion-de-problemas">Solucion de problemas</a>
+<ul>
+<li><a href="#jupyter-no-se-encuentra"
+id="toc-jupyter-no-se-encuentra">Jupyter no se encuentra</a></li>
+<li><a href="#puerto-ocupado" id="toc-puerto-ocupado">Puerto
+ocupado</a></li>
+<li><a href="#kernel-muerto" id="toc-kernel-muerto">Kernel
+muerto</a></li>
+<li><a href="#extensiones-no-funcionan"
+id="toc-extensiones-no-funcionan">Extensiones no funcionan</a></li>
+<li><a href="#problemas-con-navegador"
+id="toc-problemas-con-navegador">Problemas con navegador</a></li>
+</ul></li>
+<li><a href="#ejercicios-practicos"
+id="toc-ejercicios-practicos">Ejercicios practicos</a>
+<ul>
+<li><a href="#ejercicio-1-crear-un-cuaderno"
+id="toc-ejercicio-1-crear-un-cuaderno">Ejercicio 1: Crear un
+cuaderno</a></li>
+<li><a href="#ejercicio-2-texto-y-codigo"
+id="toc-ejercicio-2-texto-y-codigo">Ejercicio 2: Texto y codigo</a></li>
+<li><a href="#ejercicio-3-graficos"
+id="toc-ejercicio-3-graficos">Ejercicio 3: Graficos</a></li>
+<li><a href="#ejercicio-4-magic-commands"
+id="toc-ejercicio-4-magic-commands">Ejercicio 4: Magic commands</a></li>
+<li><a href="#ejercicio-5-entornos"
+id="toc-ejercicio-5-entornos">Ejercicio 5: Entornos</a></li>
+<li><a href="#ejercicio-6-widgets"
+id="toc-ejercicio-6-widgets">Ejercicio 6: Widgets</a></li>
+<li><a href="#ejercicio-7-exportar"
+id="toc-ejercicio-7-exportar">Ejercicio 7: Exportar</a></li>
+<li><a href="#ejercicio-8-integracion-con-git"
+id="toc-ejercicio-8-integracion-con-git">Ejercicio 8: Integracion con
+Git</a></li>
+<li><a href="#ejercicio-9-dashboard-con-voila"
+id="toc-ejercicio-9-dashboard-con-voila">Ejercicio 9: Dashboard con
+Voila</a></li>
+<li><a href="#ejercicio-10-jupyterhub-local"
+id="toc-ejercicio-10-jupyterhub-local">Ejercicio 10: JupyterHub
+local</a></li>
+<li><a href="#ejercicio-11-jupyter-ai"
+id="toc-ejercicio-11-jupyter-ai">Ejercicio 11: Jupyter AI</a></li>
+<li><a href="#ejercicio-12-kernel-remoto"
+id="toc-ejercicio-12-kernel-remoto">Ejercicio 12: Kernel remoto</a></li>
+<li><a href="#ejercicio-13-despliegue-en-la-nube"
+id="toc-ejercicio-13-despliegue-en-la-nube">Ejercicio 13: Despliegue en
+la nube</a></li>
+<li><a href="#ejercicio-14-widgets-avanzados"
+id="toc-ejercicio-14-widgets-avanzados">Ejercicio 14: Widgets
+avanzados</a></li>
+<li><a href="#ejercicio-15-base-de-datos"
+id="toc-ejercicio-15-base-de-datos">Ejercicio 15: Base de datos</a></li>
+<li><a href="#ejercicio-16-pruebas-unitarias"
+id="toc-ejercicio-16-pruebas-unitarias">Ejercicio 16: Pruebas
+unitarias</a></li>
+<li><a href="#ejercicio-17-visualizacion-interactiva"
+id="toc-ejercicio-17-visualizacion-interactiva">Ejercicio 17:
+Visualizacion interactiva</a></li>
+<li><a href="#ejercicio-18-dask" id="toc-ejercicio-18-dask">Ejercicio
+18: Dask</a></li>
+<li><a href="#ejercicio-19-mlflow"
+id="toc-ejercicio-19-mlflow">Ejercicio 19: MLflow</a></li>
+<li><a href="#ejercicio-20-seguridad"
+id="toc-ejercicio-20-seguridad">Ejercicio 20: Seguridad</a></li>
+<li><a href="#ejercicio-21-temas-personalizados"
+id="toc-ejercicio-21-temas-personalizados">Ejercicio 21: Temas
+personalizados</a></li>
+<li><a href="#ejercicio-22-extension-propia"
+id="toc-ejercicio-22-extension-propia">Ejercicio 22: Extension
+propia</a></li>
+<li><a href="#ejercicio-23-latex-en-jupyter"
+id="toc-ejercicio-23-latex-en-jupyter">Ejercicio 23: LaTeX en
+Jupyter</a></li>
+<li><a href="#ejercicio-24-docker"
+id="toc-ejercicio-24-docker">Ejercicio 24: Docker</a></li>
+</ul></li>
+<li><a href="#plantillas-de-cuadernos"
+id="toc-plantillas-de-cuadernos">Plantillas de cuadernos</a>
+<ul>
+<li><a href="#plantilla-de-analisis-de-datos"
+id="toc-plantilla-de-analisis-de-datos">Plantilla de analisis de
+datos</a></li>
+<li><a href="#plantilla-de-machine-learning"
+id="toc-plantilla-de-machine-learning">Plantilla de machine
+learning</a></li>
+<li><a href="#plantilla-de-informe"
+id="toc-plantilla-de-informe">Plantilla de informe</a></li>
+</ul></li>
+<li><a href="#glosario-de-terminos"
+id="toc-glosario-de-terminos">Glosario de terminos</a></li>
+<li><a href="#recursos-adicionales"
+id="toc-recursos-adicionales">Recursos adicionales</a>
+<ul>
+<li><a href="#documentacion-oficial"
+id="toc-documentacion-oficial">Documentacion oficial</a></li>
+<li><a href="#comunidad" id="toc-comunidad">Comunidad</a></li>
+<li><a href="#herramientas-complementarias"
+id="toc-herramientas-complementarias">Herramientas
+complementarias</a></li>
+<li><a href="#tutoriales-recomendados"
+id="toc-tutoriales-recomendados">Tutoriales recomendados</a></li>
+</ul></li>
+<li><a href="#referencia-rapida" id="toc-referencia-rapida">Referencia
+rapida</a>
+<ul>
+<li><a href="#comandos-imprescindibles"
+id="toc-comandos-imprescindibles">Comandos imprescindibles</a></li>
+</ul></li>
+</ul>
+</nav>
+<p><strong>GUIA JUPYTER</strong><br />
+Manual practico, completo y robusto<br />
+Notebook, Lab, kernels, extensiones y flujos de trabajo<br />
+</p>
+<hr />
+<p>Version del documento: 1.0<br />
+Fecha: 2026-06-19<br />
+Sistema: Linux, macOS y Windows</p>
+<h1 id="introduccion-a-jupyter">Introduccion a Jupyter</h1>
+<h2 id="que-es-jupyter">Que es Jupyter?</h2>
+<p>Jupyter es un ecosistema de herramientas de codigo abierto para
+computacion interactiva y ciencia de datos. Su nombre proviene de los
+lenguajes que originalmente soportaba: <strong>Ju</strong>lia,
+<strong>Pyt</strong>hon y <strong>R</strong>.</p>
+<p>El proyecto Jupyter incluye:</p>
+<ul>
+<li><p><strong>Jupyter Notebook</strong>: interfaz web clasicas de
+cuadernos.</p></li>
+<li><p><strong>JupyterLab</strong>: entorno de desarrollo integrado
+(IDE) web moderno.</p></li>
+<li><p><strong>JupyterHub</strong>: multiusuario para entornos
+corporativos y educativos.</p></li>
+<li><p><strong>Kernels</strong>: motores de ejecucion para diferentes
+lenguajes.</p></li>
+<li><p><strong>Widgets</strong>: controles interactivos en los
+cuadernos.</p></li>
+</ul>
+<blockquote>
+<p><strong>💡 Nota:</strong> Jupyter permite combinar codigo ejecutable,
+texto explicativo, ecuaciones, visualizaciones y multimedia en un unico
+documento interactivo.</p>
+</blockquote>
+<h2 id="jupyter-notebook-vs-jupyterlab">Jupyter Notebook vs
+JupyterLab</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Caracteristica</strong></th>
+<th style="text-align: left;"><strong>Jupyter Notebook</strong></th>
+<th style="text-align: left;"><strong>JupyterLab</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Interfaz</td>
+<td style="text-align: left;">Clasica, simple</td>
+<td style="text-align: left;">Moderna, modular</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Paneles</td>
+<td style="text-align: left;">Unico cuaderno a la vez</td>
+<td style="text-align: left;">Multiples paneles</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Extensiones</td>
+<td style="text-align: left;">Jupyter Notebook extensions</td>
+<td style="text-align: left;">Extensions de JupyterLab</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">IDE</td>
+<td style="text-align: left;">Basica</td>
+<td style="text-align: left;">Avanzada (terminales, editores,
+visores)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recomendado</td>
+<td style="text-align: left;">Usuarios principiantes</td>
+<td style="text-align: left;">Usuarios avanzados</td>
+</tr>
+</tbody>
+</table>
+<h2 id="requisitos-previos">Requisitos previos</h2>
+<p>Antes de instalar Jupyter se recomienda contar con:</p>
+<ol type="1">
+<li><p>Python 3.8 o superior.</p></li>
+<li><p>pip o conda instalado.</p></li>
+<li><p>Conexion a Internet.</p></li>
+<li><p>Un navegador web moderno.</p></li>
+</ol>
+<h1 id="instalacion-y-actualizacion">Instalacion y actualizacion</h1>
+<h2 id="instalacion-con-pip">Instalacion con pip</h2>
+<p>El metodo mas comun es usar pip:</p>
+<pre><code># Instalar Jupyter con pip
+pip install jupyter jupyterlab notebook</code></pre>
+<p>Para instalar solo Jupyter Notebook:</p>
+<pre><code># Solo Jupyter Notebook
+pip install notebook</code></pre>
+<p>Para instalar solo JupyterLab:</p>
+<pre><code># Solo JupyterLab
+pip install jupyterlab</code></pre>
+<h2 id="instalacion-con-conda">Instalacion con conda</h2>
+<p>Si usas Anaconda o Miniconda:</p>
+<pre><code># Instalar Jupyter con conda
+conda install -c conda-forge jupyterlab notebook</code></pre>
+<h2 id="instalacion-en-linux">Instalacion en Linux</h2>
+<h3 id="ubuntu-debian">Ubuntu / Debian</h3>
+<pre><code># Instalacion en Ubuntu/Debian
+sudo apt update
+sudo apt install -y python3-pip python3-venv
+pip3 install jupyter jupyterlab notebook</code></pre>
+<h3 id="fedora-rhel-centos">Fedora / RHEL / CentOS</h3>
+<pre><code># Instalacion en Fedora/RHEL
+sudo dnf install -y python3-pip
+pip3 install jupyter jupyterlab notebook</code></pre>
+<h3 id="arch-linux-manjaro">Arch Linux / Manjaro</h3>
+<pre><code># Instalacion en Arch Linux
+sudo pacman -S python-pip
+pip install jupyter jupyterlab notebook</code></pre>
+<h2 id="instalacion-en-macos">Instalacion en macOS</h2>
+<pre><code># Instalacion en macOS
+brew install python3
+pip3 install jupyter jupyterlab notebook</code></pre>
+<h2 id="instalacion-en-windows">Instalacion en Windows</h2>
+<p>Desde PowerShell o CMD:</p>
+<pre><code># Instalacion en Windows
+python -m pip install jupyter jupyterlab notebook</code></pre>
+<p>O usando Anaconda Navigator graficamente.</p>
+<h2 id="verificar-la-instalacion">Verificar la instalacion</h2>
+<pre><code># Verificar versiones
+jupyter --version
+jupyter notebook --version
+jupyter lab --version</code></pre>
+<pre><code># Listar kernels disponibles
+jupyter kernelspec list</code></pre>
+<h2 id="actualizar-jupyter">Actualizar Jupyter</h2>
+<pre><code># Actualizar con pip
+pip install --upgrade jupyter jupyterlab notebook</code></pre>
+<pre><code># Actualizar con conda
+conda update -c conda-forge jupyterlab notebook</code></pre>
+<h1 id="primeros-pasos">Primeros pasos</h1>
+<h2 id="iniciar-jupyter-notebook">Iniciar Jupyter Notebook</h2>
+<pre><code># Iniciar Jupyter Notebook
+jupyter notebook</code></pre>
+<p>Por defecto abre el navegador en <a href="http://localhost:8888"
+class="uri">http://localhost:8888</a>.</p>
+<h2 id="iniciar-jupyterlab">Iniciar JupyterLab</h2>
+<pre><code># Iniciar JupyterLab
+jupyter lab</code></pre>
+<p>JupyterLab tambien usa el puerto 8888 por defecto.</p>
+<h2 id="opciones-utiles-de-inicio">Opciones utiles de inicio</h2>
+<pre><code># Iniciar sin abrir navegador
+jupyter lab --no-browser</code></pre>
+<pre><code># Especificar puerto
+jupyter notebook --port 9999</code></pre>
+<pre><code># Permitir acceso remoto
+jupyter lab --ip=0.0.0.0 --no-browser</code></pre>
+<pre><code># Iniciar en una carpeta especifica
+jupyter lab --notebook-dir=/ruta/al/proyecto</code></pre>
+<figure id="fig:arquitectura">
+<figcaption>
+Arquitectura basica de Jupyter
+</figcaption>
+</figure>
+<h1 id="la-interfaz-de-jupyter-notebook">La interfaz de Jupyter
+Notebook</h1>
+<h2 id="componentes-principales">Componentes principales</h2>
+<p>La interfaz de Jupyter Notebook consta de:</p>
+<ul>
+<li><p><strong>Barra de menu</strong>: File, Edit, View, Insert, Cell,
+Kernel, Help.</p></li>
+<li><p><strong>Barra de herramientas</strong>: botones para guardar,
+anadir celda, ejecutar, etc.</p></li>
+<li><p><strong>Area de celdas</strong>: donde se escribe codigo y
+texto.</p></li>
+<li><p><strong>Panel lateral</strong>: informacion del kernel y
+extensiones.</p></li>
+</ul>
+<h2 id="modos-de-edicion">Modos de edicion</h2>
+<p>Jupyter Notebook tiene dos modos:</p>
+<p>Para operaciones sobre celdas completas.</p>
+<p>Para escribir dentro de una celda.</p>
+<h2 id="atajos-de-teclado-esenciales">Atajos de teclado esenciales</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Atajo</strong></th>
+<th style="text-align: left;"><strong>Accion</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Enter</td>
+<td style="text-align: left;">Entrar en modo edicion</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Esc</td>
+<td style="text-align: left;">Volver a modo comando</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Shift + Enter</td>
+<td style="text-align: left;">Ejecutar celda y avanzar</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ctrl + Enter</td>
+<td style="text-align: left;">Ejecutar celda y quedarse</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alt + Enter</td>
+<td style="text-align: left;">Ejecutar celda e insertar debajo</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">Insertar celda arriba</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">Insertar celda abajo</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DD</td>
+<td style="text-align: left;">Eliminar celda</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">Convertir celda a Markdown</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">Convertir celda a codigo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Z</td>
+<td style="text-align: left;">Deshacer eliminacion de celda</td>
+</tr>
+</tbody>
+</table>
+<h1 id="la-interfaz-de-jupyterlab">La interfaz de JupyterLab</h1>
+<h2 id="areas-de-trabajo">Areas de trabajo</h2>
+<p>JupyterLab organiza el trabajo en:</p>
+<ul>
+<li><p><strong>Main Work Area</strong>: area central con pestanas y
+paneles.</p></li>
+<li><p><strong>Left Sidebar</strong>: explorador de archivos, kernels,
+extensiones.</p></li>
+<li><p><strong>Right Sidebar</strong>: informacion de contexto.</p></li>
+<li><p><strong>Menu Bar</strong>: menus principales.</p></li>
+<li><p><strong>Status Bar</strong>: estado del kernel y del
+servidor.</p></li>
+</ul>
+<h2 id="ventajas-de-jupyterlab">Ventajas de JupyterLab</h2>
+<ul>
+<li><p>Arrastrar y soltar archivos entre paneles.</p></li>
+<li><p>Terminales integradas.</p></li>
+<li><p>Editor de texto para archivos de codigo.</p></li>
+<li><p>Visor de imagenes, CSV, JSON y otros formatos.</p></li>
+<li><p>Extensiones con gestor visual.</p></li>
+</ul>
+<blockquote>
+<p><strong>✅ Tip:</strong> Si empiezas con Jupyter, prueba primero
+Jupyter Notebook. Cuando necesites mas productividad, migra a
+JupyterLab.</p>
+</blockquote>
+<h1 id="celdas-y-kernels">Celdas y kernels</h1>
+<h2 id="tipos-de-celdas">Tipos de celdas</h2>
+<p>Jupyter soporta tres tipos de celdas:</p>
+<p>Para escribir y ejecutar codigo.</p>
+<p>Para texto formateado, ecuaciones e imagenes.</p>
+<p>Texto sin procesar, util para exportaciones.</p>
+<h2 id="markdown-en-jupyter">Markdown en Jupyter</h2>
+<p>Ejemplos de sintaxis Markdown:</p>
+<pre><code># Ejemplos de Markdown
+# Titulo
+## Subtitulo
+**negrita**
+*cursiva*
+`codigo`
+
+- Elemento 1
+- Elemento 2
+
+[Este es un enlace](https://jupyter.org)
+
+![Descripcion](imagen.png)
+
+$E = mc^2$</code></pre>
+<h2 id="kernels">Kernels</h2>
+<p>Un kernel es el proceso que ejecuta el codigo. Jupyter soporta
+kernels para muchos lenguajes.</p>
+<pre><code># Listar kernels
+jupyter kernelspec list</code></pre>
+<pre><code># Instalar kernel de IPython
+python -m ipykernel install --user --name python3 --display-name &quot;Python 3&quot;</code></pre>
+<pre><code># Instalar kernel de R
+install.packages(&#39;IRkernel&#39;)
+IRkernel::installspec(user = TRUE)</code></pre>
+<figure id="fig:kernels">
+<figcaption>
+Un notebook puede conectarse a multiples kernels
+</figcaption>
+</figure>
+<h1 id="magic-commands">Magic commands</h1>
+<h2 id="que-son-los-magic-commands">Que son los magic commands?</h2>
+<p>Los magic commands son comandos especiales de IPython que comienzan
+con <code>%</code> (line magic) o <code>!!</code> (cell magic).</p>
+<h2 id="magic-commands-mas-utiles">Magic commands mas utiles</h2>
+<pre><code># Listar magic commands</code></pre>
+<pre><code># Medir tiempo de ejecucion</code></pre>
+<pre><code># Medir tiempo promedio</code></pre>
+<pre><code># Ejecutar codigo del sistema
+!ls -la
+!pwd</code></pre>
+<pre><code># Cargar archivo como codigo</code></pre>
+<pre><code># Escribir celda a archivo
+print(&quot;Hola mundo&quot;)</code></pre>
+<pre><code># Graficos inline</code></pre>
+<pre><code># Recargar modulos automaticamente
+%autoreload 2</code></pre>
+<h1 id="aplicaciones-practicas">Aplicaciones practicas</h1>
+<h2 id="integracion-con-bases-de-datos">Integracion con bases de
+datos</h2>
+<p>Jupyter puede conectarse a multiples sistemas de bases de datos para
+analisis y visualizacion.</p>
+<h3 id="sqlite">SQLite</h3>
+<p>SQLite es ideal para proyectos pequenos y prototipos.</p>
+<pre><code># Usar SQLite desde Jupyter
+import sqlite3
+
+# Crear conexion
+conn = sqlite3.connect(&#39;datos.db&#39;)
+cursor = conn.cursor()
+
+# Crear tabla
+cursor.execute(&#39;&#39;&#39;
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY,
+        nombre TEXT,
+        edad INTEGER
+    )
+&#39;&#39;&#39;)
+
+# Insertar datos
+cursor.execute(&quot;INSERT INTO usuarios VALUES (1, &#39;Ana&#39;, 30)&quot;)
+conn.commit()</code></pre>
+<pre><code># Consultar datos
+import pandas as pd
+
+df = pd.read_sql_query(&quot;SELECT * FROM usuarios&quot;, conn)
+df</code></pre>
+<h3 id="postgresql">PostgreSQL</h3>
+<p>Para PostgreSQL se recomienda usar <code>psycopg2</code> o
+<code>sqlalchemy</code>.</p>
+<pre><code># Conectar a PostgreSQL
+pip install psycopg2-binary sqlalchemy</code></pre>
+<pre><code># Consultar PostgreSQL
+from sqlalchemy import create_engine
+import pandas as pd
+
+engine = create_engine(&#39;postgresql://usuario:password@localhost:5432/midb&#39;)
+df = pd.read_sql_query(&quot;SELECT * FROM ventas LIMIT 100&quot;, engine)
+df.head()</code></pre>
+<h3 id="mysql-mariadb">MySQL / MariaDB</h3>
+<pre><code># Conectar a MySQL
+pip install pymysql sqlalchemy</code></pre>
+<pre><code># Consultar MySQL
+from sqlalchemy import create_engine
+import pandas as pd
+
+engine = create_engine(&#39;mysql+pymysql://usuario:password@localhost:3306/midb&#39;)
+df = pd.read_sql_query(&quot;SELECT * FROM clientes&quot;, engine)
+df.head()</code></pre>
+<h3 id="mongodb">MongoDB</h3>
+<pre><code># Conectar a MongoDB
+pip install pymongo</code></pre>
+<pre><code># Consultar MongoDB
+from pymongo import MongoClient
+
+client = MongoClient(&#39;mongodb://localhost:27017/&#39;)
+db = client[&#39;mi_base&#39;]
+coleccion = db[&#39;documentos&#39;]
+
+for doc in coleccion.find().limit(5):
+    print(doc)</code></pre>
+<h3 id="visualizacion-de-resultados">Visualizacion de resultados</h3>
+<pre><code># Graficar resultados de SQL
+import matplotlib.pyplot as plt
+
+ventas_por_mes = pd.read_sql_query(
+    &quot;SELECT mes, SUM(total) FROM ventas GROUP BY mes&quot;,
+    engine
+)
+
+plt.bar(ventas_por_mes[&#39;mes&#39;], ventas_por_mes[&#39;SUM(total)&#39;])
+plt.title(&quot;Ventas por mes&quot;)
+plt.show()</code></pre>
+<h2 id="pruebas-unitarias-dentro-de-jupyter">Pruebas unitarias dentro de
+Jupyter</h2>
+<p>Jupyter permite ejecutar pruebas unitarias directamente en las
+celdas.</p>
+<h3 id="usar-assert">Usar assert</h3>
+<pre><code># Pruebas simples con assert
+def sumar(a, b):
+    return a + b
+
+assert sumar(2, 3) == 5
+assert sumar(-1, 1) == 0
+print(&quot;Todas las pruebas pasaron&quot;)</code></pre>
+<h3 id="usar-pytest">Usar pytest</h3>
+<pre><code># Instalar pytest
+pip install pytest</code></pre>
+<pre><code># Escribir pruebas con pytest
+# En una celda de codigo
+def factorial(n):
+    if n &lt;= 1:
+        return 1
+    return n * factorial(n - 1)
+
+# Pruebas
+assert factorial(0) == 1
+assert factorial(5) == 120</code></pre>
+<h3 id="usar-ipytest">Usar ipytest</h3>
+<pre><code># Instalar ipytest
+pip install ipytest</code></pre>
+<pre><code># Ejecutar pytest en una celda
+import ipytest
+ipytest.autoconfig()
+
+%%ipytest
+
+def test_suma():
+    assert sumar(2, 3) == 5
+
+def test_factorial():
+    assert factorial(5) == 120</code></pre>
+<h3 id="buenas-practicas-de-testing">Buenas practicas de testing</h3>
+<ul>
+<li><p>Escribe pruebas en celdas separadas o en archivos
+<code>.py</code>.</p></li>
+<li><p>Usa nombres descriptivos para las funciones de prueba.</p></li>
+<li><p>Verifica casos limite y errores esperados.</p></li>
+<li><p>Ejecuta todas las celdas antes de entregar el cuaderno.</p></li>
+</ul>
+<blockquote>
+<p><strong>✅ Tip:</strong> Para proyectos grandes, considera mover las
+pruebas a archivos <code>test_*.py</code> y ejecutarlos con pytest desde
+la terminal.</p>
+</blockquote>
+<h1 id="visualizacion-interactiva">Visualizacion interactiva</h1>
+<h2 id="plotly">Plotly</h2>
+<h3 id="instalacion">Instalacion</h3>
+<pre><code># Instalar Plotly
+pip install plotly</code></pre>
+<h3 id="grafico-basico">Grafico basico</h3>
+<pre><code># Grafico de lineas con Plotly
+import plotly.graph_objects as go
+import numpy as np
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+fig = go.Figure(data=go.Scatter(x=x, y=y, mode=&#39;lines&#39;, name=&#39;Seno&#39;))
+fig.update_layout(title=&#39;Grafico interactivo&#39;, xaxis_title=&#39;X&#39;, yaxis_title=&#39;Y&#39;)
+fig.show()</code></pre>
+<h3 id="grafico-de-barras-interactivo">Grafico de barras
+interactivo</h3>
+<pre><code># Barras interactivas
+import plotly.express as px
+
+df = px.data.gapminder().query(&quot;year == 2007&quot;).nlargest(10, &#39;pop&#39;)
+fig = px.bar(df, x=&#39;country&#39;, y=&#39;pop&#39;, color=&#39;continent&#39;, title=&#39;Poblacion por pais&#39;)
+fig.show()</code></pre>
+<h3 id="mapas-con-plotly">Mapas con Plotly</h3>
+<pre><code># Mapa coropletico
+fig = px.choropleth(df, locations=&#39;iso_alpha&#39;, color=&#39;lifeExp&#39;,
+                    hover_name=&#39;country&#39;, color_continuous_scale=&#39;Viridis&#39;,
+                    title=&#39;Expectativa de vida por pais&#39;)
+fig.show()</code></pre>
+<h2 id="bokeh">Bokeh</h2>
+<h3 id="instalacion-1">Instalacion</h3>
+<pre><code># Instalar Bokeh
+pip install bokeh</code></pre>
+<h3 id="grafico-basico-1">Grafico basico</h3>
+<pre><code># Grafico con Bokeh
+from bokeh.plotting import figure, show, output_notebook
+import numpy as np
+
+output_notebook()
+
+x = np.linspace(0, 10, 100)
+y = np.cos(x)
+
+p = figure(title=&#39;Coseno interactivo&#39;, x_axis_label=&#39;x&#39;, y_axis_label=&#39;y&#39;)
+p.line(x, y, line_width=2)
+show(p)</code></pre>
+<h3 id="herramientas-interactivas">Herramientas interactivas</h3>
+<pre><code># Zoom y seleccion
+from bokeh.plotting import figure, show, output_notebook
+from bokeh.models import HoverTool
+
+output_notebook()
+
+p = figure(title=&#39;Scatter interactivo&#39;, tools=&#39;pan,box_zoom,reset,hover&#39;)
+p.circle([1, 2, 3, 4, 5], [6, 7, 2, 4, 5], size=15)
+show(p)</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Usa Plotly cuando necesites graficos rapidos
+y atractivos. Usa Bokeh cuando requieras un control mas fino sobre la
+interactividad y las herramientas.</p>
+</blockquote>
+<h1 id="big-data-y-mlops">Big Data y MLOps</h1>
+<h2 id="manejo-de-grandes-datasets-con-dask">Manejo de grandes datasets
+con Dask</h2>
+<h3 id="que-es-dask">Que es Dask?</h3>
+<p>Dask es una biblioteca de computacion paralela para Python que
+permite trabajar con datasets mas grandes que la memoria RAM
+disponible.</p>
+<h3 id="instalacion-2">Instalacion</h3>
+<pre><code># Instalar Dask
+pip install dask[complete]</code></pre>
+<h3 id="dask-dataframes">Dask DataFrames</h3>
+<pre><code># Crear Dask DataFrame
+import dask.dataframe as dd
+
+ddf = dd.read_csv(&#39;archivos_*.csv&#39;)
+print(ddf.head())
+print(ddf.shape[0].compute())  # numero total de filas</code></pre>
+<h3 id="operaciones-paralelas">Operaciones paralelas</h3>
+<pre><code># Agregaciones con Dask
+resultado = ddf.groupby(&#39;categoria&#39;).valor.sum().compute()
+print(resultado)</code></pre>
+<h3 id="dask-arrays">Dask Arrays</h3>
+<pre><code># Arrays grandes con Dask
+import dask.array as da
+
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+print(x.mean().compute())</code></pre>
+<h3 id="dask-delayed">Dask Delayed</h3>
+<pre><code># Computo lazy con delayed
+from dask import delayed
+
+@delayed
+def sumar(x, y):
+    return x + y
+
+tareas = [sumar(i, i + 1) for i in range(10)]
+total = delayed(sum)(tareas)
+print(total.compute())</code></pre>
+<h2 id="integracion-con-mlflow">Integracion con MLflow</h2>
+<h3 id="que-es-mlflow">Que es MLflow?</h3>
+<p>MLflow es una plataforma de codigo abierto para gestionar el ciclo de
+vida de modelos de machine learning: experimentos, parametros, metricas
+y artefactos.</p>
+<h3 id="instalacion-3">Instalacion</h3>
+<pre><code># Instalar MLflow
+pip install mlflow</code></pre>
+<h3 id="tracking-de-experimentos">Tracking de experimentos</h3>
+<pre><code># Registrar un experimento
+import mlflow
+import mlflow.sklearn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+mlflow.set_experiment(&quot;mi_experimento&quot;)
+
+with mlflow.start_run():
+    X, y = load_iris(return_X_y=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    
+    model = RandomForestClassifier(n_estimators=100)
+    model.fit(X_train, y_train)
+    
+    predictions = model.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    
+    mlflow.log_param(&quot;n_estimators&quot;, 100)
+    mlflow.log_metric(&quot;accuracy&quot;, accuracy)
+    mlflow.sklearn.log_model(model, &quot;modelo&quot;)
+    
+    print(f&quot;Accuracy: {accuracy}&quot;)</code></pre>
+<h3 id="interfaz-web-de-mlflow">Interfaz web de MLflow</h3>
+<pre><code># Iniciar UI de MLflow
+mlflow ui</code></pre>
+<p>Por defecto, MLflow UI se abre en <a href="http://localhost:5000"
+class="uri">http://localhost:5000</a>.</p>
+<h3 id="guardar-y-cargar-modelos">Guardar y cargar modelos</h3>
+<pre><code># Cargar modelo registrado
+import mlflow.sklearn
+
+modelo_uri = &quot;runs:/&lt;run_id&gt;/modelo&quot;
+modelo = mlflow.sklearn.load_model(modelo_uri)
+predicciones = modelo.predict(X_test)</code></pre>
+<blockquote>
+<p><strong>💡 Nota:</strong> MLflow permite reproducir experimentos,
+comparar metricas y compartir modelos con el equipo sin salir del
+ecosistema Jupyter.</p>
+</blockquote>
+<h1 id="gestion-de-kernels-y-entornos">Gestion de kernels y
+entornos</h1>
+<h2 id="crear-un-entorno-virtual">Crear un entorno virtual</h2>
+<pre><code># Con venv
+python -m venv mi_entorno
+source mi_entorno/bin/activate
+pip install ipykernel
+python -m ipykernel install --user --name mi_entorno</code></pre>
+<pre><code># Con conda
+conda create -n mi_entorno python=3.11
+conda activate mi_entorno
+conda install ipykernel
+python -m ipykernel install --user --name mi_entorno</code></pre>
+<h2 id="seleccionar-kernel-en-jupyter">Seleccionar kernel en
+Jupyter</h2>
+<p>En Jupyter Notebook o Lab, ve a <strong>Kernel &gt; Change
+kernel</strong> y selecciona el entorno deseado.</p>
+<h2 id="detener-y-reiniciar-kernels">Detener y reiniciar kernels</h2>
+<pre><code># Gestion de kernels
+# Desde el menu: Kernel &gt; Restart Kernel
+# Kernel &gt; Interrupt Kernel
+# Kernel &gt; Shutdown Kernel</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> Reiniciar el kernel borra todas las
+variables y resultados en memoria. Guarda tu trabajo antes.</p>
+</blockquote>
+<h1 id="extensiones">Extensiones</h1>
+<h2 id="extensiones-de-jupyter-notebook">Extensiones de Jupyter
+Notebook</h2>
+<pre><code># Instalar jupyter_contrib_nbextensions
+pip install jupyter_contrib_nbextensions
+jupyter contrib nbextension install --user</code></pre>
+<p>Extensiones recomendadas:</p>
+<ul>
+<li><p><strong>Table of Contents</strong>: indice automatico.</p></li>
+<li><p><strong>Hinterland</strong>: autocompletado automatico.</p></li>
+<li><p><strong>Snippets</strong>: fragmentos de codigo
+reutilizables.</p></li>
+<li><p><strong>ExecuteTime</strong>: tiempo de ejecucion de
+celdas.</p></li>
+</ul>
+<h2 id="extensiones-de-jupyterlab">Extensiones de JupyterLab</h2>
+<pre><code># Gestionar extensiones
+jupyter labextension list
+jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
+<p>Extensiones recomendadas:</p>
+<ul>
+<li><p><strong>@jupyter-widgets/jupyterlab-manager</strong>: soporte
+para widgets.</p></li>
+<li><p><strong>jupyterlab-git</strong>: integracion con Git.</p></li>
+<li><p><strong>@jupyterlab/toc</strong>: tabla de contenidos.</p></li>
+</ul>
+<h1 id="widgets-interactivos">Widgets interactivos</h1>
+<h2 id="instalacion-4">Instalacion</h2>
+<pre><code># Instalar ipywidgets
+pip install ipywidgets
+jupyter labextension install @jupyter-widgets/jupyterlab-manager</code></pre>
+<h2 id="ejemplo-basico">Ejemplo basico</h2>
+<pre><code># Widget deslizador
+import ipywidgets as widgets
+from IPython.display import display
+
+slider = widgets.IntSlider(value=50, min=0, max=100, step=1, description=&#39;Valor:&#39;)
+display(slider)</code></pre>
+<pre><code># Widget de boton
+button = widgets.Button(description=&quot;Click me!&quot;)
+output = widgets.Output()
+
+def on_button_clicked(b):
+    with output:
+        print(&quot;Boton presionado&quot;)
+
+button.on_click(on_button_clicked)
+display(button, output)</code></pre>
+<h2 id="widgets-avanzados">Widgets avanzados</h2>
+<h3 id="contenedores-y-layouts">Contenedores y layouts</h3>
+<pre><code># Organizar widgets en tabs
+import ipywidgets as widgets
+from IPython.display import display
+
+tab1 = widgets.VBox([
+    widgets.IntSlider(description=&quot;Valor 1&quot;),
+    widgets.IntSlider(description=&quot;Valor 2&quot;)
+])
+
+tab2 = widgets.VBox([
+    widgets.Text(description=&quot;Nombre&quot;),
+    widgets.Text(description=&quot;Email&quot;)
+])
+
+tabs = widgets.Tab(children=[tab1, tab2])
+tabs.set_title(0, &quot;Numericos&quot;)
+tabs.set_title(1, &quot;Texto&quot;)
+display(tabs)</code></pre>
+<h3 id="widgets-vinculados">Widgets vinculados</h3>
+<pre><code># Vincular dos widgets
+slider = widgets.IntSlider(description=&quot;Slider&quot;)
+text = widgets.IntText(description=&quot;Texto&quot;)
+
+widgets.link((slider, &#39;value&#39;), (text, &#39;value&#39;))
+display(slider, text)</code></pre>
+<h3 id="observe-cambios">Observe cambios</h3>
+<pre><code># Reaccionar a cambios
+slider = widgets.IntSlider(description=&quot;Valor&quot;, min=0, max=100)
+output = widgets.Output()
+
+def on_change(change):
+    with output:
+        output.clear_output()
+        print(f&quot;Nuevo valor: {change[&#39;new&#39;]}&quot;)
+
+slider.observe(on_change, names=&#39;value&#39;)
+display(slider, output)</code></pre>
+<h3 id="subir-archivos">Subir archivos</h3>
+<pre><code># Widget para subir archivos
+uploader = widgets.FileUpload(accept=&#39;.csv&#39;, multiple=False)
+display(uploader)
+
+# Acceder al contenido
+for nombre, info in uploader.value.items():
+    contenido = info[&#39;content&#39;]
+    print(f&quot;Archivo: {nombre}, bytes: {len(contenido)}&quot;)</code></pre>
+<h3 id="formularios-interactivos">Formularios interactivos</h3>
+<pre><code># Formulario con validacion
+nombre = widgets.Text(description=&quot;Nombre:&quot;, placeholder=&quot;Tu nombre&quot;)
+edad = widgets.IntText(description=&quot;Edad:&quot;, value=18)
+enviar = widgets.Button(description=&quot;Enviar&quot;, button_style=&quot;success&quot;)
+salida = widgets.Output()
+
+def al_enviar(b):
+    with salida:
+        salida.clear_output()
+        if nombre.value and edad.value &gt; 0:
+            print(f&quot;Hola {nombre.value}, tienes {edad.value} anios&quot;)
+        else:
+            print(&quot;Completa todos los campos&quot;)
+
+enviar.on_click(al_enviar)
+display(nombre, edad, enviar, salida)</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Combina widgets con funciones de callback
+para crear aplicaciones interactivas completas sin salir de Jupyter.</p>
+</blockquote>
+<h1 id="buenas-practicas">Buenas practicas</h1>
+<h2 id="organizacion-del-cuaderno">Organizacion del cuaderno</h2>
+<ol type="1">
+<li><p>Comienza con una celda de Markdown que explique el
+proposito.</p></li>
+<li><p>Divide el cuaderno en secciones con encabezados.</p></li>
+<li><p>Ordena las celdas de forma logica.</p></li>
+<li><p>Limpia salidas innecesarias antes de compartir.</p></li>
+<li><p>Guarda versiones con nombres descriptivos.</p></li>
+</ol>
+<h2 id="optimizacion">Optimizacion</h2>
+<ul>
+<li><p>Usa <code>%timeit</code> para identificar cuellos de
+botella.</p></li>
+<li><p>Evita celdas muy largas; divide la logica.</p></li>
+<li><p>Reinicia el kernel y ejecuta todo para verificar
+reproducibilidad.</p></li>
+<li><p>Usa funciones en lugar de codigo repetido.</p></li>
+</ul>
+<h2 id="compartir-cuadernos">Compartir cuadernos</h2>
+<ul>
+<li><p>Exporta a PDF, HTML o Markdown.</p></li>
+<li><p>Sube a GitHub con un <code>README.md</code>.</p></li>
+<li><p>Usa NBViewer para compartir sin servidor.</p></li>
+<li><p>Considera Binder para ejecutabilidad en la nube.</p></li>
+</ul>
+<h2 id="integracion-con-git">Integracion con Git</h2>
+<p>Git es fundamental para versionar cuadernos de Jupyter. Aunque los
+archivos <code>.ipynb</code> contienen metadatos y salidas que
+dificultan las diferencias, existen herramientas para facilitar el
+trabajo.</p>
+<h3 id="configuracion-basica">Configuracion basica</h3>
+<pre><code># Inicializar repositorio
+git init
+git add .
+git commit -m &quot;Primer cuaderno de Jupyter&quot;</code></pre>
+<h3 id="ignorar-salidas-con-nbstripout">Ignorar salidas con
+nbstripout</h3>
+<pre><code># Instalar nbstripout
+pip install nbstripout
+nbstripout --install</code></pre>
+<p>Esta herramienta limpia las salidas de los cuadernos antes de hacer
+commit, reduciendo el tamano del repositorio y facilitando las
+revisiones.</p>
+<h3 id="comparar-cuadernos">Comparar cuadernos</h3>
+<pre><code># Configurar diff para notebooks
+git config --local core.attributesfile .gitattributes</code></pre>
+<pre><code># Ejemplo de .gitattributes
+*.ipynb filter=nbstripout
+*.ipynb diff=ipynb</code></pre>
+<h3 id="extension-jupyterlab-git">Extension jupyterlab-git</h3>
+<pre><code># Instalar extension Git para JupyterLab
+pip install jupyterlab-git
+jupyter lab build</code></pre>
+<p>Con esta extension puedes hacer commit, ver diferencias y gestionar
+ramas directamente desde JupyterLab.</p>
+<h3 id="buenas-practicas-con-git">Buenas practicas con Git</h3>
+<ul>
+<li><p>Limpia salidas antes de commitear.</p></li>
+<li><p>Usa nombres descriptivos para los cuadernos.</p></li>
+<li><p>Documenta dependencias en <code>requirements.txt</code> o
+<code>environment.yml</code>.</p></li>
+<li><p>Incluye un <code>README.md</code> con instrucciones de
+ejecucion.</p></li>
+<li><p>Etiqueta versiones importantes con <code>git tag</code>.</p></li>
+</ul>
+<blockquote>
+<p><strong>✅ Tip:</strong> Combina <code>nbstripout</code> con
+<code>jupyterlab-git</code> para un flujo de trabajo profesional y
+ordenado.</p>
+</blockquote>
+<h1 id="exportacion-y-publicacion">Exportacion y publicacion</h1>
+<h2 id="exportar-con-nbconvert">Exportar con nbconvert</h2>
+<pre><code># Instalar nbconvert
+pip install nbconvert</code></pre>
+<pre><code># Exportar a HTML
+jupyter nbconvert mi_cuaderno.ipynb --to html</code></pre>
+<pre><code># Exportar a PDF
+jupyter nbconvert mi_cuaderno.ipynb --to pdf</code></pre>
+<pre><code># Exportar a Markdown
+jupyter nbconvert mi_cuaderno.ipynb --to markdown</code></pre>
+<pre><code># Exportar a script de Python
+jupyter nbconvert mi_cuaderno.ipynb --to script</code></pre>
+<h2 id="publicar-con-binder">Publicar con Binder</h2>
+<p>Binder permite ejecutar cuadernos en la nube desde un repositorio de
+Git.</p>
+<ol type="1">
+<li><p>Sube tu cuaderno a GitHub.</p></li>
+<li><p>Crea un archivo <code>requirements.txt</code> con las
+dependencias.</p></li>
+<li><p>Ve a <a href="https://mybinder.org"
+class="uri">https://mybinder.org</a> y pega la URL del
+repositorio.</p></li>
+</ol>
+<h1 id="jupyterhub">JupyterHub</h1>
+<h2 id="que-es-jupyterhub">Que es JupyterHub?</h2>
+<p>JupyterHub es una plataforma multiusuario que permite a multiples
+personas acceder a entornos de Jupyter desde un unico servidor. Es ideal
+para:</p>
+<ul>
+<li><p>Aulas y cursos.</p></li>
+<li><p>Equipos de ciencia de datos.</p></li>
+<li><p>Organizaciones que comparten recursos computacionales.</p></li>
+</ul>
+<h2 id="instalacion-basica">Instalacion basica</h2>
+<pre><code># Instalar JupyterHub
+pip install jupyterhub
+npm install -g configurable-http-proxy</code></pre>
+<pre><code># Instalar con conda
+conda install -c conda-forge jupyterhub</code></pre>
+<h2 id="iniciar-jupyterhub">Iniciar JupyterHub</h2>
+<pre><code># Iniciar servidor JupyterHub
+jupyterhub</code></pre>
+<p>Por defecto, JupyterHub escucha en el puerto 8000.</p>
+<h2 id="autenticacion">Autenticacion</h2>
+<p>JupyterHub soporta multiples autenticadores:</p>
+<ul>
+<li><p><strong>PAM</strong>: autenticacion nativa del sistema
+Linux.</p></li>
+<li><p><strong>OAuth</strong>: Google, GitHub, GitLab.</p></li>
+<li><p><strong>LDAP</strong>: directorios empresariales.</p></li>
+<li><p><strong>NativeAuthenticator</strong>: base de datos local de
+usuarios.</p></li>
+</ul>
+<pre><code># Configuracion basica de JupyterHub
+# jupyterhub_config.py
+c.JupyterHub.authenticator_class = &#39;jupyterhub.auth.PAMAuthenticator&#39;
+c.JupyterHub.bind_url = &#39;http://:8000&#39;
+c.Spawner.default_url = &#39;/lab&#39;</code></pre>
+<h2 id="spawners">Spawners</h2>
+<p>Un spawner crea el entorno de cada usuario. Los mas comunes son:</p>
+<ul>
+<li><p><strong>LocalProcessSpawner</strong>: procesos locales del
+sistema.</p></li>
+<li><p><strong>DockerSpawner</strong>: contenedores Docker por
+usuario.</p></li>
+<li><p><strong>KubeSpawner</strong>: pods de Kubernetes.</p></li>
+</ul>
+<pre><code># Usar DockerSpawner
+pip install dockerspawner</code></pre>
+<pre><code># Configurar DockerSpawner
+c.JupyterHub.spawner_class = &#39;dockerspawner.DockerSpawner&#39;
+c.DockerSpawner.image = &#39;jupyter/base-notebook&#39;</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> Configurar JupyterHub en produccion
+requiere conocimientos de administracion de sistemas, seguridad y
+redes.</p>
+</blockquote>
+<h1 id="voila">Voila</h1>
+<h2 id="que-es-voila">Que es Voila?</h2>
+<p>Voila convierte cuadernos de Jupyter en aplicaciones web
+interactivas. A diferencia de JupyterLab, oculta el codigo y muestra
+solo los widgets y las salidas, creando dashboards limpios.</p>
+<h2 id="instalacion-5">Instalacion</h2>
+<pre><code># Instalar Voila
+pip install voila
+jupyter labextension install @voila-dashboards/jupyterlab-preview</code></pre>
+<h2 id="usar-voila">Usar Voila</h2>
+<pre><code># Ejecutar un cuaderno con Voila
+voila mi_cuaderno.ipynb</code></pre>
+<p>Voila abre el cuaderno como una aplicacion web en el puerto 8866 por
+defecto.</p>
+<h2 id="opciones-utiles">Opciones utiles</h2>
+<pre><code># Cambiar puerto
+voila mi_cuaderno.ipynb --port 8080</code></pre>
+<pre><code># No abrir navegador
+voila mi_cuaderno.ipynb --no-browser</code></pre>
+<pre><code># Mostrar solo widgets
+voila mi_cuaderno.ipynb --strip_sources=True</code></pre>
+<h2 id="crear-un-dashboard">Crear un dashboard</h2>
+<p>Pasos para crear un dashboard con Voila:</p>
+<ol type="1">
+<li><p>Diseña el cuaderno con widgets interactivos.</p></li>
+<li><p>Oculta o elimina celdas de codigo innecesarias.</p></li>
+<li><p>Ejecuta <code>voila mi_cuaderno.ipynb</code>.</p></li>
+<li><p>Comparte la URL generada.</p></li>
+</ol>
+<pre><code># Ejemplo de dashboard
+import ipywidgets as widgets
+from IPython.display import display
+import matplotlib.pyplot as plt
+import numpy as np
+
+slider = widgets.IntSlider(value=10, min=1, max=50, description=&#39;Frecuencia&#39;)
+
+def update_plot(freq):
+    x = np.linspace(0, 2*np.pi, 100)
+    plt.figure(figsize=(8, 4))
+    plt.plot(x, np.sin(freq * x))
+    plt.show()
+
+widgets.interact(update_plot, freq=slider)</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Usa Voila cuando necesites compartir
+resultados con personas que no conocen Jupyter ni programacion.</p>
+</blockquote>
+<h1 id="jupyter-avanzado">Jupyter avanzado</h1>
+<h2 id="jupyter-ai">Jupyter AI</h2>
+<h3 id="que-es-jupyter-ai">Que es Jupyter AI?</h3>
+<p>Jupyter AI es una extension oficial que integra modelos de
+inteligencia artificial directamente en JupyterLab y Jupyter Notebook.
+Permite:</p>
+<ul>
+<li><p>Generar codigo desde descripciones en lenguaje natural.</p></li>
+<li><p>Explicar codigo existente.</p></li>
+<li><p>Responder preguntas tecnicas sin salir del entorno.</p></li>
+<li><p>Usar multiples proveedores de IA.</p></li>
+</ul>
+<h3 id="instalacion-6">Instalacion</h3>
+<pre><code># Instalar Jupyter AI
+pip install jupyter-ai</code></pre>
+<p>Para JupyterLab:</p>
+<pre><code># Instalar extension de JupyterLab
+pip install jupyter-ai jupyterlab</code></pre>
+<h3 id="configurar-proveedores">Configurar proveedores</h3>
+<p>Jupyter AI soporta OpenAI, Anthropic, Google, Hugging Face y
+otros.</p>
+<pre><code># Configurar API key
+export OPENAI_API_KEY=tu_clave_aqui
+export ANTHROPIC_API_KEY=tu_clave_aqui</code></pre>
+<h3 id="uso-basico">Uso basico</h3>
+<p>En JupyterLab aparece un panel de chat. Tambien puedes usar comandos
+magicos:</p>
+<pre><code># Generar codigo con IA
+Escribe una funcion en Python que calcule el factorial de un numero</code></pre>
+<pre><code># Explicar codigo
+Explica el siguiente codigo:
+
+def factorial(n):
+    return 1 if n &lt;= 1 else n * factorial(n - 1)</code></pre>
+<pre><code># Preguntar sin codigo
+Como funciona la recursividad en Python?</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Jupyter AI es util para prototipar rapido,
+pero revisa siempre el codigo generado antes de usarlo en
+produccion.</p>
+</blockquote>
+<h2 id="kernels-remotos">Kernels remotos</h2>
+<h3 id="que-son-los-kernels-remotos">Que son los kernels remotos?</h3>
+<p>Un kernel remoto permite ejecutar codigo en una maquina diferente a
+la que muestra la interfaz de Jupyter. Es util cuando necesitas mas
+recursos computacionales o datos ubicados en otro servidor.</p>
+<h3 id="kernel-remoto-via-ssh">Kernel remoto via SSH</h3>
+<pre><code># Instalar kernel en servidor remoto
+# En el servidor remoto
+python -m pip install ipykernel
+python -m ipykernel install --user --name remoto --display-name &quot;Python Remoto&quot;</code></pre>
+<pre><code># Conectar con SSH tunnel
+ssh -L 8888:localhost:8888 usuario@servidor-remoto
+jupyter lab --no-browser</code></pre>
+<h3 id="jupyter-kernel-gateway">Jupyter Kernel Gateway</h3>
+<pre><code># Instalar Kernel Gateway
+pip install jupyter_kernel_gateway</code></pre>
+<pre><code># Iniciar Kernel Gateway
+jupyter kernelgateway --KernelGatewayApp.ip=0.0.0.0 --KernelGatewayApp.port=9999</code></pre>
+<pre><code># Conectar notebook a kernel remoto
+# Desde la interfaz de Jupyter:
+# Kernel &gt; Change kernel &gt; Seleccionar kernel remoto</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> Nunca expongas un kernel remoto sin
+autenticacion. Usa siempre SSH tunnels, VPNs o firewalls para proteger
+el acceso.</p>
+</blockquote>
+<h2 id="despliegue-en-la-nube">Despliegue en la nube</h2>
+<h3 id="amazon-web-services-aws">Amazon Web Services (AWS)</h3>
+<h4 id="ec2">EC2</h4>
+<pre><code># Pasos en AWS EC2
+# 1. Crear una instancia EC2 (Ubuntu recomendado)
+# 2. Configurar el security group para permitir el puerto 8888
+# 3. Conectarte por SSH
+# 4. Instalar Jupyter
+sudo apt update
+sudo apt install -y python3-pip
+pip3 install jupyter jupyterlab
+
+# 5. Configurar autenticacion
+jupyter lab --generate-config
+jupyter lab password
+
+# 6. Iniciar Jupyter
+jupyter lab --ip=0.0.0.0 --no-browser --allow-root</code></pre>
+<h4 id="amazon-sagemaker">Amazon SageMaker</h4>
+<p>Amazon SageMaker proporciona instancias de notebook administradas con
+Jupyter preinstalado.</p>
+<pre><code># Crear notebook en SageMaker
+# 1. Ir a Amazon SageMaker Studio
+# 2. Crear un nuevo Jupyter Notebook
+# 3. Seleccionar instancia (ml.t3.medium, ml.m5.large, etc.)
+# 4. Elegir kernel (Python 3, PyTorch, TensorFlow)</code></pre>
+<h3 id="microsoft-azure">Microsoft Azure</h3>
+<h4 id="maquina-virtual">Maquina virtual</h4>
+<pre><code># Pasos en Azure VM
+# 1. Crear una maquina virtual Ubuntu
+# 2. Abrir el puerto 8888 en Network Security Group
+# 3. Conectarte por SSH
+# 4. Instalar Jupyter
+sudo apt update &amp;&amp; sudo apt install -y python3-pip
+pip3 install jupyter jupyterlab
+
+# 5. Configurar contrasena
+jupyter lab --generate-config
+jupyter lab password
+
+# 6. Ejecutar
+jupyter lab --ip=0.0.0.0 --no-browser</code></pre>
+<h4 id="azure-machine-learning">Azure Machine Learning</h4>
+<p>Azure ML ofrece cuadernos administrados integrados con el ecosistema
+de Azure.</p>
+<pre><code># Usar Azure ML Notebooks
+# 1. Crear un Workspace de Azure Machine Learning
+# 2. Ir a Notebooks
+# 3. Crear o subir un cuaderno .ipynb
+# 4. Seleccionar compute target</code></pre>
+<h3 id="google-cloud-platform-gcp">Google Cloud Platform (GCP)</h3>
+<h4 id="compute-engine">Compute Engine</h4>
+<pre><code># Pasos en GCP Compute Engine
+# 1. Crear una VM con Ubuntu
+# 2. Abrir firewall para el puerto 8888
+# 3. Conectarte por SSH
+# 4. Instalar Jupyter
+sudo apt update
+sudo apt install -y python3-pip
+pip3 install jupyter jupyterlab
+
+# 5. Configurar acceso
+jupyter lab --generate-config
+jupyter lab password
+
+# 6. Iniciar servidor
+jupyter lab --ip=0.0.0.0 --no-browser</code></pre>
+<h4 id="vertex-ai-workbench">Vertex AI Workbench</h4>
+<p>Vertex AI Workbench ofrece instancias de notebook administradas con
+integracion a BigQuery y otros servicios de GCP.</p>
+<pre><code># Usar Vertex AI Workbench
+# 1. Ir a Vertex AI &gt; Workbench
+# 2. Crear una instancia de notebook
+# 3. Seleccionar region y maquina
+# 4. Abrir JupyterLab desde la consola</code></pre>
+<h3 id="comparativa-de-opciones-en-la-nube">Comparativa de opciones en
+la nube</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Plataforma</strong></th>
+<th style="text-align: left;"><strong>Servicio</strong></th>
+<th style="text-align: left;"><strong>Mejor para</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">AWS</td>
+<td style="text-align: left;">EC2</td>
+<td style="text-align: left;">Control total del servidor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AWS</td>
+<td style="text-align: left;">SageMaker</td>
+<td style="text-align: left;">ML administrado y escalable</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Azure</td>
+<td style="text-align: left;">VM</td>
+<td style="text-align: left;">Flexibilidad de infraestructura</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Azure</td>
+<td style="text-align: left;">Azure ML</td>
+<td style="text-align: left;">Integracion con servicios de Azure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GCP</td>
+<td style="text-align: left;">Compute Engine</td>
+<td style="text-align: left;">VMs personalizables</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GCP</td>
+<td style="text-align: left;">Vertex AI Workbench</td>
+<td style="text-align: left;">Cuadernos integrados con GCP</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>💡 Nota:</strong> Las instancias en la nube generan costes
+por uso. Apaga las maquinas cuando no las necesites y configura alertas
+de presupuesto.</p>
+</blockquote>
+<h1 id="seguridad-en-jupyter">Seguridad en Jupyter</h1>
+<h2 id="autenticacion-y-contrasenas">Autenticacion y contrasenas</h2>
+<p>Por defecto, Jupyter genera un token de autenticacion al iniciar.
+Para entornos compartidos o produccion, es recomendable configurar una
+contrasena.</p>
+<pre><code># Configurar contrasena
+jupyter lab --generate-config
+jupyter lab password</code></pre>
+<pre><code># Iniciar con contrasena
+jupyter lab --NotebookApp.token=&#39;&#39; --NotebookApp.password=&#39;sha1:...&#39;</code></pre>
+<h2 id="certificados-ssl">Certificados SSL</h2>
+<p>Para conexiones seguras, usa certificados SSL:</p>
+<pre><code># Generar certificado autofirmado
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout mi_certificado.key -out mi_certificado.pem</code></pre>
+<pre><code># Iniciar Jupyter con SSL
+jupyter lab --certfile=mi_certificado.pem --keyfile=mi_certificado.key</code></pre>
+<h2 id="restriccion-de-acceso">Restriccion de acceso</h2>
+<pre><code># Escuchar solo localhost
+jupyter lab --ip=127.0.0.1</code></pre>
+<pre><code># Deshabilitar ejecucion de shell
+c.NotebookApp.disable_check_xsrf = False
+c.NotebookApp.allow_remote_access = False</code></pre>
+<h2 id="buenas-practicas-de-seguridad">Buenas practicas de
+seguridad</h2>
+<ul>
+<li><p>Nunca ejecutes Jupyter como root en produccion.</p></li>
+<li><p>Usa contrasenas fuertes y tokens seguros.</p></li>
+<li><p>Manten Jupyter y sus dependencias actualizadas.</p></li>
+<li><p>Limita el acceso con firewalls y VPNs.</p></li>
+<li><p>No compartas tokens ni credenciales en repositorios
+publicos.</p></li>
+<li><p>Revisa las extensiones antes de instalarlas.</p></li>
+</ul>
+<h2 id="entornos-aislados">Entornos aislados</h2>
+<p>Usa contenedores o entornos virtuales para aislar usuarios y
+proyectos.</p>
+<pre><code># Ejecutar Jupyter en Docker
+docker run -p 8888:8888 jupyter/scipy-notebook</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> Exponer Jupyter sin autenticacion ni
+SSL permite que cualquiera ejecute codigo en tu servidor. Configura
+siempre medidas de seguridad adecuadas.</p>
+</blockquote>
+<h1 id="personalizacion-y-extensiones-propias">Personalizacion y
+extensiones propias</h1>
+<h2 id="personalizacion-de-temas">Personalizacion de temas</h2>
+<h3 id="temas-de-jupyterlab">Temas de JupyterLab</h3>
+<p>JupyterLab incluye temas claro y oscuro por defecto.</p>
+<pre><code># Cambiar tema
+# Settings &gt; JupyterLab Theme &gt; JupyterLab Dark</code></pre>
+<h3 id="instalar-temas-personalizados">Instalar temas
+personalizados</h3>
+<pre><code># Tema oscuro personalizado
+pip install jupyterlab_theme_solarized_dark
+jupyter labextension install jupyterlab_theme_solarized_dark</code></pre>
+<pre><code># Activar tema instalado
+# Settings &gt; JupyterLab Theme &gt; Solarized Dark</code></pre>
+<h3 id="personalizar-apariencia-con-css">Personalizar apariencia con
+CSS</h3>
+<pre><code># CSS personalizado
+# Crear archivo: ~/.jupyter/custom/custom.css
+
+/* Fondo de celda seleccionada */
+.jp-Notebook .jp-Cell.jp-mod-active {
+    border-left: 4px solid #0066cc;
+}</code></pre>
+<h2 id="creacion-de-extensiones-propias">Creacion de extensiones
+propias</h2>
+<h3 id="estructura-de-una-extension">Estructura de una extension</h3>
+<p>Una extension de JupyterLab es un paquete de Node.js con
+TypeScript.</p>
+<pre><code># Instalar cookiecutter
+pip install cookiecutter
+cookiecutter https://github.com/jupyterlab/extension-cookiecutter-ts.git</code></pre>
+<h3 id="extension-simple-hola-mundo">Extension simple: Hola mundo</h3>
+<pre><code># Estructura del proyecto
+mi_extension/
+  package.json
+  src/
+    index.ts
+  tsconfig.json
+  webpack.config.js</code></pre>
+<pre><code># src/index.ts basico
+import {
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
+} from &#39;@jupyterlab/application&#39;;
+
+const plugin: JupyterFrontEndPlugin&lt;void&gt; = {
+  id: &#39;mi-extension:plugin&#39;,
+  autoStart: true,
+  activate: (app: JupyterFrontEnd) =&gt; {
+    console.log(&#39;Mi extension esta activa&#39;);
+  }
+};
+
+export default plugin;</code></pre>
+<h3 id="instalar-extension-en-desarrollo">Instalar extension en
+desarrollo</h3>
+<pre><code># Instalar localmente
+cd mi_extension
+pip install -e .
+jupyter labextension develop . --overwrite
+jupyter lab build</code></pre>
+<h3 id="publicar-extension">Publicar extension</h3>
+<pre><code># Publicar en npm
+npm login
+npm publish</code></pre>
+<pre><code># Instalar extension publicada
+jupyter labextension install mi-extension</code></pre>
+<h2 id="extensiones-de-jupyter-notebook-classic">Extensiones de Jupyter
+Notebook classic</h2>
+<pre><code># Estructura basica
+mi_nbextension/
+  main.js
+  mi_nbextension.yaml</code></pre>
+<pre><code># main.js simple
+define(function(require, exports, module) {
+    console.log(&#39;Mi extension de Notebook cargada&#39;);
+});</code></pre>
+<pre><code># Instalar extension de Notebook
+jupyter nbextension install mi_nbextension
+jupyter nbextension enable mi_nbextension/main</code></pre>
+<blockquote>
+<p><strong>✅ Tip:</strong> Para extensiones simples, considera primero
+scripts de IPython o widgets. Las extensiones de JupyterLab requieren
+conocimientos de TypeScript y Node.js.</p>
+</blockquote>
+<h1 id="integracion-con-latex">Integracion con LaTeX</h1>
+<h2 id="ecuaciones-en-celdas-markdown">Ecuaciones en celdas
+Markdown</h2>
+<p>Jupyter utiliza MathJax para renderizar ecuaciones matematicas en
+celdas Markdown.</p>
+<h3 id="ecuaciones-en-linea">Ecuaciones en linea</h3>
+<pre><code># Ecuacion en linea
+La energia se expresa como $E = mc^2$.</code></pre>
+<h3 id="ecuaciones-en-bloque">Ecuaciones en bloque</h3>
+<pre><code># Ecuacion en bloque
+$$
+\int_{a}^{b} f(x) \, dx = F(b) - F(a)
+$$</code></pre>
+<h3 id="matriz">Matriz</h3>
+<pre><code># Matriz en LaTeX
+$$
+A = \begin{bmatrix}
+1 &amp; 2 &amp; 3 \\
+4 &amp; 5 &amp; 6 \\
+7 &amp; 8 &amp; 9
+\end{bmatrix}
+$$</code></pre>
+<h2 id="exportar-cuadernos-a-latex">Exportar cuadernos a LaTeX</h2>
+<pre><code># Exportar a LaTeX
+jupyter nbconvert mi_cuaderno.ipynb --to latex</code></pre>
+<pre><code># Exportar a PDF via LaTeX
+jupyter nbconvert mi_cuaderno.ipynb --to pdf</code></pre>
+<h2 id="plantillas-latex-personalizadas">Plantillas LaTeX
+personalizadas</h2>
+<pre><code># Usar plantilla personalizada
+jupyter nbconvert mi_cuaderno.ipynb --to pdf --template mi_plantilla.tplx</code></pre>
+<pre><code># Ejemplo de plantilla basica
+((*- extends &#39;article.tplx&#39; -*))
+
+((* block title *))
+\title{Mi informe cientifico}
+\author{Autor}
+\date{\today}
+\maketitle
+((* endblock title *))</code></pre>
+<h2 id="macros-y-simbolos-frecuentes">Macros y simbolos frecuentes</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Descripcion</strong></th>
+<th style="text-align: left;"><strong>LaTeX</strong></th>
+<th style="text-align: left;"><strong>Resultado</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Fraccion</td>
+<td style="text-align: left;"><code>\frac{a}{b}</code></td>
+<td style="text-align: left;"><span
+class="math inline">$\frac{a}{b}$</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Raiz cuadrada</td>
+<td style="text-align: left;"><code>\sqrt{x}</code></td>
+<td style="text-align: left;"><span
+class="math inline">$\sqrt{x}$</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Suma</td>
+<td style="text-align: left;"><code>\sum_{i=1}^{n}</code></td>
+<td style="text-align: left;"><span
+class="math inline">$\sum_{i=1}^{n}$</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Integral</td>
+<td style="text-align: left;"><code>\int_{a}^{b}</code></td>
+<td style="text-align: left;"><span
+class="math inline">∫<sub><em>a</em></sub><sup><em>b</em></sup></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Griega alfa</td>
+<td style="text-align: left;"><code>\alpha</code></td>
+<td style="text-align: left;"><span
+class="math inline"><em>α</em></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Griega beta</td>
+<td style="text-align: left;"><code>\beta</code></td>
+<td style="text-align: left;"><span
+class="math inline"><em>β</em></span></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>✅ Tip:</strong> Usa LaTeX en Jupyter para documentacion
+cientifica, informes tecnicos y material educativo con notacion
+matematica profesional.</p>
+</blockquote>
+<h1 id="despliegue-con-docker-y-kubernetes">Despliegue con Docker y
+Kubernetes</h1>
+<h2 id="despliegue-con-docker">Despliegue con Docker</h2>
+<h3 id="imagenes-oficiales">Imagenes oficiales</h3>
+<p>El proyecto Jupyter proporciona imagenes Docker listas para usar.</p>
+<pre><code># Ejecutar Jupyter con Docker
+docker run -p 8888:8888 jupyter/scipy-notebook</code></pre>
+<pre><code># Con volumen persistente
+docker run -p 8888:8888 -v $(pwd):/home/jovyan/work jupyter/scipy-notebook</code></pre>
+<h3 id="dockerfile-personalizado">Dockerfile personalizado</h3>
+<pre><code># Dockerfile para proyecto Jupyter
+FROM jupyter/scipy-notebook:latest
+
+USER root
+
+COPY requirements.txt /tmp/
+RUN pip install -r /tmp/requirements.txt
+
+USER jovyan
+
+COPY notebooks/ /home/jovyan/notebooks/
+WORKDIR /home/jovyan/notebooks</code></pre>
+<pre><code># Construir y ejecutar
+docker build -t mi-jupyter .
+docker run -p 8888:8888 mi-jupyter</code></pre>
+<h3 id="docker-compose">docker-compose</h3>
+<pre><code># docker-compose.yml
+version: &#39;3.8&#39;
+services:
+  jupyter:
+    image: jupyter/scipy-notebook
+    ports:
+      - &quot;8888:8888&quot;
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes</code></pre>
+<pre><code># Iniciar con docker-compose
+docker-compose up</code></pre>
+<h2 id="despliegue-con-kubernetes">Despliegue con Kubernetes</h2>
+<h3 id="crear-un-deployment">Crear un deployment</h3>
+<pre><code># jupyter-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyter
+  template:
+    metadata:
+      labels:
+        app: jupyter
+    spec:
+      containers:
+      - name: jupyter
+        image: jupyter/scipy-notebook
+        ports:
+        - containerPort: 8888</code></pre>
+<pre><code># Aplicar deployment
+kubectl apply -f jupyter-deployment.yaml</code></pre>
+<h3 id="exponer-el-servicio">Exponer el servicio</h3>
+<pre><code># jupyter-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter-service
+spec:
+  selector:
+    app: jupyter
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8888
+  type: LoadBalancer</code></pre>
+<pre><code># Aplicar servicio
+kubectl apply -f jupyter-service.yaml</code></pre>
+<h3 id="persistent-volume">Persistent Volume</h3>
+<pre><code># Reclamacion de volumen persistente
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jupyter-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi</code></pre>
+<pre><code># Montar volumen en el deployment
+spec:
+  containers:
+  - name: jupyter
+    image: jupyter/scipy-notebook
+    volumeMounts:
+    - name: jupyter-storage
+      mountPath: /home/jovyan/work
+  volumes:
+  - name: jupyter-storage
+    persistentVolumeClaim:
+      claimName: jupyter-pvc</code></pre>
+<h3 id="helm-chart">Helm chart</h3>
+<pre><code># Instalar JupyterHub con Helm
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+
+helm upgrade --install jupyterhub jupyterhub/jupyterhub \
+  --namespace jupyterhub --create-namespace \
+  --version=3.0.0 \
+  --values config.yaml</code></pre>
+<blockquote>
+<p><strong>⚠️ Advertencia:</strong> Configurar Kubernetes en produccion
+requiere conocimientos de networking, almacenamiento persistente y
+seguridad. Practica primero en un cluster local como minikube.</p>
+</blockquote>
+<h1 id="solucion-de-problemas">Solucion de problemas</h1>
+<h2 id="jupyter-no-se-encuentra">Jupyter no se encuentra</h2>
+<pre><code># Verificar instalacion
+which jupyter
+python -m jupyter --version</code></pre>
+<pre><code># Reinstalar
+pip install --force-reinstall jupyter jupyterlab notebook</code></pre>
+<h2 id="puerto-ocupado">Puerto ocupado</h2>
+<pre><code># Usar otro puerto
+jupyter lab --port 8889</code></pre>
+<h2 id="kernel-muerto">Kernel muerto</h2>
+<ol type="1">
+<li><p>Reinicia el kernel: <strong>Kernel &gt; Restart
+Kernel</strong>.</p></li>
+<li><p>Verifica que el entorno tenga las dependencias
+instaladas.</p></li>
+<li><p>Revisa los mensajes de error en la terminal del
+servidor.</p></li>
+</ol>
+<h2 id="extensiones-no-funcionan">Extensiones no funcionan</h2>
+<pre><code># Reconstruir JupyterLab
+jupyter lab build</code></pre>
+<pre><code># Limpiar configuracion
+jupyter lab clean</code></pre>
+<h2 id="problemas-con-navegador">Problemas con navegador</h2>
+<p>Si el navegador no abre automaticamente:</p>
+<pre><code># Abrir manualmente
+jupyter lab --no-browser
+# Copia la URL que aparece en la terminal</code></pre>
+<h1 id="ejercicios-practicos">Ejercicios practicos</h1>
+<h2 id="ejercicio-1-crear-un-cuaderno">Ejercicio 1: Crear un
+cuaderno</h2>
+<ol type="1">
+<li><p>Inicia JupyterLab.</p></li>
+<li><p>Crea un nuevo notebook de Python 3.</p></li>
+<li><p>Cambia el nombre a
+<code>mi_primer_cuaderno.ipynb</code>.</p></li>
+</ol>
+<h2 id="ejercicio-2-texto-y-codigo">Ejercicio 2: Texto y codigo</h2>
+<ol type="1">
+<li><p>Agrega una celda Markdown con un titulo y una breve
+descripcion.</p></li>
+<li><p>Agrega una celda de codigo que imprima
+<code>Hola, Jupyter!</code>.</p></li>
+<li><p>Ejecuta ambas celdas.</p></li>
+</ol>
+<h2 id="ejercicio-3-graficos">Ejercicio 3: Graficos</h2>
+<pre><code># Grafico simple
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.title(&quot;Seno&quot;)
+plt.show()</code></pre>
+<h2 id="ejercicio-4-magic-commands">Ejercicio 4: Magic commands</h2>
+<p>Prueba los siguientes comandos en celdas separadas:</p>
+<pre><code># Practicar magic commands
+!pwd
+%lsmagic</code></pre>
+<h2 id="ejercicio-5-entornos">Ejercicio 5: Entornos</h2>
+<ol type="1">
+<li><p>Crea un entorno virtual.</p></li>
+<li><p>Instala ipykernel y registra el entorno.</p></li>
+<li><p>Abre Jupyter y cambia al nuevo kernel.</p></li>
+</ol>
+<h2 id="ejercicio-6-widgets">Ejercicio 6: Widgets</h2>
+<p>Crea un widget deslizador que muestre el cuadrado del valor
+seleccionado.</p>
+<pre><code># Widget interactivo
+import ipywidgets as widgets
+
+@widgets.interact(x=(0, 100))
+def f(x):
+    print(f&quot;El cuadrado de {x} es {x**2}&quot;)</code></pre>
+<h2 id="ejercicio-7-exportar">Ejercicio 7: Exportar</h2>
+<p>Exporta tu cuaderno a HTML y PDF usando
+<code>jupyter nbconvert</code>.</p>
+<h2 id="ejercicio-8-integracion-con-git">Ejercicio 8: Integracion con
+Git</h2>
+<ol type="1">
+<li><p>Inicializa un repositorio Git en la carpeta de tu
+cuaderno.</p></li>
+<li><p>Instala <code>nbstripout</code> para limpiar las
+salidas.</p></li>
+<li><p>Crea un archivo <code>.gitattributes</code> adecuado.</p></li>
+<li><p>Realiza varios commits y observa las diferencias.</p></li>
+</ol>
+<h2 id="ejercicio-9-dashboard-con-voila">Ejercicio 9: Dashboard con
+Voila</h2>
+<ol type="1">
+<li><p>Crea un cuaderno con al menos dos widgets interactivos.</p></li>
+<li><p>Genera una grafica que responda a los widgets.</p></li>
+<li><p>Ejecuta el cuaderno con <code>voila</code>.</p></li>
+<li><p>Comparte la URL generada en tu red local.</p></li>
+</ol>
+<h2 id="ejercicio-10-jupyterhub-local">Ejercicio 10: JupyterHub
+local</h2>
+<ol type="1">
+<li><p>Instala JupyterHub en una maquina virtual o servidor
+local.</p></li>
+<li><p>Configura la autenticacion PAM o NativeAuthenticator.</p></li>
+<li><p>Crea al menos dos usuarios de prueba.</p></li>
+<li><p>Verifica que ambos usuarios puedan iniciar sesion y crear
+cuadernos.</p></li>
+</ol>
+<h2 id="ejercicio-11-jupyter-ai">Ejercicio 11: Jupyter AI</h2>
+<ol type="1">
+<li><p>Instala Jupyter AI.</p></li>
+<li><p>Configura una API key de OpenAI o Anthropic.</p></li>
+<li><p>Usa <code>%%ai</code> para generar una funcion de
+Python.</p></li>
+<li><p>Pide a la IA que explique un fragmento de codigo.</p></li>
+</ol>
+<h2 id="ejercicio-12-kernel-remoto">Ejercicio 12: Kernel remoto</h2>
+<ol type="1">
+<li><p>Configura un servidor remoto con Python e ipykernel.</p></li>
+<li><p>Crea un tunel SSH hacia el servidor.</p></li>
+<li><p>Conecta tu Jupyter local al kernel remoto.</p></li>
+<li><p>Ejecuta codigo y verifica que corre en el servidor
+remoto.</p></li>
+</ol>
+<h2 id="ejercicio-13-despliegue-en-la-nube">Ejercicio 13: Despliegue en
+la nube</h2>
+<ol type="1">
+<li><p>Elige una plataforma: AWS, Azure o GCP.</p></li>
+<li><p>Crea una maquina virtual minima.</p></li>
+<li><p>Instala Jupyter y configura una contrasena.</p></li>
+<li><p>Accede al cuaderno desde tu navegador local.</p></li>
+<li><p>Apaga la instancia al finalizar para evitar costes.</p></li>
+</ol>
+<h2 id="ejercicio-14-widgets-avanzados">Ejercicio 14: Widgets
+avanzados</h2>
+<ol type="1">
+<li><p>Crea una interfaz con tabs que contenga multiples
+widgets.</p></li>
+<li><p>Vincula un slider con un campo de texto.</p></li>
+<li><p>Agrega un boton que muestre el resultado de una
+operacion.</p></li>
+</ol>
+<h2 id="ejercicio-15-base-de-datos">Ejercicio 15: Base de datos</h2>
+<ol type="1">
+<li><p>Crea una base de datos SQLite con al menos dos tablas.</p></li>
+<li><p>Inserta datos de prueba.</p></li>
+<li><p>Realiza consultas con pandas.</p></li>
+<li><p>Visualiza los resultados con matplotlib.</p></li>
+</ol>
+<h2 id="ejercicio-16-pruebas-unitarias">Ejercicio 16: Pruebas
+unitarias</h2>
+<ol type="1">
+<li><p>Escribe tres funciones en celdas de codigo.</p></li>
+<li><p>Crea pruebas con <code>assert</code>.</p></li>
+<li><p>Instala <code>ipytest</code> y ejecuta las pruebas en una
+celda.</p></li>
+<li><p>Verifica que todas las pruebas pasan.</p></li>
+</ol>
+<h2 id="ejercicio-17-visualizacion-interactiva">Ejercicio 17:
+Visualizacion interactiva</h2>
+<ol type="1">
+<li><p>Instala Plotly y crea un grafico de dispersion
+interactivo.</p></li>
+<li><p>Agrega tooltips y zoom.</p></li>
+<li><p>Repite el ejercicio con Bokeh.</p></li>
+<li><p>Compara la sintaxis y funcionalidad de ambas
+bibliotecas.</p></li>
+</ol>
+<h2 id="ejercicio-18-dask">Ejercicio 18: Dask</h2>
+<ol type="1">
+<li><p>Crea un dataset CSV grande o descarga uno publico.</p></li>
+<li><p>Carga el dataset con Dask DataFrame.</p></li>
+<li><p>Realiza una agregacion y comparala con pandas.</p></li>
+<li><p>Mide el tiempo de ejecucion.</p></li>
+</ol>
+<h2 id="ejercicio-19-mlflow">Ejercicio 19: MLflow</h2>
+<ol type="1">
+<li><p>Instala MLflow.</p></li>
+<li><p>Entrena un modelo simple de scikit-learn.</p></li>
+<li><p>Registra parametros, metricas y el modelo con MLflow.</p></li>
+<li><p>Abre la interfaz web y revisa el experimento.</p></li>
+</ol>
+<h2 id="ejercicio-20-seguridad">Ejercicio 20: Seguridad</h2>
+<ol type="1">
+<li><p>Configura una contrasena para Jupyter.</p></li>
+<li><p>Genera un certificado SSL autofirmado.</p></li>
+<li><p>Inicia Jupyter con HTTPS y verifica la conexion.</p></li>
+<li><p>Revisa la configuracion de seguridad recomendada.</p></li>
+</ol>
+<h2 id="ejercicio-21-temas-personalizados">Ejercicio 21: Temas
+personalizados</h2>
+<ol type="1">
+<li><p>Cambia entre el tema claro y oscuro de JupyterLab.</p></li>
+<li><p>Instala un tema de terceros.</p></li>
+<li><p>Crea un archivo <code>custom.css</code> con cambios
+menores.</p></li>
+<li><p>Reinicia Jupyter y verifica los cambios visuales.</p></li>
+</ol>
+<h2 id="ejercicio-22-extension-propia">Ejercicio 22: Extension
+propia</h2>
+<ol type="1">
+<li><p>Usa cookiecutter para generar la estructura de una
+extension.</p></li>
+<li><p>Modifica el mensaje de activacion.</p></li>
+<li><p>Instala la extension en modo desarrollo.</p></li>
+<li><p>Verifica en la consola del navegador que se cargo.</p></li>
+</ol>
+<h2 id="ejercicio-23-latex-en-jupyter">Ejercicio 23: LaTeX en
+Jupyter</h2>
+<ol type="1">
+<li><p>Crea una celda Markdown con una ecuacion en linea.</p></li>
+<li><p>Crea una celda con una ecuacion en bloque.</p></li>
+<li><p>Escribe una matriz usando sintaxis LaTeX.</p></li>
+<li><p>Exporta el cuaderno a PDF.</p></li>
+</ol>
+<h2 id="ejercicio-24-docker">Ejercicio 24: Docker</h2>
+<ol type="1">
+<li><p>Crea un Dockerfile basado en ‘jupyter/scipy-notebook’.</p></li>
+<li><p>Agrega tus librerias favoritas en ‘requirements.txt’.</p></li>
+<li><p>Construye la imagen y ejecuta un contenedor.</p></li>
+<li><p>Accede a Jupyter desde el navegador.</p></li>
+</ol>
+<blockquote>
+<p><strong>✅ Tip:</strong> Realiza los ejercicios en orden. Los ultimos
+tres requieren conocimientos previos de Git, widgets y administracion de
+sistemas.</p>
+</blockquote>
+<h1 id="plantillas-de-cuadernos">Plantillas de cuadernos</h1>
+<h2 id="plantilla-de-analisis-de-datos">Plantilla de analisis de
+datos</h2>
+<p>Estructura recomendada:</p>
+<pre><code># Plantilla de analisis
+# 1. Importar librerias
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 2. Cargar datos
+df = pd.read_csv(&#39;datos.csv&#39;)
+
+# 3. Exploracion
+df.head()
+df.describe()
+
+# 4. Visualizacion
+plt.figure(figsize=(10, 6))
+plt.show()
+
+# 5. Conclusiones</code></pre>
+<h2 id="plantilla-de-machine-learning">Plantilla de machine
+learning</h2>
+<pre><code># Plantilla de ML
+# 1. Cargar datos
+# 2. Preprocesamiento
+# 3. Division train/test
+# 4. Entrenamiento
+# 5. Evaluacion
+# 6. Guardar modelo</code></pre>
+<h2 id="plantilla-de-informe">Plantilla de informe</h2>
+<pre><code># Plantilla de informe
+# Titulo del informe
+
+## Resumen ejecutivo
+
+## Metodologia
+
+## Resultados
+
+## Conclusiones</code></pre>
+<h1 id="glosario-de-terminos">Glosario de terminos</h1>
+<p>Unidad basica de un cuaderno de Jupyter.</p>
+<p>Comando magico que afecta toda una celda (comienza con
+<code>!!</code>).</p>
+<p>Gestor de paquetes y entornos para Python y otros lenguajes.</p>
+<p>Documento interactivo de Jupyter con codigo, texto y salidas.</p>
+<p>Espacio aislado con su propia instalacion de paquetes.</p>
+<p>Shell interactivo mejorado para Python.</p>
+<p>Plataforma multiusuario para Jupyter.</p>
+<p>IDE web moderno del proyecto Jupyter.</p>
+<p>Interfaz clasica de cuadernos de Jupyter.</p>
+<p>Proceso que ejecuta el codigo de un cuaderno.</p>
+<p>Comando magico que afecta una sola linea (comienza con
+<code>%</code>).</p>
+<p>Lenguaje de marcado ligero para formatear texto.</p>
+<p>Herramienta para convertir cuadernos a otros formatos.</p>
+<p>Servicio para visualizar cuadernos de forma estatica.</p>
+<p>Gestor de paquetes de Python.</p>
+<p>Capacidad de obtener los mismos resultados al ejecutar el codigo.</p>
+<p>Kernel que se ejecuta en una maquina diferente a la interfaz de
+Jupyter.</p>
+<p>Large Language Model, modelo de lenguaje grande usado por Jupyter
+AI.</p>
+<p>Componente de JupyterHub que crea el entorno de cada usuario.</p>
+<p>Plataforma de machine learning de Google Cloud.</p>
+<p>Herramienta para convertir cuadernos en aplicaciones web.</p>
+<p>Elemento interactivo en un cuaderno.</p>
+<p>Extension para ejecutar pytest dentro de Jupyter.</p>
+<p>Biblioteca de computacion paralela para grandes datasets.</p>
+<p>Plataforma para gestionar el ciclo de vida de modelos de ML.</p>
+<p>Biblioteca de graficos interactivos.</p>
+<p>Biblioteca para visualizaciones interactivas en navegador.</p>
+<p>Protocolo de seguridad para conexiones cifradas.</p>
+<p>Codigo temporal de autenticacion de Jupyter.</p>
+<p>Gestor de paquetes para Kubernetes.</p>
+<p>Solicitud de almacenamiento persistente en Kubernetes.</p>
+<h1 id="recursos-adicionales">Recursos adicionales</h1>
+<h2 id="documentacion-oficial">Documentacion oficial</h2>
+<ul>
+<li><p><strong>Jupyter:</strong> <a href="https://jupyter.org"
+class="uri">https://jupyter.org</a></p></li>
+<li><p><strong>JupyterLab:</strong> <a
+href="https://jupyterlab.readthedocs.io"
+class="uri">https://jupyterlab.readthedocs.io</a></p></li>
+<li><p><strong>Jupyter Notebook:</strong> <a
+href="https://jupyter-notebook.readthedocs.io"
+class="uri">https://jupyter-notebook.readthedocs.io</a></p></li>
+<li><p><strong>IPython:</strong> <a
+href="https://ipython.readthedocs.io"
+class="uri">https://ipython.readthedocs.io</a></p></li>
+</ul>
+<h2 id="comunidad">Comunidad</h2>
+<ul>
+<li><p><strong>Discourse:</strong> <a
+href="https://discourse.jupyter.org"
+class="uri">https://discourse.jupyter.org</a></p></li>
+<li><p><strong>GitHub:</strong> <a href="https://github.com/jupyter"
+class="uri">https://github.com/jupyter</a></p></li>
+<li><p><strong>Stack Overflow:</strong> etiqueta
+<code>jupyter</code></p></li>
+</ul>
+<h2 id="herramientas-complementarias">Herramientas complementarias</h2>
+<p>Distribucion de Python con Jupyter incluido.</p>
+<p>Plataforma para ejecutar cuadernos en la nube.</p>
+<p>Cuadernos de Google basados en Jupyter.</p>
+<p>Control de versiones para cuadernos.</p>
+<p>Plataforma de competiciones con notebooks.</p>
+<p>Convierte cuadernos en aplicaciones web.</p>
+<h2 id="tutoriales-recomendados">Tutoriales recomendados</h2>
+<ol type="1">
+<li><p>Configura JupyterLab con tu entorno favorito.</p></li>
+<li><p>Crea un cuaderno de analisis exploratorio de datos.</p></li>
+<li><p>Instala y prueba tres extensiones de JupyterLab.</p></li>
+<li><p>Publica un cuaderno en GitHub y visualizalo con
+NBViewer.</p></li>
+<li><p>Crea un dashboard interactivo con ipywidgets.</p></li>
+</ol>
+<blockquote>
+<p><strong>✅ Tip:</strong> El ecosistema Jupyter evoluciona
+constantemente. Revisa la documentacion oficial para conocer las ultimas
+caracteristicas.</p>
+</blockquote>
+<h1 id="referencia-rapida">Referencia rapida</h1>
+<h2 id="comandos-imprescindibles">Comandos imprescindibles</h2>
+<pre><code># Hoja de ruta
+jupyter --version              # versiones instaladas
+jupyter notebook               # iniciar Notebook
+jupyter lab                    # iniciar Lab
+jupyter lab --no-browser       # sin abrir navegador
+jupyter lab --port 9999        # puerto personalizado
+jupyter kernelspec list        # listar kernels
+jupyter nbconvert file.ipynb --to html   # exportar a HTML
+jupyter nbconvert file.ipynb --to pdf    # exportar a PDF
+voila file.ipynb                         # ejecutar como dashboard
+jupyterhub                               # iniciar JupyterHub</code></pre>
+</div>
+</body>
+</html>
